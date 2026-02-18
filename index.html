@@ -224,57 +224,109 @@
     .cp-name.hi { color: var(--gold); }
 
     /* ════════════════════════════════════
-       SWATCHES — muestrario de lo compartido
-       Como fichas de tienda de pinturas:
-       franja de color arriba, nombre abajo
+       SWATCHES — categorías con flip 3D
+       --h = hue único por categoría (inline)
+       Toca → rota y muestra lo que hay dentro
     ════════════════════════════════════ */
     .swatches {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
-      gap: 6px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
       margin-top: 2.8rem;
+      max-width: 680px; margin-left: auto; margin-right: auto;
     }
 
     .sw {
-      border-radius: 7px;
+      height: 172px;
+      perspective: 800px;
+      cursor: pointer;
+    }
+    .sw-inner {
+      width: 100%; height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .6s cubic-bezier(.4,0,.2,1);
+      border-radius: 10px;
+    }
+    .sw.flipped .sw-inner { transform: rotateY(180deg); }
+
+    .sw-front,
+    .sw-back {
+      position: absolute; inset: 0;
+      border-radius: 10px;
+      backface-visibility: hidden;
       overflow: hidden;
-      cursor: default;
-      transition: transform .25s, box-shadow .25s;
-    }
-    .sw:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 20px rgba(0,0,0,.35);
-      z-index: 1; position: relative;
     }
 
-    /* Franja de color — el "chip" de pintura */
-    .sw-band {
-      height: 72px;
+    /* ── Cara frontal: color único ── */
+    .sw-front {
+      background: linear-gradient(160deg,
+        hsla(var(--h),58%,30%,1) 0%,
+        hsla(var(--h),70%,11%,1) 100%);
+      border: 1px solid hsla(var(--h),50%,40%,.45);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
     }
-    .sw.g  .sw-band { background: linear-gradient(145deg, rgba(240,176,0,.22) 0%, rgba(240,176,0,.1) 100%); }
-    .sw.gr .sw-band { background: linear-gradient(145deg, rgba(0,200,122,.2)  0%, rgba(0,200,122,.09) 100%); }
-    .sw.d  .sw-band { background: linear-gradient(145deg, rgba(195,215,205,.1) 0%, rgba(195,215,205,.04) 100%); }
-
-    /* Etiqueta con el nombre */
-    .sw-label {
-      padding: .55rem .6rem .6rem;
+    .sw-front::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 85% 55% at 50% 12%,
+        hsla(var(--h),65%,55%,.2) 0%, transparent 70%);
+    }
+    .sw-cat {
+      width: 100%;
+      padding: .6rem .65rem .65rem;
+      background: rgba(0,0,0,.3);
+      text-align: center;
+    }
+    .sw-cat-name {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .62rem; font-weight: 600;
-      letter-spacing: .07em; text-transform: uppercase;
-      line-height: 1.3; text-align: center;
+      font-size: .7rem; font-weight: 600;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: hsla(var(--h),50%,82%,1);
+      line-height: 1.2;
     }
-    .sw.g  .sw-label { background: rgba(240,176,0,.08); color: rgba(240,176,0,.85); }
-    .sw.gr .sw-label { background: rgba(0,200,122,.07); color: rgba(0,200,122,.9); }
-    .sw.d  .sw-label { background: rgba(195,215,205,.05); color: rgba(195,215,205,.6); }
+    .sw-cat-hint {
+      font-family: 'Inter', sans-serif;
+      font-size: .48rem; letter-spacing: .16em;
+      color: hsla(var(--h),40%,62%,.65);
+      margin-top: .18rem; text-transform: uppercase;
+    }
 
-    /* Estado seleccionado — como marcar un chip */
-    .sw.picked { transform: translateY(-4px) scale(1.06); position: relative; z-index: 2; }
-    .sw.g.picked  .sw-band { background: linear-gradient(145deg, rgba(240,176,0,.55) 0%, rgba(240,176,0,.28) 100%); box-shadow: inset 0 0 0 1.5px rgba(240,176,0,.7); }
-    .sw.gr.picked .sw-band { background: linear-gradient(145deg, rgba(0,200,122,.5)  0%, rgba(0,200,122,.25) 100%); box-shadow: inset 0 0 0 1.5px rgba(0,200,122,.75); }
-    .sw.d.picked  .sw-band { background: linear-gradient(145deg, rgba(195,215,205,.28) 0%, rgba(195,215,205,.12) 100%); box-shadow: inset 0 0 0 1.5px rgba(195,215,205,.45); }
-    .sw.g.picked  .sw-label { background: rgba(240,176,0,.18); color: var(--gold); }
-    .sw.gr.picked .sw-label { background: rgba(0,200,122,.16); color: var(--green); }
-    .sw.d.picked  .sw-label { background: rgba(195,215,205,.12); color: var(--text); }
+    /* ── Cara trasera: sub-items ── */
+    .sw-back {
+      background: hsla(var(--h),42%,7%,1);
+      border: 1.5px solid hsla(var(--h),62%,42%,.6);
+      box-shadow: 0 0 24px hsla(var(--h),70%,38%,.22);
+      transform: rotateY(180deg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: .9rem .8rem;
+      gap: .5rem;
+    }
+    .sw-back-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .52rem; font-weight: 600;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: hsla(var(--h),55%,55%,.7);
+      margin-bottom: .2rem;
+    }
+    .sw-items {
+      list-style: none;
+      display: flex; flex-direction: column;
+      align-items: center; gap: .28rem;
+      width: 100%;
+    }
+    .sw-items li {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .64rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: hsla(var(--h),58%,74%,1);
+      text-align: center; line-height: 1.25;
+    }
+    .sw-items li::before {
+      content: '· ';
+      color: hsla(var(--h),65%,50%,.6);
+    }
 
     /* ════════════════════════════════════
        DIVIDER
@@ -1102,12 +1154,16 @@
 
       /* ── Swatches ── */
       .swatches {
-        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-        gap: 5px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
         margin-top: 1.8rem;
       }
-      .sw-band { height: 60px; }
-      .sw-label { font-size: .58rem; padding: .48rem .5rem .52rem; }
+      .sw { height: 148px; }
+      .sw-cat-name { font-size: .62rem; }
+      .sw-cat-hint { font-size: .44rem; }
+      .sw-back { padding: .75rem .65rem; gap: .36rem; }
+      .sw-back-title { font-size: .46rem; }
+      .sw-items li { font-size: .56rem; }
 
       /* ── Divider ── */
       .divider {
@@ -1487,23 +1543,127 @@
   <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
 
-  <!-- Muestrario — toca para seleccionar -->
+  <!-- Muestrario de categorías — toca para ver lo que hay dentro -->
   <div class="swatches" id="swatches">
-    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Real Madrid</div></div>
-    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Fortnite</div></div>
-    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">League of Legends</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Teatro</div></div>
-    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Fútbol</div></div>
-    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Videojuegos</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Hércules</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Príncipe de Egipto</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">La Merced</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Los recreos</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">La UCAB</div></div>
-    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Humor</div></div>
-    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Champions League</div></div>
-    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Graduaciones</div></div>
-    <div class="sw g"><div class="sw-band"></div><div class="sw-label">20 años</div></div>
+
+    <!-- Videojuegos — violeta/azul -->
+    <div class="sw" style="--h:260">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">Videojuegos</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">Videojuegos</div>
+          <ul class="sw-items">
+            <li>Fortnite</li>
+            <li>League of Legends</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deporte — dorado/ámbar -->
+    <div class="sw" style="--h:42">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">Deporte</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">Deporte</div>
+          <ul class="sw-items">
+            <li>Real Madrid</li>
+            <li>Fútbol</li>
+            <li>Champions League</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teatro — burdeos -->
+    <div class="sw" style="--h:335">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">Teatro</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">Teatro</div>
+          <ul class="sw-items">
+            <li>Hércules</li>
+            <li>Príncipe de Egipto</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Educación — teal -->
+    <div class="sw" style="--h:198">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">Educación</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">Educación</div>
+          <ul class="sw-items">
+            <li>La Merced</li>
+            <li>La UCAB</li>
+            <li>Los recreos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Humor — naranja -->
+    <div class="sw" style="--h:22">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">Humor</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">Humor</div>
+          <ul class="sw-items">
+            <li>El grupo</li>
+            <li>Los chistes</li>
+            <li>La dinámica</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 20 años — verde/dorado especial -->
+    <div class="sw" style="--h:145">
+      <div class="sw-inner">
+        <div class="sw-front">
+          <div class="sw-cat">
+            <div class="sw-cat-name">20 años</div>
+            <div class="sw-cat-hint">toca para ver</div>
+          </div>
+        </div>
+        <div class="sw-back">
+          <div class="sw-back-title">20 años</div>
+          <ul class="sw-items">
+            <li>La amistad</li>
+            <li>El grupo</li>
+            <li>Toda una vida</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -2020,9 +2180,9 @@ if (dockLight) {
   });
 }
 
-/* ─── Swatches — toca para marcar ─── */
+/* ─── Swatches — toca para girar y ver lo que hay dentro ─── */
 document.querySelectorAll('.sw').forEach(sw => {
-  sw.addEventListener('click', () => sw.classList.toggle('picked'));
+  sw.addEventListener('click', () => sw.classList.toggle('flipped'));
 });
 
 /* ─── Interstellar gate ─── */
