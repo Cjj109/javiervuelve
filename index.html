@@ -237,7 +237,7 @@
       margin-left: auto; margin-right: auto;
     }
 
-    .sw { height: 162px; perspective: 800px; cursor: pointer; }
+    .sw { height: 184px; perspective: 900px; cursor: pointer; }
     .sw-inner {
       width: 100%; height: 100%; position: relative;
       transform-style: preserve-3d;
@@ -245,6 +245,23 @@
       border-radius: 10px;
     }
     .sw.flipped .sw-inner { transform: rotateY(180deg); }
+    .sw:hover:not(.flipped) .sw-inner {
+      transform: rotateY(-9deg) rotateX(3deg);
+    }
+    .sw-watermark {
+      position: absolute;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 5.5rem; font-weight: 700;
+      opacity: .045; pointer-events: none; user-select: none;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      line-height: 1;
+    }
+    .sw-count {
+      font-family: 'Inter', sans-serif;
+      font-size: .48rem; letter-spacing: .22em;
+      text-transform: uppercase; opacity: .4;
+      position: relative; z-index: 1;
+    }
 
     .sw-front, .sw-back {
       position: absolute; inset: 0;
@@ -262,7 +279,8 @@
     }
     .sw-front::before {
       content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
+      top: 0; left: 0; right: 0; height: 3px;
+      border-radius: 10px 10px 0 0;
     }
     .sw-front::after {
       content: ''; position: absolute;
@@ -311,7 +329,7 @@
     .sw-items li::before { content: '· '; opacity: .45; }
 
     /* ══ GOLD ══ */
-    .sw-gold .sw-front::before { background: var(--gold); }
+    .sw-gold .sw-front::before { background: var(--gold); box-shadow: 0 0 10px rgba(240,176,0,.4); }
     .sw-gold .sw-front::after  { background: radial-gradient(ellipse, rgba(240,176,0,.11) 0%, transparent 70%); }
     .sw-gold .sw-gem           { border-color: rgba(240,176,0,.55); }
     .sw-gold .sw-cat-name      { color: var(--gold); }
@@ -321,7 +339,7 @@
     .sw-gold .sw-items li      { color: rgba(240,176,0,.88); }
 
     /* ══ GREEN ══ */
-    .sw-green .sw-front::before { background: var(--green); }
+    .sw-green .sw-front::before { background: var(--green); box-shadow: 0 0 10px rgba(0,200,122,.35); }
     .sw-green .sw-front::after  { background: radial-gradient(ellipse, rgba(0,200,122,.1) 0%, transparent 70%); }
     .sw-green .sw-gem           { border-color: rgba(0,200,122,.55); }
     .sw-green .sw-cat-name      { color: var(--green); }
@@ -816,25 +834,36 @@
       border-radius: 1px;
     }
 
-    /* Fotos ocultas dentro del panel — se revelan al tocar */
-    .office-inner { cursor: pointer; }
-    .office-hint {
-      margin-top: 1.6rem;
-      font-family: 'Inter', sans-serif;
-      font-size: .5rem; letter-spacing: .24em; text-transform: uppercase;
-      color: rgba(195,215,205,.28);
-      transition: opacity .4s;
+    /* Polaroids — se revelan al entrar en viewport */
+    .office-polaroids {
+      display: flex; justify-content: center; align-items: flex-end;
+      gap: 1.8rem; flex-wrap: wrap;
+      margin-top: 3rem; padding: 0 .5rem 1rem;
     }
-    .office-section.revealed .office-hint { opacity: 0; pointer-events: none; }
-    .office-photos {
-      overflow: hidden;
-      max-height: 0; opacity: 0; margin-top: 0;
-      transition: max-height .85s cubic-bezier(.4,0,.2,1),
-                  opacity .5s ease .35s,
-                  margin-top .85s;
+    .polaroid {
+      background: #f4efe8;
+      padding: .72rem .72rem 2rem;
+      border-radius: 2px;
+      box-shadow: 0 6px 24px rgba(0,0,0,.55), 0 2px 6px rgba(0,0,0,.35),
+                  inset 0 0 0 1px rgba(0,0,0,.04);
+      cursor: pointer;
+      width: min(268px, 42vw);
+      transform: scale(.88) rotate(var(--rot)) translateY(12px);
+      opacity: 0;
+      transition: opacity .55s ease, transform .55s ease, box-shadow .3s;
     }
-    .office-section.revealed .office-photos {
-      max-height: 520px; opacity: 1; margin-top: 1.8rem;
+    .polaroid.shot {
+      opacity: 1; transform: scale(1) rotate(var(--rot)) translateY(0);
+    }
+    .polaroid:hover {
+      transform: scale(1.04) rotate(0deg) translateY(-4px) !important;
+      box-shadow: 0 14px 36px rgba(0,0,0,.65), 0 4px 10px rgba(0,0,0,.4);
+    }
+    .polaroid img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
+    .polaroid-caption {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: .92rem; font-style: italic; font-weight: 400;
+      color: #2c2318; text-align: center; margin-top: .65rem;
     }
 
     /* REC indicator — esquina superior izquierda */
@@ -1270,14 +1299,17 @@
         gap: 7px;
         margin-top: 1.8rem;
       }
-      .sw { height: 148px; }
+      .sw { height: 158px; }
+      .sw-watermark { font-size: 4rem; }
       .sw-cat-name { font-size: .62rem; padding: 0 .5rem; }
+      .sw-count { font-size: .44rem; }
       .sw-back { padding: .75rem .65rem; gap: .32rem; }
       .sw-back-title { font-size: .46rem; }
       .sw-back-rule { width: 20px; }
       .sw-items li { font-size: .54rem; }
-      .office-section.revealed .office-photos { max-height: 700px; }
-      .office-photos .gallery { grid-template-columns: 1fr; }
+      .office-polaroids { gap: 1.2rem; padding-bottom: .5rem; }
+      .polaroid { width: min(200px, 44vw); padding: .6rem .6rem 1.7rem; }
+      .polaroid-caption { font-size: .82rem; margin-top: .5rem; }
 
       /* ── Divider ── */
       .divider {
@@ -1654,8 +1686,10 @@
     <div class="sw sw-green">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">V</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">Videojuegos</div>
+          <span class="sw-count">× 2 cosas</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Videojuegos</div>
@@ -1668,8 +1702,10 @@
     <div class="sw sw-gold">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">D</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">Deporte</div>
+          <span class="sw-count">× 3 cosas</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Deporte</div>
@@ -1682,8 +1718,10 @@
     <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">T</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">Teatro</div>
+          <span class="sw-count">× 2 cosas</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Teatro</div>
@@ -1696,8 +1734,10 @@
     <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">E</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">Educación</div>
+          <span class="sw-count">× 3 cosas</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Educación</div>
@@ -1710,8 +1750,10 @@
     <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">H</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">Humor</div>
+          <span class="sw-count">× 3 cosas</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Humor</div>
@@ -1724,8 +1766,10 @@
     <div class="sw sw-gold">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-watermark">XX</span>
           <span class="sw-gem"></span>
           <div class="sw-cat-name">20 años</div>
+          <span class="sw-count">× toda una vida</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">20 años</div>
@@ -1781,33 +1825,21 @@
       </div>
     </div>
 
-    <div class="office-hint">▾ &nbsp; ver los momentos</div>
-
   </div>
 
-  <!-- Fotos que se revelan al tocar el panel -->
-  <div class="office-photos" id="office-photos">
-    <div class="gallery">
-      <div class="gphoto" data-src="fortnite.jpg" data-title="Fortnite" data-sub="Cjj1092534 &amp; xaveris18 — jugando juntos">
-        <img src="fortnite.jpg" alt="Carlos y Javier en Fortnite" loading="lazy">
-        <div class="gphoto-overlay">
-          <div class="gphoto-caption">Fortnite</div>
-          <div class="gphoto-sub">Carlos &amp; Javier</div>
-        </div>
-        <div class="gphoto-icon">
-          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-        </div>
-      </div>
-      <div class="gphoto" data-src="graduacion.jpg" data-title="Graduación de David" data-sub="El grupo — juntos como siempre">
-        <img src="graduacion.jpg" alt="El grupo en la graduación de David" loading="lazy">
-        <div class="gphoto-overlay">
-          <div class="gphoto-caption">Graduación de David</div>
-          <div class="gphoto-sub">El grupo — juntos como siempre</div>
-        </div>
-        <div class="gphoto-icon">
-          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-        </div>
-      </div>
+  <!-- Polaroids — aparecen al entrar en viewport -->
+  <div class="office-polaroids" id="office-polaroids">
+    <div class="polaroid" style="--rot:-3.5deg"
+         data-src="fortnite.jpg" data-title="Fortnite"
+         data-sub="Cjj1092534 &amp; xaveris18 — jugando juntos">
+      <img src="fortnite.jpg" alt="Carlos y Javier en Fortnite" loading="lazy">
+      <div class="polaroid-caption">Carlos &amp; Javier — Fortnite</div>
+    </div>
+    <div class="polaroid" style="--rot:2.2deg"
+         data-src="graduacion.jpg" data-title="Graduación de David"
+         data-sub="El grupo — juntos como siempre">
+      <img src="graduacion.jpg" alt="El grupo en la graduación de David" loading="lazy">
+      <div class="polaroid-caption">Graduación de David</div>
     </div>
   </div>
 
@@ -2313,13 +2345,30 @@ document.querySelectorAll('.sw').forEach(sw => {
   sw.addEventListener('click', () => sw.classList.toggle('flipped'));
 });
 
-/* ─── The Office — toca para revelar las fotos ─── */
-const officeInner = document.getElementById('office-inner');
-const officeSection = document.getElementById('office-section');
-if (officeInner) {
-  officeInner.addEventListener('click', () => {
-    officeSection.classList.add('revealed');
-    officeInner.style.cursor = 'default';
+/* ─── Polaroids — se revelan al entrar en viewport ─── */
+const polaroids = document.querySelectorAll('.polaroid');
+const officePolaroids = document.getElementById('office-polaroids');
+if (polaroids.length && officePolaroids) {
+  const polaroidObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      polaroids.forEach((p, i) => {
+        setTimeout(() => p.classList.add('shot'), i * 280);
+      });
+      polaroidObs.disconnect();
+    });
+  }, { threshold: 0.2 });
+  polaroidObs.observe(officePolaroids);
+
+  polaroids.forEach(p => {
+    p.addEventListener('click', () => {
+      lbImg.src = p.dataset.src;
+      lbImg.alt = p.dataset.title || '';
+      lbTitle.textContent = p.dataset.title || '';
+      lbSub.innerHTML = p.dataset.sub || '';
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
   });
 }
 
