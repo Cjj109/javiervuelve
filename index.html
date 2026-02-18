@@ -26,7 +26,7 @@
       --gold:  #f0b000;   /* oro cálido */
       --gold2: rgba(240,176,0,0.18);
       --text:  #dde8e2;   /* blanco neutro-verdoso */
-      --muted: rgba(195,215,205,0.52);
+      --muted: rgba(195,215,205,0.72);
       --line:  rgba(240,176,0,0.16);
       --green: #00c87a;   /* verde del canvas/orbe — LA LUZ */
     }
@@ -580,7 +580,7 @@
     .close-from {
       margin-top: 1rem; font-size: .6rem;
       letter-spacing: .36em; text-transform: uppercase;
-      color: rgba(240,176,0,.28);
+      color: rgba(240,176,0,.5);
     }
 
     /* ════════════════════════════════════
@@ -851,32 +851,46 @@
     .office-inner {
       max-width: 700px; width: 100%;
       position: relative;
-      background: rgba(18,12,3,.6);
-      border: 1px solid rgba(240,200,80,.1);
+      background: rgba(18,12,3,.65);
+      border: 1px solid rgba(240,200,80,.22);
       border-radius: 12px;
       padding: 2.8rem 3rem 2.4rem;
       text-align: center;
       cursor: pointer;
-      transition: opacity .45s ease, transform .45s ease;
+      transition: opacity .45s ease, transform .45s ease,
+                  border-color .3s, box-shadow .3s;
+    }
+    .office-inner:hover {
+      border-color: rgba(240,200,80,.42);
+      box-shadow: 0 0 32px rgba(240,200,80,.07);
     }
     /* Línea caliente en la parte superior — warm amber, distinta del oro frío */
     .office-inner::before {
       content: ''; position: absolute;
       top: 0; left: 10%; right: 10%; height: 1.5px;
-      background: linear-gradient(to right, transparent, rgba(240,200,80,.45), transparent);
+      background: linear-gradient(to right, transparent, rgba(240,200,80,.55), transparent);
       border-radius: 1px;
     }
-    /* Hint sutil al pie del panel */
+    /* Hint — pill visible al pie del panel */
     .office-inner::after {
-      content: '▾  ver los momentos  ▾';
-      display: block; margin-top: 1.6rem;
+      content: '▶  ver los momentos';
+      display: inline-block; margin-top: 1.8rem;
+      padding: .38rem 1.1rem;
+      border: 1px solid rgba(240,200,80,.42);
+      border-radius: 20px;
       font-family: 'Inter', sans-serif;
-      font-size: .42rem; letter-spacing: .32em; text-transform: uppercase;
-      color: rgba(240,200,80,.2);
+      font-size: .48rem; letter-spacing: .24em; text-transform: uppercase;
+      color: rgba(240,200,80,.75);
+      background: rgba(240,200,80,.06);
       animation: hint-pulse 3s ease-in-out infinite;
     }
+    .office-inner:hover::after {
+      border-color: rgba(240,200,80,.65);
+      color: rgba(240,200,80,.95);
+      background: rgba(240,200,80,.1);
+    }
     @keyframes hint-pulse {
-      0%, 100% { opacity: .5; }
+      0%, 100% { opacity: .7; }
       50% { opacity: 1; }
     }
     .office-section.revealed .office-inner {
@@ -936,7 +950,7 @@
       position: absolute; top: 1.1rem; right: 1.3rem;
       font-family: 'Inter', sans-serif;
       font-size: .48rem; letter-spacing: .2em; text-transform: uppercase;
-      color: rgba(240,200,80,.3);
+      color: rgba(240,200,80,.52);
     }
 
     /* La cita */
@@ -1172,13 +1186,13 @@
     .log-entry:last-child { border-bottom: none; }
     .log-day {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .58rem; color: rgba(240,176,0,.32);
+      font-size: .58rem; color: rgba(240,176,0,.58);
       letter-spacing: .07em;
       min-width: 52px; flex-shrink: 0;
     }
     .log-msg {
       font-family: 'Inter', sans-serif;
-      font-size: .75rem; color: rgba(195,215,205,.38);
+      font-size: .75rem; color: rgba(195,215,205,.68);
       line-height: 1.45;
     }
     .log-entry.log-hoy .log-day {
