@@ -225,7 +225,7 @@
 
     /* ════════════════════════════════════
        SWATCHES — categorías con flip 3D
-       --h = hue único por categoría (inline)
+       Paleta de la página: gold / green / dim
        Toca → rota y muestra lo que hay dentro
     ════════════════════════════════════ */
     .swatches {
@@ -233,100 +233,112 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       margin-top: 2.8rem;
-      max-width: 680px; margin-left: auto; margin-right: auto;
+      max-width: 680px;
+      margin-left: auto; margin-right: auto;
     }
 
-    .sw {
-      height: 172px;
-      perspective: 800px;
-      cursor: pointer;
-    }
+    .sw { height: 162px; perspective: 800px; cursor: pointer; }
     .sw-inner {
-      width: 100%; height: 100%;
-      position: relative;
+      width: 100%; height: 100%; position: relative;
       transform-style: preserve-3d;
       transition: transform .6s cubic-bezier(.4,0,.2,1);
       border-radius: 10px;
     }
     .sw.flipped .sw-inner { transform: rotateY(180deg); }
 
-    .sw-front,
-    .sw-back {
+    .sw-front, .sw-back {
       position: absolute; inset: 0;
       border-radius: 10px;
       backface-visibility: hidden;
-      overflow: hidden;
     }
 
-    /* ── Cara frontal: color único ── */
+    /* ── Cara frontal ── */
     .sw-front {
-      background: linear-gradient(160deg,
-        hsla(var(--h),58%,30%,1) 0%,
-        hsla(var(--h),70%,11%,1) 100%);
-      border: 1px solid hsla(var(--h),50%,40%,.45);
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.05);
       display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-end;
+      align-items: center; justify-content: center;
+      gap: .55rem; overflow: hidden;
     }
     .sw-front::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 85% 55% at 50% 12%,
-        hsla(var(--h),65%,55%,.2) 0%, transparent 70%);
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
     }
-    .sw-cat {
-      width: 100%;
-      padding: .6rem .65rem .65rem;
-      background: rgba(0,0,0,.3);
-      text-align: center;
+    .sw-front::after {
+      content: ''; position: absolute;
+      top: -18px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 55px;
+      border-radius: 50%; pointer-events: none;
+    }
+    .sw-gem {
+      width: 7px; height: 7px; flex-shrink: 0;
+      transform: rotate(45deg);
+      border: 1px solid rgba(240,176,0,.25);
     }
     .sw-cat-name {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .7rem; font-weight: 600;
+      font-size: .76rem; font-weight: 600;
       letter-spacing: .1em; text-transform: uppercase;
-      color: hsla(var(--h),50%,82%,1);
-      line-height: 1.2;
-    }
-    .sw-cat-hint {
-      font-family: 'Inter', sans-serif;
-      font-size: .48rem; letter-spacing: .16em;
-      color: hsla(var(--h),40%,62%,.65);
-      margin-top: .18rem; text-transform: uppercase;
+      text-align: center; line-height: 1.2;
+      padding: 0 .7rem;
     }
 
-    /* ── Cara trasera: sub-items ── */
+    /* ── Cara trasera ── */
     .sw-back {
-      background: hsla(var(--h),42%,7%,1);
-      border: 1.5px solid hsla(var(--h),62%,42%,.6);
-      box-shadow: 0 0 24px hsla(var(--h),70%,38%,.22);
+      background: var(--card2);
       transform: rotateY(180deg);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: .9rem .8rem;
-      gap: .5rem;
+      padding: 1rem .9rem; gap: .5rem;
     }
     .sw-back-title {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .52rem; font-weight: 600;
-      letter-spacing: .14em; text-transform: uppercase;
-      color: hsla(var(--h),55%,55%,.7);
-      margin-bottom: .2rem;
+      font-size: .5rem; font-weight: 400;
+      letter-spacing: .22em; text-transform: uppercase;
     }
+    .sw-back-rule { width: 26px; height: 1px; flex-shrink: 0; opacity: .45; }
     .sw-items {
       list-style: none;
       display: flex; flex-direction: column;
-      align-items: center; gap: .28rem;
-      width: 100%;
+      align-items: center; gap: .3rem;
     }
     .sw-items li {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .64rem; font-weight: 600;
+      font-size: .63rem; font-weight: 600;
       letter-spacing: .06em; text-transform: uppercase;
-      color: hsla(var(--h),58%,74%,1);
-      text-align: center; line-height: 1.25;
+      text-align: center; line-height: 1.2;
     }
-    .sw-items li::before {
-      content: '· ';
-      color: hsla(var(--h),65%,50%,.6);
-    }
+    .sw-items li::before { content: '· '; opacity: .45; }
+
+    /* ══ GOLD ══ */
+    .sw-gold .sw-front::before { background: var(--gold); }
+    .sw-gold .sw-front::after  { background: radial-gradient(ellipse, rgba(240,176,0,.11) 0%, transparent 70%); }
+    .sw-gold .sw-gem           { border-color: rgba(240,176,0,.55); }
+    .sw-gold .sw-cat-name      { color: var(--gold); }
+    .sw-gold .sw-back          { border: 1.5px solid rgba(240,176,0,.22); box-shadow: 0 0 18px rgba(240,176,0,.06); }
+    .sw-gold .sw-back-title    { color: rgba(240,176,0,.5); }
+    .sw-gold .sw-back-rule     { background: var(--gold); }
+    .sw-gold .sw-items li      { color: rgba(240,176,0,.88); }
+
+    /* ══ GREEN ══ */
+    .sw-green .sw-front::before { background: var(--green); }
+    .sw-green .sw-front::after  { background: radial-gradient(ellipse, rgba(0,200,122,.1) 0%, transparent 70%); }
+    .sw-green .sw-gem           { border-color: rgba(0,200,122,.55); }
+    .sw-green .sw-cat-name      { color: var(--green); }
+    .sw-green .sw-back          { border: 1.5px solid rgba(0,200,122,.2); box-shadow: 0 0 18px rgba(0,200,122,.06); }
+    .sw-green .sw-back-title    { color: rgba(0,200,122,.5); }
+    .sw-green .sw-back-rule     { background: var(--green); }
+    .sw-green .sw-items li      { color: rgba(0,200,122,.88); }
+
+    /* ══ DIM ══ */
+    .sw-dim .sw-front::before { background: linear-gradient(to right, transparent, rgba(195,215,205,.2), transparent); }
+    .sw-dim .sw-front::after  { background: radial-gradient(ellipse, rgba(195,215,205,.05) 0%, transparent 70%); }
+    .sw-dim .sw-gem           { border-color: rgba(195,215,205,.22); }
+    .sw-dim .sw-cat-name      { color: var(--text); }
+    .sw-dim .sw-back          { border: 1.5px solid rgba(195,215,205,.12); }
+    .sw-dim .sw-back-title    { color: rgba(195,215,205,.42); }
+    .sw-dim .sw-back-rule     { background: rgba(195,215,205,.4); }
+    .sw-dim .sw-items li      { color: rgba(195,215,205,.78); }
 
     /* ════════════════════════════════════
        DIVIDER
@@ -804,6 +816,27 @@
       border-radius: 1px;
     }
 
+    /* Fotos ocultas dentro del panel — se revelan al tocar */
+    .office-inner { cursor: pointer; }
+    .office-hint {
+      margin-top: 1.6rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .5rem; letter-spacing: .24em; text-transform: uppercase;
+      color: rgba(195,215,205,.28);
+      transition: opacity .4s;
+    }
+    .office-section.revealed .office-hint { opacity: 0; pointer-events: none; }
+    .office-photos {
+      overflow: hidden;
+      max-height: 0; opacity: 0; margin-top: 0;
+      transition: max-height .85s cubic-bezier(.4,0,.2,1),
+                  opacity .5s ease .35s,
+                  margin-top .85s;
+    }
+    .office-section.revealed .office-photos {
+      max-height: 520px; opacity: 1; margin-top: 1.8rem;
+    }
+
     /* REC indicator — esquina superior izquierda */
     .office-rec {
       position: absolute; top: 1.1rem; left: 1.3rem;
@@ -1238,11 +1271,13 @@
         margin-top: 1.8rem;
       }
       .sw { height: 148px; }
-      .sw-cat-name { font-size: .62rem; }
-      .sw-cat-hint { font-size: .44rem; }
-      .sw-back { padding: .75rem .65rem; gap: .36rem; }
+      .sw-cat-name { font-size: .62rem; padding: 0 .5rem; }
+      .sw-back { padding: .75rem .65rem; gap: .32rem; }
       .sw-back-title { font-size: .46rem; }
-      .sw-items li { font-size: .56rem; }
+      .sw-back-rule { width: 20px; }
+      .sw-items li { font-size: .54rem; }
+      .office-section.revealed .office-photos { max-height: 700px; }
+      .office-photos .gallery { grid-template-columns: 1fr; }
 
       /* ── Divider ── */
       .divider {
@@ -1592,29 +1627,6 @@
     </div>
   </div>
 
-  <!-- Galería -->
-  <div class="gallery">
-    <div class="gphoto" data-src="fortnite.jpg" data-title="Fortnite" data-sub="Cjj1092534 &amp; xaveris18 — jugando juntos">
-      <img src="fortnite.jpg" alt="Carlos y Javier en Fortnite" loading="lazy">
-      <div class="gphoto-overlay">
-        <div class="gphoto-caption">Fortnite</div>
-        <div class="gphoto-sub">Carlos &amp; Javier</div>
-      </div>
-      <div class="gphoto-icon">
-        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-      </div>
-    </div>
-    <div class="gphoto" data-src="graduacion.jpg" data-title="Graduación de David" data-sub="El grupo — juntos como siempre">
-      <img src="graduacion.jpg" alt="El grupo en la graduación de David" loading="lazy">
-      <div class="gphoto-overlay">
-        <div class="gphoto-caption">Graduación de David</div>
-        <div class="gphoto-sub">El grupo — juntos como siempre</div>
-      </div>
-      <div class="gphoto-icon">
-        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
-      </div>
-    </div>
-  </div>
 
 </div>
 
@@ -1636,123 +1648,89 @@
   <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
 
-  <!-- Muestrario de categorías — toca para ver lo que hay dentro -->
+  <!-- Muestrario de categorías — toca para girar -->
   <div class="swatches" id="swatches">
 
-    <!-- Videojuegos — violeta/azul -->
-    <div class="sw" style="--h:260">
+    <div class="sw sw-green">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">Videojuegos</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">Videojuegos</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Videojuegos</div>
-          <ul class="sw-items">
-            <li>Fortnite</li>
-            <li>League of Legends</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>Fortnite</li><li>League of Legends</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- Deporte — dorado/ámbar -->
-    <div class="sw" style="--h:42">
+    <div class="sw sw-gold">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">Deporte</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">Deporte</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Deporte</div>
-          <ul class="sw-items">
-            <li>Real Madrid</li>
-            <li>Fútbol</li>
-            <li>Champions League</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>Real Madrid</li><li>Fútbol</li><li>Champions</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- Teatro — burdeos -->
-    <div class="sw" style="--h:335">
+    <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">Teatro</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">Teatro</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Teatro</div>
-          <ul class="sw-items">
-            <li>Hércules</li>
-            <li>Príncipe de Egipto</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>Hércules</li><li>Príncipe de Egipto</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- Educación — teal -->
-    <div class="sw" style="--h:198">
+    <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">Educación</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">Educación</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Educación</div>
-          <ul class="sw-items">
-            <li>La Merced</li>
-            <li>La UCAB</li>
-            <li>Los recreos</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>La Merced</li><li>La UCAB</li><li>Los recreos</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- Humor — naranja -->
-    <div class="sw" style="--h:22">
+    <div class="sw sw-dim">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">Humor</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">Humor</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Humor</div>
-          <ul class="sw-items">
-            <li>El grupo</li>
-            <li>Los chistes</li>
-            <li>La dinámica</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>El grupo</li><li>Los chistes</li><li>La dinámica</li></ul>
         </div>
       </div>
     </div>
 
-    <!-- 20 años — verde/dorado especial -->
-    <div class="sw" style="--h:145">
+    <div class="sw sw-gold">
       <div class="sw-inner">
         <div class="sw-front">
-          <div class="sw-cat">
-            <div class="sw-cat-name">20 años</div>
-            <div class="sw-cat-hint">toca para ver</div>
-          </div>
+          <span class="sw-gem"></span>
+          <div class="sw-cat-name">20 años</div>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">20 años</div>
-          <ul class="sw-items">
-            <li>La amistad</li>
-            <li>El grupo</li>
-            <li>Toda una vida</li>
-          </ul>
+          <div class="sw-back-rule"></div>
+          <ul class="sw-items"><li>La amistad</li><li>El grupo</li><li>Toda una vida</li></ul>
         </div>
       </div>
     </div>
@@ -1781,8 +1759,8 @@
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
 
 <!-- ══════════════ THE OFFICE ══════════════ -->
-<div class="office-section">
-  <div class="office-inner">
+<div class="office-section" id="office-section">
+  <div class="office-inner" id="office-inner">
 
     <div class="office-rec" aria-hidden="true">
       <span class="office-rec-dot"></span> REC
@@ -1803,7 +1781,36 @@
       </div>
     </div>
 
+    <div class="office-hint">▾ &nbsp; ver los momentos</div>
+
   </div>
+
+  <!-- Fotos que se revelan al tocar el panel -->
+  <div class="office-photos" id="office-photos">
+    <div class="gallery">
+      <div class="gphoto" data-src="fortnite.jpg" data-title="Fortnite" data-sub="Cjj1092534 &amp; xaveris18 — jugando juntos">
+        <img src="fortnite.jpg" alt="Carlos y Javier en Fortnite" loading="lazy">
+        <div class="gphoto-overlay">
+          <div class="gphoto-caption">Fortnite</div>
+          <div class="gphoto-sub">Carlos &amp; Javier</div>
+        </div>
+        <div class="gphoto-icon">
+          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </div>
+      </div>
+      <div class="gphoto" data-src="graduacion.jpg" data-title="Graduación de David" data-sub="El grupo — juntos como siempre">
+        <img src="graduacion.jpg" alt="El grupo en la graduación de David" loading="lazy">
+        <div class="gphoto-overlay">
+          <div class="gphoto-caption">Graduación de David</div>
+          <div class="gphoto-sub">El grupo — juntos como siempre</div>
+        </div>
+        <div class="gphoto-icon">
+          <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
@@ -2305,6 +2312,16 @@ if (dockLight) {
 document.querySelectorAll('.sw').forEach(sw => {
   sw.addEventListener('click', () => sw.classList.toggle('flipped'));
 });
+
+/* ─── The Office — toca para revelar las fotos ─── */
+const officeInner = document.getElementById('office-inner');
+const officeSection = document.getElementById('office-section');
+if (officeInner) {
+  officeInner.addEventListener('click', () => {
+    officeSection.classList.add('revealed');
+    officeInner.style.cursor = 'default';
+  });
+}
 
 /* ─── Interstellar gate ─── */
 const igGate = document.getElementById('ig-gate');
