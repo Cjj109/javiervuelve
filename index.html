@@ -49,62 +49,54 @@
     ════════════════════════════════════ */
     .hero {
       position: relative; z-index: 1;
-      min-height: 100svh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       text-align: center;
-      padding: 5rem 1.5rem 4rem;
+      min-height: 100svh;
+      padding: 0 1.5rem;
       background:
         /* Halo dorado alrededor del "20" */
-        radial-gradient(ellipse 55% 40% at 50% 38%,
-          rgba(240,176,0,.07) 0%, transparent 70%),
-        /* Neblina verde desde la derecha — la orilla de Javier */
-        radial-gradient(ellipse 55% 70% at 92% 75%,
-          rgba(0,200,112,.13) 0%, rgba(0,200,112,.04) 45%, transparent 70%),
-        /* Atmósfera de agua oscura en la parte baja */
-        linear-gradient(to top,
-          rgba(0,18,10,.5) 0%,
-          rgba(0,12,7,.15) 20%,
-          transparent 40%);
+        radial-gradient(ellipse 55% 40% at 50% 50%,
+          rgba(240,176,0,.07) 0%, transparent 70%);
     }
 
 
     .hero-num {
       font-family: 'Cinzel', Georgia, serif;
-      font-size: clamp(6.5rem, 24vw, 15rem);
+      font-size: clamp(7rem, 26vw, 15rem);
       font-weight: 700;
       line-height: .85;
       letter-spacing: -.02em;
       color: var(--gold);
       text-shadow:
-        0  0  24px rgba(240,176,0,.6),
-        0  0  70px rgba(240,176,0,.22),
-        0  0 140px rgba(240,176,0,.1);
+        0  0  24px rgba(240,176,0,.7),
+        0  0  80px rgba(240,176,0,.28),
+        0  0 160px rgba(240,176,0,.12);
     }
 
     .hero-anos {
       font-family: 'Inter', sans-serif;
-      font-size: .62rem;
+      font-size: .65rem;
       letter-spacing: .42em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-top: .7rem;
+      margin-top: .8rem;
     }
 
     .hero-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(2rem, 7vw, 5rem);
+      font-size: clamp(2.2rem, 8vw, 5.5rem);
       font-weight: 300;
-      line-height: 1.2;
-      margin-top: 1.4rem;
+      line-height: 1.1;
+      margin-top: 1.2rem;
       color: var(--text);
-      letter-spacing: .04em;
+      letter-spacing: .05em;
     }
     .hero-title .name {
       color: var(--gold);
       font-style: italic;
       font-weight: 400;
-      text-shadow: 0 0 28px rgba(240,176,0,.4);
+      text-shadow: 0 0 32px rgba(240,176,0,.45);
     }
 
 
@@ -592,53 +584,48 @@
     /* ═══════════════════════════════
        Luz verde en el hero (full dock)
     ═══════════════════════════════ */
+    /* La luz al final del muelle — FIJA en todo momento */
     .gatsby-hero-light {
-      position: absolute;
-      bottom: 12%; right: 6%;
+      position: fixed;
+      bottom: 14%; right: 6%;
       display: flex; flex-direction: column;
       align-items: center;
       z-index: 2; pointer-events: none;
     }
     .ghl-beam-up {
-      width: 2px; height: 120px;
-      background: linear-gradient(to top, rgba(0,220,120,.7), transparent);
+      width: 2px; height: 130px;
+      background: linear-gradient(to top, rgba(0,220,120,.75), transparent);
     }
     .ghl-orb {
-      width: 26px; height: 26px;
+      width: 28px; height: 28px;
       background: var(--green);
       border-radius: 50%; flex-shrink: 0;
       box-shadow:
-        0 0 0  6px rgba(0,200,122,.12),
-        0 0 28px 12px rgba(0,200,122,.65),
-        0 0 90px 36px rgba(0,200,122,.28),
-        0 0 180px 70px rgba(0,200,122,.14),
-        0 0 340px 110px rgba(0,200,122,.07);
+        0 0 0  7px rgba(0,200,122,.15),
+        0 0 30px 14px rgba(0,200,122,.70),
+        0 0 100px 40px rgba(0,200,122,.30),
+        0 0 200px 80px rgba(0,200,122,.14),
+        0 0 380px 120px rgba(0,200,122,.07);
       animation: gdock 3.4s ease-in-out infinite;
     }
     .ghl-beam-down {
-      width: 2px; height: 80px;
-      background: linear-gradient(to bottom, rgba(0,220,120,.6), transparent);
+      width: 2px; height: 90px;
+      background: linear-gradient(to bottom, rgba(0,220,120,.65), transparent);
     }
     .ghl-water {
-      width: 180px; height: 24px;
+      width: 200px; height: 28px;
       background: radial-gradient(ellipse 100% 100% at 50% 0%,
-        rgba(0,200,112,.22) 0%, transparent 100%);
-      filter: blur(12px);
-      margin-top: -6px;
+        rgba(0,200,112,.26) 0%, transparent 100%);
+      filter: blur(14px);
+      margin-top: -8px;
     }
     .ghl-label {
-      margin-top: 12px;
+      margin-top: 14px;
       font-family: 'Inter', sans-serif;
-      font-size: .5rem; letter-spacing: .26em;
+      font-size: .48rem; letter-spacing: .24em;
       text-transform: uppercase;
-      color: rgba(0,200,112,.45);
+      color: rgba(0,200,112,.42);
       white-space: nowrap;
-    }
-    @media (max-width: 640px) {
-      .gatsby-hero-light { bottom: 8%; right: 5%; }
-      .ghl-orb { width: 22px; height: 22px; }
-      .ghl-beam-up { height: 90px; }
-      .ghl-beam-down { height: 60px; }
     }
 
     @keyframes gdock {
@@ -1267,46 +1254,57 @@
 
 <script>
 /* ═══════════════════════════════════════════
-   CANVAS: hex grid dorado + partículas oro
+   LA LUZ AL FINAL DEL MUELLE
+   Canvas fijo — eco verde en toda la página
 ═══════════════════════════════════════════ */
 const cvs = document.getElementById('cvs');
 const ctx = cvs.getContext('2d');
-let W, H, hexes = [];
+let W, H;
 
 function resize() {
   W = cvs.width  = window.innerWidth;
   H = cvs.height = window.innerHeight;
-  buildHex();
-}
-
-function buildHex() {
-  hexes = [];
-  const R = 46, dx = R * Math.sqrt(3), dy = R * 1.5;
-  for (let row = -1; row < H / dy + 2; row++)
-    for (let col = -1; col < W / dx + 2; col++)
-      hexes.push({
-        cx: col * dx + (row % 2 === 0 ? 0 : dx / 2),
-        cy: row * dy, R
-      });
 }
 resize();
 window.addEventListener('resize', resize);
 
-function drawHex(cx, cy, R) {
-  ctx.beginPath();
-  for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i - Math.PI / 6;
-    i ? ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a))
-      : ctx.moveTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
-  }
-  ctx.closePath();
+let phase = 0, lastTs = 0;
+function drawLight(ts) {
+  requestAnimationFrame(drawLight);
+  if (ts - lastTs < 48) return; // ~20fps
+  lastTs = ts;
+  phase += 0.007;
+  const p = 0.5 + 0.5 * Math.sin(phase); // pulso suave
+
+  ctx.clearRect(0, 0, W, H);
+
+  /* ── FUENTE PRINCIPAL ── derecha del viewport, siempre fija */
+  const g1 = ctx.createRadialGradient(W * 0.9, H * 0.42, 0, W * 0.9, H * 0.42, Math.max(W, H) * 1.25);
+  g1.addColorStop(0,    `rgba(0,200,112,${0.20 + p * 0.07})`);
+  g1.addColorStop(0.14, `rgba(0,200,112,${0.11 + p * 0.04})`);
+  g1.addColorStop(0.30, `rgba(0,200,112,0.048)`);
+  g1.addColorStop(0.50, `rgba(0,180,100,0.016)`);
+  g1.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+
+  /* ── ECO SUPERIOR ── la luz sube y llena el cielo */
+  const g2 = ctx.createRadialGradient(W * 0.74, -H * 0.08, 0, W * 0.74, -H * 0.08, W * 1.05);
+  g2.addColorStop(0,    `rgba(0,200,112,${0.06 + p * 0.02})`);
+  g2.addColorStop(0.42, `rgba(0,180,100,0.016)`);
+  g2.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = g2;
+  ctx.fillRect(0, 0, W, H);
+
+  /* ── ECO INFERIOR ── reflejo sobre el agua */
+  const g3 = ctx.createRadialGradient(W * 0.85, H * 1.1, 0, W * 0.85, H * 1.1, W * 0.8);
+  g3.addColorStop(0,    `rgba(0,200,112,${0.048 + p * 0.014})`);
+  g3.addColorStop(0.5,  `rgba(0,180,100,0.012)`);
+  g3.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = g3;
+  ctx.fillRect(0, 0, W, H);
 }
-
-let t = 0;
-let mx = -9999, my = -9999;
-window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-/* Canvas pausado — fondo puro */
+requestAnimationFrame(drawLight);
 
 /* ─── Scroll reveal ─── */
 requestAnimationFrame(() =>
