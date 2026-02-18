@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para Javier — de Carlos y Anthonny</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* ════════════════════════════════════
+       PALETA: una sola — negro + oro
+       ════════════════════════════════════
+       --dark  : fondo base
+       --gold  : único acento (Real Madrid / LoL Legendary border)
+       --text  : blanco frío
+       --muted : texto secundario
+       --card  : superficies elevadas
+    */
+    :root {
+      --dark:  #010509;
+      --bg1:   #030a12;
+      --card:  #060f1c;
+      --card2: #08152a;
+      --gold:  #f0b000;
+      --gold2: rgba(240,176,0,0.18);
+      --text:  #dde6f2;
+      --muted: rgba(190,210,230,0.5);
+      --line:  rgba(240,176,0,0.16);
+      --green: #00c87a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ─── Canvas de fondo ─── */
+    #cvs { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* ════════════════════════════════════
+       HERO
+    ════════════════════════════════════ */
+    .hero {
+      position: relative; z-index: 1;
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 1.5rem 4rem;
+      background:
+        /* Halo dorado alrededor del "20" */
+        radial-gradient(ellipse 60% 45% at 50% 40%,
+          rgba(240,176,0,.06) 0%, transparent 70%),
+        /* Atmósfera de agua nocturna en la parte baja */
+        linear-gradient(to top,
+          rgba(0,15,9,.35) 0%,
+          rgba(0,10,6,.12) 18%,
+          transparent 35%),
+        /* Halo verde muy sutil desde la derecha (la orilla de Javier) */
+        radial-gradient(ellipse 40% 55% at 88% 68%,
+          rgba(0,200,112,.05) 0%, transparent 65%);
+    }
+
+    /* Runas LoL en esquinas */
+    .rune { position: absolute; pointer-events: none; }
+    .rune::before, .rune::after {
+      content: ''; position: absolute;
+      background: var(--gold); opacity: .5; border-radius: 1px;
+    }
+    .rune.tl { top: 16px; left: 16px; }
+    .rune.tl::before { width: 20px; height: 1.5px; top: 0; left: 0; }
+    .rune.tl::after  { width: 1.5px; height: 20px; top: 0; left: 0; }
+    .rune.tr { top: 16px; right: 16px; }
+    .rune.tr::before { width: 20px; height: 1.5px; top: 0; right: 0; }
+    .rune.tr::after  { width: 1.5px; height: 20px; top: 0; right: 0; }
+    .rune.bl { bottom: 16px; left: 16px; }
+    .rune.bl::before { width: 20px; height: 1.5px; bottom: 0; left: 0; }
+    .rune.bl::after  { width: 1.5px; height: 20px; bottom: 0; left: 0; }
+    .rune.br { bottom: 16px; right: 16px; }
+    .rune.br::before { width: 20px; height: 1.5px; bottom: 0; right: 0; }
+    .rune.br::after  { width: 1.5px; height: 20px; bottom: 0; right: 0; }
+
+    /* SVG hexágono decorativo */
+    .hero-hex {
+      position: absolute;
+      width: clamp(240px, 48vw, 460px);
+      height: clamp(240px, 48vw, 460px);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: .055;
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Inter', sans-serif;
+      font-size: .62rem;
+      letter-spacing: .38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: .75;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-num {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(6.5rem, 24vw, 15rem);
+      font-weight: 700;
+      line-height: .85;
+      letter-spacing: -.02em;
+      color: var(--gold);
+      text-shadow:
+        0  0  24px rgba(240,176,0,.6),
+        0  0  70px rgba(240,176,0,.22),
+        0  0 140px rgba(240,176,0,.1);
+    }
+
+    .hero-anos {
+      font-family: 'Inter', sans-serif;
+      font-size: .62rem;
+      letter-spacing: .42em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: .7rem;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.6rem, 5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.25;
+      margin-top: 1.8rem;
+      color: var(--text);
+      max-width: 560px;
+      /* evita overflow en mobile */
+      word-break: keep-all;
+      overflow-wrap: break-word;
+    }
+    .hero-title .name {
+      color: var(--gold);
+      font-style: italic;
+      font-weight: 400;
+      text-shadow: 0 0 18px rgba(240,176,0,.3);
+    }
+
+    .hero-desc {
+      font-size: clamp(.85rem, 2.2vw, .98rem);
+      color: var(--muted);
+      line-height: 1.9;
+      max-width: 380px;
+      margin: 1.3rem auto 0;
+    }
+
+    .hero-from {
+      display: flex; align-items: center;
+      gap: .8rem; margin-top: 2.2rem;
+      max-width: 340px; width: 100%;
+    }
+    .hfl { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--line)); }
+    .hfr { flex: 1; height: 1px; background: linear-gradient(to left, transparent, var(--line)); }
+    .hf-label {
+      font-size: .6rem; letter-spacing: .28em;
+      text-transform: uppercase; color: rgba(240,176,0,.6);
+      white-space: nowrap;
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+    }
+    .arr {
+      width: 17px; height: 17px;
+      border-right: 1.5px solid rgba(240,176,0,.38);
+      border-bottom: 1.5px solid rgba(240,176,0,.38);
+      transform: rotate(45deg);
+      animation: bounce 1.7s ease-in-out infinite;
+    }
+
+    /* ════════════════════════════════════
+       SECCIÓN BASE
+    ════════════════════════════════════ */
+    .s {
+      position: relative; z-index: 1;
+      max-width: 880px; margin: 0 auto;
+      padding: 5rem 1.25rem;
+    }
+    .s-label {
+      font-size: .6rem; letter-spacing: .42em;
+      text-transform: uppercase;
+      color: rgba(240,176,0,.6);
+      display: block; margin-bottom: .6rem;
+    }
+    .s-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      font-weight: 300; line-height: 1.2;
+      color: var(--text); margin-bottom: .9rem;
+    }
+    .s-title em {
+      font-style: italic; color: var(--gold);
+      text-shadow: 0 0 14px rgba(240,176,0,.28);
+    }
+    .rule {
+      width: 32px; height: 1px;
+      background: var(--gold); opacity: .55;
+      margin-bottom: 2.2rem; border-radius: 1px;
+    }
+    .body-text {
+      font-size: clamp(.88rem, 2vw, 1rem);
+      line-height: 1.88; color: var(--muted);
+    }
+
+    /* ════════════════════════════════════
+       AÑOS TRACK
+    ════════════════════════════════════ */
+    .years-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 2.5rem;
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid var(--line);
+    }
+    @media (max-width: 480px) {
+      .years-track { grid-template-columns: 1fr 1fr; }
+    }
+    .year-block {
+      background: var(--card);
+      padding: 1.5rem 1rem; text-align: center;
+      border-right: 1px solid var(--line);
+      transition: background .3s;
+    }
+    .year-block:last-child { border-right: none; }
+    @media (max-width: 480px) {
+      .year-block:nth-child(2) { border-right: none; }
+      .year-block:nth-child(1),
+      .year-block:nth-child(2) { border-bottom: 1px solid var(--line); }
+    }
+    .year-block:hover { background: rgba(240,176,0,.04); }
+    .yb-num {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.45rem; font-weight: 600;
+      color: var(--gold); display: block;
+      text-shadow: 0 0 12px rgba(240,176,0,.28);
+    }
+    .yb-label {
+      font-size: .65rem; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: .3rem; line-height: 1.5;
+    }
+
+    /* ════════════════════════════════════
+       CREW
+    ════════════════════════════════════ */
+    .crew {
+      display: flex; flex-wrap: wrap;
+      gap: 1.2rem; margin-top: 2.8rem;
+      justify-content: center;
+    }
+    .crew-person { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+    .cp-ring {
+      width: 66px; height: 66px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.25rem; font-weight: 600;
+      background: var(--card2);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      transition: border-color .3s, transform .3s, color .3s, box-shadow .3s;
+    }
+    .cp-ring:hover {
+      transform: scale(1.06);
+      border-color: rgba(240,176,0,.55);
+      color: var(--gold);
+      box-shadow: 0 0 14px rgba(240,176,0,.18);
+    }
+    .cp-ring.star {
+      border-color: rgba(240,176,0,.7);
+      color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(240,176,0,.1), 0 0 18px rgba(240,176,0,.15);
+    }
+    .cp-ring.javi {
+      border-color: var(--gold);
+      color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(240,176,0,.12), 0 0 24px rgba(240,176,0,.22);
+      animation: pjavi 3s ease-in-out infinite;
+    }
+    .cp-name { font-size: .7rem; color: var(--muted); }
+    .cp-name.hi { color: var(--gold); }
+
+    /* ════════════════════════════════════
+       MOMENTOS — lista manifiesto
+    ════════════════════════════════════ */
+    .moments { margin-top: 2.8rem; }
+
+    .moment {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      gap: 0 2rem;
+      align-items: start;
+      padding: 2rem 0;
+      border-top: 1px solid var(--line);
+      transition: background .3s;
+    }
+    .moment:last-child { border-bottom: 1px solid var(--line); }
+    .moment:hover { background: transparent; }
+    .moment:hover .m-num { color: var(--gold); }
+
+    .m-num {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1.1rem; font-weight: 400;
+      color: rgba(240,176,0,.35);
+      letter-spacing: .05em;
+      padding-top: .15rem;
+      transition: color .3s;
+    }
+    .m-content { }
+    .m-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 1rem; color: var(--gold);
+      margin-bottom: .5rem; font-weight: 400;
+      letter-spacing: .04em;
+    }
+    .m-desc { font-size: .88rem; color: var(--muted); line-height: 1.75; }
+    .m-badge {
+      display: inline-block; margin-top: .6rem;
+      font-size: .57rem; font-weight: 600; letter-spacing: .16em;
+      text-transform: uppercase; padding: .16rem .6rem;
+      border-radius: 2px;
+      border: 1px solid rgba(240,176,0,.4);
+      color: rgba(240,176,0,.65);
+    }
+
+    /* ════════════════════════════════════
+       DIVIDER
+    ════════════════════════════════════ */
+    .divider {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: .9rem;
+      max-width: 880px; margin: 0 auto; padding: 0 1.25rem;
+    }
+    .dl { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--line), transparent); }
+    .gem {
+      width: 8px; height: 8px; flex-shrink: 0;
+      border: 1px solid rgba(240,176,0,.55);
+      transform: rotate(45deg);
+      box-shadow: 0 0 6px rgba(240,176,0,.25);
+    }
+
+    /* ════════════════════════════════════
+       QUOTE
+    ════════════════════════════════════ */
+    .quote-wrap {
+      position: relative; z-index: 1;
+      text-align: center; padding: 5rem 1.5rem;
+    }
+    .quote-wrap::before {
+      content: ''; position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: min(380px,80vw); height: min(380px,80vw);
+      background: radial-gradient(ellipse, rgba(240,176,0,.05) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .q-text {
+      position: relative;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.25rem, 3.8vw, 2.1rem);
+      font-style: italic; font-weight: 300;
+      max-width: 680px; margin: 0 auto; line-height: 1.65;
+      color: var(--text);
+    }
+    .q-text::before { content: '\201C'; color: var(--gold); opacity: .8; }
+    .q-text::after  { content: '\201D'; color: var(--gold); opacity: .8; }
+
+    /* ════════════════════════════════════
+       CARTAS
+    ════════════════════════════════════ */
+    .letters-section {
+      position: relative; z-index: 1;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%,
+        rgba(8,22,38,.7) 0%, transparent 75%);
+    }
+    .letters-inner {
+      max-width: 880px; margin: 0 auto;
+      padding: 5.5rem 1.25rem;
+    }
+    .letters-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.4rem; margin-top: 2.8rem;
+    }
+    @media (max-width: 600px) { .letters-grid { grid-template-columns: 1fr; } }
+
+    .letter {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 0;
+      position: relative; overflow: hidden;
+      transition: border-color .3s, box-shadow .3s;
+    }
+    .letter:hover {
+      border-color: rgba(240,176,0,.35);
+      box-shadow: 0 4px 28px rgba(240,176,0,.05);
+    }
+    .letter::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; width: 1.5px; height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .letter::after {
+      content: ''; position: absolute;
+      bottom: -30px; right: -30px;
+      width: 80px; height: 80px;
+      background: radial-gradient(circle, rgba(240,176,0,.06) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .letter-from {
+      font-size: .58rem; letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(240,176,0,.65);
+      margin-bottom: 1.4rem;
+    }
+    .letter-body {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: clamp(.9rem, 1.8vw, .98rem);
+      font-style: normal; font-weight: 300;
+      line-height: 1.95; color: rgba(210,225,242,.88);
+    }
+    .letter-body p + p { margin-top: 1rem; }
+    .letter-body strong {
+      font-style: normal; font-weight: 600;
+      color: var(--gold);
+    }
+    .letter-sign {
+      margin-top: 1.8rem; text-align: right;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .95rem; color: var(--gold);
+      font-weight: 600; letter-spacing: .05em;
+    }
+
+    /* ════════════════════════════════════
+       CIERRE — KINTSUGI
+    ════════════════════════════════════ */
+    .close-section {
+      position: relative; z-index: 1;
+      text-align: center; padding: 7rem 1.5rem 6rem;
+      background: radial-gradient(ellipse 60% 55% at 50% 50%,
+        rgba(240,176,0,.05) 0%, transparent 70%);
+    }
+
+    /* SVG del jarrón Kintsugi */
+    .kintsugi-wrap {
+      display: flex; justify-content: center;
+      margin-bottom: 3rem;
+    }
+    .kintsugi-svg {
+      width: clamp(160px, 35vw, 240px);
+      height: clamp(180px, 40vw, 270px);
+      overflow: visible;
+    }
+    /* Las grietas se dibujan solas */
+    .k-crack {
+      fill: none;
+      stroke: var(--gold);
+      stroke-linecap: round;
+      stroke-dasharray: 300;
+      stroke-dashoffset: 300;
+      transition: stroke-dashoffset 0s;
+    }
+    .k-crack.draw { stroke-dashoffset: 0; }
+    .k-vessel {
+      fill: none;
+      stroke: rgba(240,176,0,.15);
+      stroke-width: 1;
+    }
+    .k-gold-fill {
+      fill: var(--gold);
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    .k-gold-fill.show { opacity: .55; }
+
+    /* Título Kintsugi */
+    .kintsugi-kanji {
+      font-family: 'Inter', sans-serif;
+      font-size: .6rem; letter-spacing: .45em;
+      text-transform: uppercase; color: rgba(240,176,0,.45);
+      margin-bottom: .5rem;
+    }
+    .kintsugi-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2rem, 8vw, 5rem);
+      font-weight: 600; letter-spacing: .1em; line-height: 1;
+      color: var(--gold);
+      text-shadow:
+        0 0 24px rgba(240,176,0,.4),
+        0 0 70px rgba(240,176,0,.14);
+      margin-bottom: .8rem;
+    }
+    .kintsugi-def {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(.95rem, 2.5vw, 1.3rem);
+      color: var(--muted); font-style: italic;
+      margin-bottom: 2.5rem;
+    }
+    .kintsugi-rule {
+      width: 32px; height: 1px;
+      background: var(--gold); opacity: .45;
+      margin: 0 auto 2.5rem;
+    }
+    .kintsugi-quote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.1rem, 3vw, 1.65rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.72; color: var(--text);
+      max-width: 600px; margin: 0 auto 2.8rem;
+    }
+    .kintsugi-quote em {
+      color: var(--gold); font-style: italic;
+      text-shadow: 0 0 14px rgba(240,176,0,.3);
+    }
+    .close-from {
+      margin-top: 1rem; font-size: .6rem;
+      letter-spacing: .36em; text-transform: uppercase;
+      color: rgba(240,176,0,.28);
+    }
+
+    /* ════════════════════════════════════
+       FOOTER
+    ════════════════════════════════════ */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 1.6rem 1rem 3.5rem;
+      border-top: 1px solid rgba(240,176,0,.06);
+      font-size: .7rem; color: rgba(190,210,230,.15);
+      letter-spacing: .16em;
+    }
+
+    /* ════════════════════════════════════
+       GALERÍA DE FOTOS
+    ════════════════════════════════════ */
+    .gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2.8rem;
+    }
+    @media (max-width: 540px) { .gallery { grid-template-columns: 1fr; } }
+
+    .gphoto {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      background: var(--card);
+      transition: border-color .3s, transform .3s;
+    }
+    .gphoto:hover {
+      border-color: rgba(240,176,0,.5);
+      transform: translateY(-3px);
+    }
+    .gphoto img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s;
+    }
+    .gphoto:hover img { transform: scale(1.03); }
+
+    .gphoto-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(3,12,24,.85) 0%, transparent 55%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.2rem;
+      opacity: 0; transition: opacity .3s;
+    }
+    .gphoto:hover .gphoto-overlay { opacity: 1; }
+
+    .gphoto-caption {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .78rem; color: var(--gold);
+      letter-spacing: .06em;
+      margin-bottom: .25rem;
+    }
+    .gphoto-sub {
+      font-size: .72rem; color: var(--muted);
+      line-height: 1.4;
+    }
+    .gphoto-icon {
+      position: absolute; top: .9rem; right: .9rem;
+      width: 28px; height: 28px;
+      background: rgba(3,12,24,.7);
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .3s;
+    }
+    .gphoto:hover .gphoto-icon { opacity: 1; }
+    .gphoto-icon svg { width: 12px; height: 12px; fill: none; stroke: var(--gold); stroke-width: 2; }
+
+    /* ── Lightbox ── */
+    .lb {
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(3,12,24,.96);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .lb.open { opacity: 1; pointer-events: all; }
+
+    .lb-img {
+      max-width: min(90vw, 860px);
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      box-shadow: 0 0 80px rgba(240,176,0,.08);
+    }
+    .lb-caption {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .lb-caption-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .85rem; color: var(--gold);
+      letter-spacing: .1em; margin-bottom: .25rem;
+    }
+    .lb-caption-sub { font-size: .78rem; color: var(--muted); }
+    .lb-close {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--card); border: 1px solid var(--line);
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; line-height: 1;
+      transition: border-color .2s, color .2s;
+    }
+    .lb-close:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ════════════════════════════════════
+       LUZ VERDE — THE GREAT GATSBY
+    ════════════════════════════════════ */
+
+    /* ═══════════════════════════════
+       Luz verde en el hero (full dock)
+    ═══════════════════════════════ */
+    .gatsby-hero-light {
+      position: absolute;
+      /* El orbe queda aprox. al 30% desde abajo, 10% desde la derecha */
+      bottom: 14%; right: 7%;
+      display: flex; flex-direction: column;
+      align-items: center;
+      z-index: 2; pointer-events: none;
+    }
+    /* Rayo hacia arriba — el haz del faro */
+    .ghl-beam-up {
+      width: 1px; height: 80px;
+      background: linear-gradient(to top, rgba(0,220,120,.55), transparent);
+    }
+    /* El orbe: la luz */
+    .ghl-orb {
+      width: 18px; height: 18px;
+      background: var(--green);
+      border-radius: 50%; flex-shrink: 0;
+      box-shadow:
+        0 0 0  5px rgba(0,200,122,.08),
+        0 0 22px 9px  rgba(0,200,122,.52),
+        0 0 70px 28px rgba(0,200,122,.22),
+        0 0 150px 55px rgba(0,200,122,.10),
+        0 0 280px 90px rgba(0,200,122,.05);
+      animation: gdock 3.4s ease-in-out infinite;
+    }
+    /* Rayo hacia abajo — reflejo sobre el agua */
+    .ghl-beam-down {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, rgba(0,220,120,.45), transparent);
+    }
+    /* Brillo difuso del agua */
+    .ghl-water {
+      width: 130px; height: 18px;
+      background: radial-gradient(ellipse 100% 100% at 50% 0%,
+        rgba(0,200,112,.16) 0%, transparent 100%);
+      filter: blur(9px);
+      margin-top: -4px;
+    }
+    /* Etiqueta: la referencia explícita */
+    .ghl-label {
+      margin-top: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: .5rem; letter-spacing: .26em;
+      text-transform: uppercase;
+      color: rgba(0,200,112,.4);
+      white-space: nowrap;
+    }
+    @media (max-width: 640px) {
+      .gatsby-hero-light { bottom: 10%; right: 4%; }
+      .ghl-label { font-size: .42rem; letter-spacing: .18em; }
+    }
+
+    @keyframes gdock {
+      0%,100% { opacity:.65; transform:scale(1); }
+      50%      { opacity:1;  transform:scale(1.15); }
+    }
+
+    /* ── Sección The Great Gatsby — cinematográfica ── */
+    .gatsby-moment {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 5rem 1.5rem 6rem;
+      overflow: hidden;
+      /* Night water background — deep, dark, with green glow centered at beacon */
+      background:
+        radial-gradient(ellipse 55% 38% at 50% 28%,
+          rgba(0,220,124,.065) 0%,
+          rgba(0,180,100,.02) 45%,
+          transparent 70%),
+        radial-gradient(ellipse 80% 55% at 50% 58%,
+          rgba(0,40,22,.45) 0%,
+          rgba(0,20,12,.30) 40%,
+          transparent 75%),
+        linear-gradient(to bottom,
+          rgba(1,5,9,0) 0%,
+          rgba(0,10,6,.22) 38%,
+          rgba(0,18,10,.30) 52%,
+          rgba(0,8,4,.18) 72%,
+          rgba(1,5,9,0) 100%);
+    }
+    /* Subtle vignette to frame the scene */
+    .gatsby-moment::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 30% 22% at 50% 29%,
+          rgba(0,232,124,.04) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Pequeño orbe verde — minimalista, la luz al final del muelle */
+    .gm-orb-wrap {
+      display: flex; justify-content: center;
+      align-items: center; margin-bottom: 2.8rem;
+    }
+    .gm-orb {
+      width: 12px; height: 12px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 5px  rgba(0,220,124,.07),
+        0 0 18px 7px rgba(0,220,124,.42),
+        0 0 60px 22px rgba(0,220,124,.16),
+        0 0 120px 45px rgba(0,220,124,.07);
+      animation: gdock 3.4s ease-in-out infinite;
+    }
+
+    /* Diálogo Gatsby — dos líneas */
+    .gm-dialogue { margin-bottom: 1.2rem; }
+    .gm-line-1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1rem, 2.8vw, 1.55rem);
+      font-style: italic; font-weight: 300;
+      color: var(--muted); line-height: 1.6;
+      margin-bottom: .6rem;
+    }
+    .gm-line-2 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.4rem, 4.2vw, 2.4rem);
+      font-style: italic; font-weight: 300;
+      color: var(--text); line-height: 1.3;
+    }
+    .gm-line-2 em {
+      font-style: italic; color: var(--green);
+      text-shadow: 0 0 20px rgba(0,200,112,.4);
+    }
+    .gm-attr {
+      font-size: .6rem; letter-spacing: .28em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 2rem;
+    }
+    .gm-sub {
+      font-size: .72rem; letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(0,200,112,.42);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ════════════════════════════════════
+       INTERSTELLAR — DÍAS DE SILENCIO
+    ════════════════════════════════════ */
+
+    .days-headline {
+      display: flex; align-items: baseline;
+      gap: .8rem; justify-content: center;
+      margin: 2rem 0 1.4rem;
+    }
+    .days-big {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(2.8rem, 9vw, 5.5rem);
+      font-weight: 700; color: var(--gold);
+      text-shadow: 0 0 28px rgba(240,176,0,.28);
+      line-height: 1;
+    }
+    .days-unit {
+      font-size: .68rem; color: var(--muted);
+      letter-spacing: .16em; text-transform: uppercase;
+      line-height: 1.6; font-family: 'Inter', sans-serif;
+    }
+
+    /* ── Header REC de cada carta ── */
+    .letter-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .72rem 1.5rem;
+      background: rgba(3,12,24,.55);
+      border-bottom: 1px solid rgba(240,176,0,.07);
+    }
+    .letter-rec {
+      display: flex; align-items: center; gap: .45rem;
+      font-size: .54rem; letter-spacing: .22em;
+      text-transform: uppercase; color: rgba(190,65,65,.9);
+      font-family: 'Inter', sans-serif;
+    }
+    .rec-dot {
+      width: 5px; height: 5px;
+      background: #c84040; border-radius: 50%;
+      display: block; flex-shrink: 0;
+      animation: rec-blink 1.7s ease-in-out infinite;
+    }
+    @keyframes rec-blink {
+      0%,100%{ opacity:.9 } 50%{ opacity:.1 }
+    }
+    .letter-days {
+      font-family: 'Inter', sans-serif;
+      font-size: .54rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .letter-days .dc {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .78rem; color: var(--gold); font-weight: 600;
+    }
+
+    /* ── Log de días (Interstellar) ── */
+    .letter-log-wrap {
+      position: relative;
+      border-bottom: 1px solid rgba(240,176,0,.07);
+      overflow: hidden;
+    }
+    /* Fade en la parte superior — indica que hay más arriba */
+    .letter-log-wrap::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 40px;
+      background: linear-gradient(to bottom, var(--card), transparent);
+      z-index: 2; pointer-events: none;
+    }
+    .letter-log {
+      max-height: 170px;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      padding: .8rem 1.5rem;
+    }
+    .letter-log::-webkit-scrollbar { display: none; }
+
+    .log-entry {
+      display: flex; gap: 1.1rem; align-items: baseline;
+      padding: .32rem 0;
+      border-bottom: 1px solid rgba(240,176,0,.04);
+    }
+    .log-entry:last-child { border-bottom: none; }
+    .log-day {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .58rem; color: rgba(240,176,0,.32);
+      letter-spacing: .07em;
+      min-width: 52px; flex-shrink: 0;
+    }
+    .log-msg {
+      font-family: 'Inter', sans-serif;
+      font-size: .75rem; color: rgba(190,210,230,.38);
+      line-height: 1.45;
+    }
+    .log-entry.log-hoy .log-day {
+      color: rgba(240,176,0,.75);
+    }
+    .log-entry.log-hoy .log-msg {
+      color: rgba(190,210,230,.75);
+      font-weight: 400;
+    }
+
+    /* Contenido de la carta — empieza invisible, aparece tras el scroll del log */
+    .letter-content {
+      padding: 1.7rem 1.8rem 0;
+      opacity: 0;
+      transition: opacity .9s ease .2s;
+    }
+    .letter-content.revealed { opacity: 1; }
+
+    /* Barra de progreso tipo "video sin respuesta" */
+    .letter-progress { padding: 1.2rem 1.8rem 1.4rem; }
+    .lp-head {
+      display: flex; justify-content: space-between;
+      font-size: .52rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase;
+      margin-bottom: .42rem; font-family: 'Inter', sans-serif;
+    }
+    .lp-track {
+      height: 2px; background: rgba(240,176,0,.07);
+      border-radius: 2px; overflow: visible;
+      position: relative;
+    }
+    .lp-fill {
+      height: 100%; width: 0;
+      background: linear-gradient(to right, rgba(240,176,0,.4), var(--gold));
+      border-radius: 2px;
+      transition: width 2.4s cubic-bezier(.22,1,.36,1);
+      position: relative;
+    }
+    .lp-fill.go { width: 100%; }
+    .lp-fill::after {
+      content: '';
+      position: absolute; right: -2px; top: 50%;
+      transform: translateY(-50%);
+      width: 6px; height: 6px;
+      background: var(--gold); border-radius: 50%;
+      box-shadow: 0 0 8px rgba(240,176,0,.9);
+      opacity: 0; transition: opacity .3s 2s;
+    }
+    .lp-fill.go::after { opacity: 1; }
+    .lp-status {
+      margin-top: .55rem; text-align: center;
+      font-size: .52rem; letter-spacing: .18em;
+      text-transform: uppercase; color: rgba(240,176,0,.22);
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ════════════════════════════════════
+       ANIMACIONES (opcional, via JS)
+    ════════════════════════════════════ */
+    .anim .moment,
+    .anim .letter {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity .65s ease, transform .65s ease,
+                  background .3s, border-color .3s, box-shadow .3s;
+    }
+    .anim .moment.vis,
+    .anim .letter.vis { opacity: 1; transform: translateY(0); }
+
+    @keyframes bounce {
+      0%,100% { transform: rotate(45deg) translateY(0); }
+      50%      { transform: rotate(45deg) translateY(7px); }
+    }
+    @keyframes pjavi {
+      0%,100% { box-shadow: 0 0 0 3px rgba(240,176,0,.12), 0 0 24px rgba(240,176,0,.22); }
+      50%      { box-shadow: 0 0 0 5px rgba(240,176,0,.06), 0 0 42px rgba(240,176,0,.32); }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="cvs"></canvas>
+
+<!-- ══════════════ HERO ══════════════ -->
+<div class="hero">
+  <div class="rune tl"></div><div class="rune tr"></div>
+  <div class="rune bl"></div><div class="rune br"></div>
+
+  <span class="hero-eyebrow">Colegio La Merced · UCAB · 2005</span>
+  <div class="hero-num">20</div>
+  <div class="hero-anos">años de amistad</div>
+
+  <h1 class="hero-title">
+    Para <span class="name">Javier</span>,<br>
+    nuestro pana de toda la vida
+  </h1>
+
+  <p class="hero-desc">
+    Desde kinder hasta la universidad.<br>
+    Eso no se olvida, y tampoco se rinde fácil.
+  </p>
+
+  <div class="hero-from">
+    <div class="hfl"></div>
+    <span class="hf-label">Carlos &amp; Anthonny</span>
+    <div class="hfr"></div>
+  </div>
+
+  <!-- La luz al final del muelle — The Great Gatsby -->
+  <div class="gatsby-hero-light" aria-hidden="true">
+    <div class="ghl-beam-up"></div>
+    <div class="ghl-orb"></div>
+    <div class="ghl-beam-down"></div>
+    <div class="ghl-water"></div>
+    <span class="ghl-label">la luz al final del muelle</span>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="arr"></div>
+  </div>
+</div>
+
+<!-- ══════════════ EL GRUPO ══════════════ -->
+<div class="s">
+  <span class="s-label">Colegio La Merced — 2005</span>
+  <h2 class="s-title">El grupo que <em>formamos</em></h2>
+  <div class="rule"></div>
+
+  <div class="crew">
+    <div class="crew-person"><div class="cp-ring javi">J</div><span class="cp-name hi">Javier</span></div>
+    <div class="crew-person"><div class="cp-ring star">C</div><span class="cp-name hi">Carlos</span></div>
+    <div class="crew-person"><div class="cp-ring star">A</div><span class="cp-name hi">Anthonny</span></div>
+    <div class="crew-person"><div class="cp-ring">J</div><span class="cp-name">Jesus</span></div>
+    <div class="crew-person"><div class="cp-ring">A</div><span class="cp-name">Arthur</span></div>
+    <div class="crew-person"><div class="cp-ring">Z</div><span class="cp-name">Zachiro</span></div>
+    <div class="crew-person"><div class="cp-ring">D</div><span class="cp-name">David</span></div>
+  </div>
+
+  <div class="years-track">
+    <div class="year-block">
+      <span class="yb-num">2005</span>
+      <span class="yb-label">Kinder</span>
+    </div>
+    <div class="year-block">
+      <span class="yb-num">2011</span>
+      <span class="yb-label">Liceo</span>
+    </div>
+    <div class="year-block">
+      <span class="yb-num">2016</span>
+      <span class="yb-label">Graduación</span>
+    </div>
+    <div class="year-block">
+      <span class="yb-num">UCAB</span>
+      <span class="yb-label">Universidad</span>
+    </div>
+  </div>
+
+  <!-- Galería -->
+  <div class="gallery">
+    <div class="gphoto" data-src="fortnite.jpg" data-title="Fortnite" data-sub="Cjj1092534 &amp; xaveris18 — jugando juntos">
+      <img src="fortnite.jpg" alt="Carlos y Javier en Fortnite" loading="lazy">
+      <div class="gphoto-overlay">
+        <div class="gphoto-caption">Fortnite</div>
+        <div class="gphoto-sub">Carlos &amp; Javier</div>
+      </div>
+      <div class="gphoto-icon">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+    </div>
+    <div class="gphoto" data-src="graduacion.jpg" data-title="Graduación de David" data-sub="El grupo — juntos como siempre">
+      <img src="graduacion.jpg" alt="El grupo en la graduación de David" loading="lazy">
+      <div class="gphoto-overlay">
+        <div class="gphoto-caption">Graduación de David</div>
+        <div class="gphoto-sub">El grupo — juntos como siempre</div>
+      </div>
+      <div class="gphoto-icon">
+        <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lb-close" aria-label="Cerrar">✕</button>
+  <img class="lb-img" id="lb-img" src="" alt="">
+  <div class="lb-caption">
+    <div class="lb-caption-title" id="lb-title"></div>
+    <div class="lb-caption-sub" id="lb-sub"></div>
+  </div>
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
+<!-- ══════════════ MOMENTOS ══════════════ -->
+<div class="s">
+  <span class="s-label">Lo que compartíamos</span>
+  <h2 class="s-title">Más que amigos — <em>cómplices</em></h2>
+  <div class="rule"></div>
+
+  <div class="moments">
+    <div class="moment">
+      <span class="m-num">I</span>
+      <div class="m-content">
+        <div class="m-title">Teatro</div>
+        <p class="m-desc">Hércules y El Príncipe de Egipto — fuera del colegio. No cualquier grupo de panas hace teatro juntos. Nosotros sí.</p>
+      </div>
+    </div>
+    <div class="moment">
+      <span class="m-num">II</span>
+      <div class="m-content">
+        <div class="m-title">League of Legends</div>
+        <p class="m-desc">Tu juego. Tu mundo. Horas de League que eran parte del lenguaje del grupo.<br><span class="m-badge">League of Legends</span></p>
+      </div>
+    </div>
+    <div class="moment">
+      <span class="m-num">III</span>
+      <div class="m-content">
+        <div class="m-title">Real Madrid</div>
+        <p class="m-desc">Tú, Carlos y David. Del Madrid los tres. Ese idioma que solo entiende el que lo vive.<br><span class="m-badge">Real Madrid</span></p>
+      </div>
+    </div>
+    <div class="moment">
+      <span class="m-num">IV</span>
+      <div class="m-content">
+        <div class="m-title">Once años en La Merced</div>
+        <p class="m-desc">Kinder, primaria, liceo. Once años en el mismo colegio. Eso no se simula — eso te moldea junto a las mismas personas.</p>
+      </div>
+    </div>
+    <div class="moment">
+      <span class="m-num">V</span>
+      <div class="m-content">
+        <div class="m-title">La UCAB</div>
+        <p class="m-desc">Carreras distintas, mismo grupo. La amistad sobrevivió al cambio de etapa. Eso no es poco.</p>
+      </div>
+    </div>
+    <div class="moment">
+      <span class="m-num">VI</span>
+      <div class="m-content">
+        <div class="m-title">Veinte años</div>
+        <p class="m-desc">Es prácticamente toda una vida. La nuestra y la tuya. Ese es el peso de lo que estamos hablando.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ GATSBY ══════════════ -->
+<div class="gatsby-moment">
+
+  <!-- La luz verde — solo el orbe, la neblina la da el fondo de la sección -->
+  <div class="gm-orb-wrap" aria-hidden="true">
+    <div class="gm-orb"></div>
+  </div>
+
+  <!-- El diálogo más icónico de Fitzgerald -->
+  <div class="gm-dialogue">
+    <p class="gm-line-1">"¿No se puede repetir el pasado?"</p>
+    <p class="gm-line-2">¿Cómo que no? <em>Claro que se puede.</em></p>
+  </div>
+  <p class="gm-attr">— F. Scott Fitzgerald, El Gran Gatsby</p>
+  <p class="gm-sub">Esa luz al final del muelle siempre fuiste tú.</p>
+
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
+<!-- ══════════════ CARTAS ══════════════ -->
+<div class="letters-section">
+  <div class="letters-inner">
+    <span class="s-label" style="text-align:center;display:block;">Transmisión pendiente</span>
+    <h2 class="s-title" style="text-align:center;">Mensajes que <em>nunca llegaron</em></h2>
+    <div class="rule" style="margin:0 auto 0;"></div>
+
+    <!-- Counter: días de silencio -->
+    <div class="days-headline">
+      <span class="days-big" id="days-counter">0</span>
+      <span class="days-unit">días<br>de silencio</span>
+    </div>
+
+    <p class="body-text" style="text-align:center;max-width:480px;margin:0 auto;">
+      Cada día que pasó fue una escena que no viste con nosotros.<br>
+      Esto es lo que queríamos haberte dicho.
+    </p>
+
+    <div class="letters-grid">
+
+      <!-- CARTA CARLOS -->
+      <div class="letter">
+        <!-- Header estilo REC / Interstellar -->
+        <div class="letter-header">
+          <div class="letter-rec"><span class="rec-dot"></span> REC</div>
+          <div class="letter-days">DÍA <span class="dc" id="dc-carlos">0</span></div>
+        </div>
+        <!-- Log de días — Interstellar -->
+        <div class="letter-log-wrap">
+          <div class="letter-log" id="log-carlos">
+            <div class="log-entry"><span class="log-day">DÍA 1</span><span class="log-msg">pto... ojalá pudiéramos hablar.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 18</span><span class="log-msg">Todavía no entiendo cómo llegamos aquí.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 47</span><span class="log-msg">El Madrid ganó la Champions. No supe a quién gritarle.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 83</span><span class="log-msg">Te vi conectado. No supe qué escribir.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 120</span><span class="log-msg">Ojalá pudiéramos volver a jugar Fortnite juntos.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 176</span><span class="log-msg">Hay cosas que solo te diría a ti, pto.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 230</span><span class="log-msg">Kinder. Primaria. Liceo. UCAB. Eso no desaparece.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 295</span><span class="log-msg">Otro partido del Madrid sin ti. Siempre falta uno.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 368</span><span class="log-msg">Te extraño, pana. Así de simple.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 440</span><span class="log-msg">20 años son 20 años. Eso no se borra.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 512</span><span class="log-msg">Pasé por la UCAB. Me acordé de todos los cafés.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 580</span><span class="log-msg">Cuando leas esto, solo quiero hablar contigo.</span></div>
+            <div class="log-entry log-hoy"><span class="log-day">HOY</span><span class="log-msg">Escribí esto para ti. Aquí está.</span></div>
+          </div>
+        </div>
+        <!-- Contenido -->
+        <div class="letter-content" id="lc-carlos">
+          <div class="letter-from">Carlos — tu pana del Real Madrid</div>
+          <div class="letter-body">
+            <p>pto, no tengo manera de escribirte desde hace más de un año. Así que hice esto.</p>
+            <p>No vengo a repasar lo que pasó — tú lo sabes igual que yo. Vengo a decirte que te extraño. Que Anthonny y yo te extrañamos. Y que si en algún momento quieres hablar, <strong>aquí estamos. Sin condiciones, sin apuro.</strong></p>
+            <p>Desde los 6 años, Javier. La Merced, el teatro, el Madrid, la UCAB. Eso es prácticamente toda mi vida. Y una parte de ella lleva más de un año en pausa.</p>
+            <p>Solo quiero la oportunidad de hablar contigo. <strong>Eso es todo lo que te pido.</strong></p>
+          </div>
+          <div class="letter-sign">— Carlos</div>
+        </div>
+        <!-- Progress bar: video que nunca fue visto -->
+        <div class="letter-progress">
+          <div class="lp-head"><span>13 Mayo 2024</span><span>Sin respuesta</span></div>
+          <div class="lp-track"><div class="lp-fill" id="lp-carlos"></div></div>
+          <div class="lp-status">Transmisión pendiente · Sin respuesta</div>
+        </div>
+      </div>
+
+      <!-- CARTA ANTHONNY -->
+      <div class="letter">
+        <div class="letter-header">
+          <div class="letter-rec"><span class="rec-dot"></span> REC</div>
+          <div class="letter-days">DÍA <span class="dc" id="dc-anthonny">0</span></div>
+        </div>
+        <!-- Log de días — Interstellar -->
+        <div class="letter-log-wrap">
+          <div class="letter-log" id="log-anthonny">
+            <div class="log-entry"><span class="log-day">DÍA 1</span><span class="log-msg">No entiendo cómo llegamos a esto, pto.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 22</span><span class="log-msg">Eras el mejor jungler del grupo. Sin discusión.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 55</span><span class="log-msg">Me acordé del Príncipe de Egipto hoy. No sé por qué.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 98</span><span class="log-msg">Once años en el mismo colegio, pto. Once.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 160</span><span class="log-msg">Cada vez que abro el LoL pienso en ti.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 218</span><span class="log-msg">La UCAB se siente distinta sin el grupo completo.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 290</span><span class="log-msg">¿Cómo estarás, pto?</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 355</span><span class="log-msg">Tantos recreos. Tantos años juntos en ese pasillo.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 428</span><span class="log-msg">Te extraño, hermano. Más de lo que crees.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 500</span><span class="log-msg">Algún día vamos a reírnos de todo esto.</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 572</span><span class="log-msg">Hércules. El Príncipe de Egipto. Éramos buenos, ¿sabes?</span></div>
+            <div class="log-entry"><span class="log-day">DÍA 621</span><span class="log-msg">Aquí estoy. Cuando quieras.</span></div>
+            <div class="log-entry log-hoy"><span class="log-day">HOY</span><span class="log-msg">Esto también lo escribí para ti.</span></div>
+          </div>
+        </div>
+        <div class="letter-content" id="lc-anthonny">
+          <div class="letter-from">Anthonny — tu pana de toda la vida</div>
+          <div class="letter-body">
+            <p>pto, once años en el mismo colegio. Hércules. El Príncipe de Egipto. Cada recreo, cada año. No es fácil fingir que eso no existió.</p>
+            <p>No te escribo para debatir nada ni para convencerte de nada. Te escribo porque <strong>te extraño</strong>, así de simple. Extraño a mi pana de toda la vida.</p>
+            <p>Si algún día quieres sentarte a hablar — sin presiones, cuando tú quieras — yo voy a estar. Siempre.</p>
+          </div>
+          <div class="letter-sign">— Anthonny</div>
+        </div>
+        <div class="letter-progress">
+          <div class="lp-head"><span>13 Mayo 2024</span><span>Sin respuesta</span></div>
+          <div class="lp-track"><div class="lp-fill" id="lp-anthonny"></div></div>
+          <div class="lp-status">Transmisión pendiente · Sin respuesta</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ KINTSUGI ══════════════ -->
+<div class="close-section">
+
+  <!-- Jarrón Kintsugi con grietas doradas — SVG animado -->
+  <div class="kintsugi-wrap">
+    <svg class="kintsugi-svg" viewBox="0 0 200 230" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="kg-glow" cx="50%" cy="55%" r="50%">
+          <stop offset="0%"  stop-color="rgba(240,176,0,.08)"/>
+          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Glow sutil de fondo -->
+      <ellipse cx="100" cy="130" rx="70" ry="70" fill="url(#kg-glow)"/>
+
+      <!-- ── VASIJA japonesa: cuello, hombros, cuerpo, base ── -->
+      <!-- Cuerpo principal -->
+      <path class="k-vessel" stroke-width="1.4"
+        d="
+          M 88,38
+          C 82,38  78,42  76,48
+          C 72,56  70,64  68,72
+          C 62,88  56,105 54,122
+          C 51,140 52,158 57,173
+          C 63,190 76,202 100,205
+          C 124,202 137,190 143,173
+          C 148,158 149,140 146,122
+          C 144,105 138,88 132,72
+          C 130,64 128,56 124,48
+          C 122,42 118,38 112,38
+          Z
+        "/>
+      <!-- Cuello (estrecho) — conecta la boca con los hombros -->
+      <path class="k-vessel" stroke-width="1.2"
+        d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38"/>
+      <!-- Boca — el borde superior, abierto y ovalado -->
+      <ellipse class="k-vessel" cx="100" cy="20" rx="20" ry="7" stroke-width="1.4"/>
+      <!-- Interior visible de la boca (más oscuro) -->
+      <ellipse cx="100" cy="20" rx="16" ry="4.5" fill="rgba(0,0,0,.25)" stroke="none"/>
+      <!-- Base del jarrón -->
+      <ellipse class="k-vessel" cx="100" cy="202" rx="30" ry="8" stroke-width="1.2"/>
+
+      <!-- ── GRIETAS DE ORO (kintsugi) ── -->
+      <!-- Grieta principal: desde la boca por el cuello y el cuerpo -->
+      <path class="k-crack" id="kc1" stroke-width="1.7" stroke-opacity=".8"
+        d="M 100,22 C 97,35 104,48 99,62 C 94,78 105,92 100,110 C 95,128 103,148 100,170 C 98,185 100,198 100,205"/>
+      <!-- Ramal izquierdo — sale del centro del cuerpo -->
+      <path class="k-crack" id="kc2" stroke-width="1.1" stroke-opacity=".65"
+        d="M 99,92 C 88,96 74,93 62,100 C 54,105 52,118 54,130"/>
+      <!-- Ramal derecho — sale más abajo -->
+      <path class="k-crack" id="kc3" stroke-width="1.1" stroke-opacity=".65"
+        d="M 101,128 C 114,133 130,128 140,136 C 148,142 147,158 143,170"/>
+      <!-- Grieta del cuello -->
+      <path class="k-crack" id="kc4" stroke-width=".9" stroke-opacity=".5"
+        d="M 97,42 C 88,44 82,50 78,58"/>
+      <!-- Grieta del hombro derecho -->
+      <path class="k-crack" id="kc5" stroke-width=".85" stroke-opacity=".45"
+        d="M 103,58 C 114,60 122,66 128,74"/>
+
+      <!-- ── NODOS DORADOS en las intersecciones ── -->
+      <circle class="k-gold-fill" id="kg1" cx="99"  cy="62"  r="3.2"/>
+      <circle class="k-gold-fill" id="kg2" cx="99"  cy="92"  r="3.8"/>
+      <circle class="k-gold-fill" id="kg3" cx="100" cy="128" r="3.2"/>
+      <circle class="k-gold-fill" id="kg4" cx="100" cy="168" r="2.8"/>
+      <circle class="k-gold-fill" id="kg5" cx="97"  cy="42"  r="2.2"/>
+    </svg>
+  </div>
+
+  <p class="kintsugi-kanji">金継ぎ</p>
+  <div class="kintsugi-title">Kintsugi</div>
+  <p class="kintsugi-def">El arte japonés de reparar con oro</p>
+  <div class="kintsugi-rule"></div>
+
+  <p class="kintsugi-quote">
+    "Lo que se rompe y se une con oro<br>
+    no vuelve a ser lo mismo —<br>
+    <em>vale más."</em>
+  </p>
+  <p class="kintsugi-quote" style="font-size:clamp(.95rem,2.2vw,1.3rem);color:var(--muted);">
+    Nuestra amistad no tiene que ser igual a la de antes.<br>
+    Puede ser más hermosa gracias a todo lo que hemos vivido.
+  </p>
+
+  <div class="close-from">De Carlos &amp; Anthonny · 2026</div>
+</div>
+
+<footer>Colegio La Merced 2005 &nbsp;·&nbsp; UCAB 2016 &nbsp;·&nbsp; Siempre panas</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   CANVAS: hex grid dorado + partículas oro
+═══════════════════════════════════════════ */
+const cvs = document.getElementById('cvs');
+const ctx = cvs.getContext('2d');
+let W, H, hexes = [];
+
+function resize() {
+  W = cvs.width  = window.innerWidth;
+  H = cvs.height = window.innerHeight;
+  buildHex();
+}
+
+function buildHex() {
+  hexes = [];
+  const R = 46, dx = R * Math.sqrt(3), dy = R * 1.5;
+  for (let row = -1; row < H / dy + 2; row++)
+    for (let col = -1; col < W / dx + 2; col++)
+      hexes.push({
+        cx: col * dx + (row % 2 === 0 ? 0 : dx / 2),
+        cy: row * dy, R
+      });
+}
+resize();
+window.addEventListener('resize', resize);
+
+function drawHex(cx, cy, R) {
+  ctx.beginPath();
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i - Math.PI / 6;
+    i ? ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a))
+      : ctx.moveTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+  }
+  ctx.closePath();
+}
+
+let t = 0;
+let mx = -9999, my = -9999;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+/* Canvas pausado — fondo puro */
+
+/* ─── Scroll reveal ─── */
+requestAnimationFrame(() =>
+  requestAnimationFrame(() => document.body.classList.add('anim'))
+);
+const io = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting)
+      setTimeout(() => e.target.classList.add('vis'), i * 100);
+  });
+}, { threshold: .1 });
+document.querySelectorAll('.moment, .letter').forEach(el => io.observe(el));
+
+/* ─── Días de silencio (Interstellar) ─── */
+const SINCE = new Date('2024-05-13');
+const silencio = Math.floor((Date.now() - SINCE.getTime()) / 86400000);
+
+// Animate the big counter on load
+(function animCounter() {
+  const el = document.getElementById('days-counter');
+  if (!el) return;
+  let cur = 0;
+  const step = Math.max(1, Math.ceil(silencio / 80));
+  const tick = setInterval(() => {
+    cur = Math.min(cur + step, silencio);
+    el.textContent = cur;
+    if (cur >= silencio) clearInterval(tick);
+  }, 18);
+})();
+
+// Cuando la carta entra en view: scroll del log → revelar carta → barra de progreso
+const lpTrigger = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    const card = entry.target;
+    if (card.dataset.activated) return;
+    card.dataset.activated = '1';
+
+    // 1. Animar counter del header (REC DÍA)
+    const dc = card.querySelector('.dc');
+    if (dc) {
+      let c = 0;
+      const s2 = Math.max(1, Math.ceil(silencio / 60));
+      const t2 = setInterval(() => {
+        c = Math.min(c + s2, silencio);
+        dc.textContent = c;
+        if (c >= silencio) clearInterval(t2);
+      }, 20);
+    }
+
+    // 2. Scroll animado del log de días (de arriba abajo)
+    const log = card.querySelector('.letter-log');
+    const content = card.querySelector('.letter-content');
+    const bar = card.querySelector('.lp-fill');
+
+    if (log) {
+      const scrollDuration = 2800;
+      const startTime = performance.now();
+      const endScroll = log.scrollHeight - log.clientHeight;
+      log.scrollTop = 0;
+
+      function animLog(now) {
+        const elapsed = now - startTime;
+        const p = Math.min(elapsed / scrollDuration, 1);
+        // Ease: lento al principio, acelera, pausa al final
+        const eased = p < 0.5
+          ? 2 * p * p
+          : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        log.scrollTop = endScroll * eased;
+        if (p < 1) {
+          requestAnimationFrame(animLog);
+        } else {
+          // Scroll termina → revelar carta
+          if (content) content.classList.add('revealed');
+          // Barra de progreso
+          if (bar) setTimeout(() => bar.classList.add('go'), 400);
+        }
+      }
+      requestAnimationFrame(animLog);
+    } else {
+      if (content) content.classList.add('revealed');
+      if (bar) setTimeout(() => bar.classList.add('go'), 200);
+    }
+
+    lpTrigger.unobserve(card);
+  });
+}, { threshold: 0.35 });
+document.querySelectorAll('.letter').forEach(el => lpTrigger.observe(el));
+
+/* ─── Lightbox ─── */
+const lb      = document.getElementById('lb');
+const lbImg   = document.getElementById('lb-img');
+const lbTitle = document.getElementById('lb-title');
+const lbSub   = document.getElementById('lb-sub');
+const lbClose = document.getElementById('lb-close');
+
+document.querySelectorAll('.gphoto').forEach(p => {
+  p.addEventListener('click', () => {
+    lbImg.src       = p.dataset.src;
+    lbImg.alt       = p.dataset.title;
+    lbTitle.textContent  = p.dataset.title;
+    lbSub.innerHTML = p.dataset.sub;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
+
+function closeLb() {
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ─── Kintsugi: animar grietas cuando entra en view ─── */
+const kintsugiObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const cracks = document.querySelectorAll('.k-crack');
+    const fills  = document.querySelectorAll('.k-gold-fill');
+    // Calcular longitud real de cada grieta para dasharray
+    cracks.forEach(c => {
+      const len = c.getTotalLength ? c.getTotalLength() : 200;
+      c.style.strokeDasharray = len;
+      c.style.strokeDashoffset = len;
+    });
+    // Dibujar grietas en secuencia
+    cracks.forEach((c, i) => {
+      c.style.transition = `stroke-dashoffset ${0.9 + i * 0.3}s cubic-bezier(.4,0,.2,1) ${i * 0.35}s`;
+      setTimeout(() => c.style.strokeDashoffset = '0', 50);
+    });
+    // Aparecer puntos dorados tras las grietas
+    fills.forEach((f, i) => {
+      setTimeout(() => f.classList.add('show'), 600 + i * 200);
+    });
+    kintsugiObs.unobserve(e.target);
+  });
+}, { threshold: 0.3 });
+const kSvg = document.querySelector('.kintsugi-svg');
+if (kSvg) kintsugiObs.observe(kSvg);
+
+lbClose.addEventListener('click', closeLb);
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+</script>
+</body>
+</html>
