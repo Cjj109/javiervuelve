@@ -780,6 +780,85 @@
     }
 
     /* ════════════════════════════════════
+       THE OFFICE — confessional / talking head
+    ════════════════════════════════════ */
+    .office-section {
+      position: relative; z-index: 1;
+      padding: 5rem 1.5rem 4rem;
+      display: flex; justify-content: center;
+    }
+    .office-inner {
+      max-width: 700px; width: 100%;
+      position: relative;
+      background: rgba(18,12,3,.6);
+      border: 1px solid rgba(240,200,80,.1);
+      border-radius: 12px;
+      padding: 2.8rem 3rem 2.4rem;
+      text-align: center;
+    }
+    /* Línea caliente en la parte superior — warm amber, distinta del oro frío */
+    .office-inner::before {
+      content: ''; position: absolute;
+      top: 0; left: 10%; right: 10%; height: 1.5px;
+      background: linear-gradient(to right, transparent, rgba(240,200,80,.45), transparent);
+      border-radius: 1px;
+    }
+
+    /* REC indicator — esquina superior izquierda */
+    .office-rec {
+      position: absolute; top: 1.1rem; left: 1.3rem;
+      display: flex; align-items: center; gap: .42rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .5rem; letter-spacing: .28em; text-transform: uppercase;
+      color: rgba(200,70,70,.7);
+    }
+    .office-rec-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(200,70,70,.85); flex-shrink: 0;
+      animation: rec-blink 1.7s ease-in-out infinite;
+    }
+
+    /* Etiqueta de serie — esquina superior derecha */
+    .office-tag {
+      position: absolute; top: 1.1rem; right: 1.3rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .48rem; letter-spacing: .2em; text-transform: uppercase;
+      color: rgba(240,200,80,.3);
+    }
+
+    /* La cita */
+    .office-quote {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.15rem, 3vw, 1.8rem);
+      font-weight: 300; font-style: italic;
+      line-height: 1.72; color: var(--text);
+      margin: .6rem 0 2.6rem;
+    }
+    .office-quote em {
+      font-style: italic; color: var(--gold);
+      text-shadow: 0 0 16px rgba(240,176,0,.28);
+    }
+
+    /* Lower-third — chyron al estilo documental */
+    .office-lower {
+      display: inline-flex; align-items: flex-start;
+      border-left: 2.5px solid rgba(240,176,0,.55);
+      padding-left: .9rem; text-align: left;
+    }
+    .office-name {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .82rem; font-weight: 600;
+      letter-spacing: .07em; color: var(--gold);
+      display: block;
+    }
+    .office-role {
+      font-family: 'Inter', sans-serif;
+      font-size: .55rem; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--muted);
+      margin-top: .18rem; display: block;
+    }
+
+    /* ════════════════════════════════════
        INTERSTELLAR — DÍAS DE SILENCIO
     ════════════════════════════════════ */
 
@@ -1212,6 +1291,20 @@
         gap: 1.1rem;
         margin-top: 2rem;
       }
+
+      /* ── The Office ── */
+      .office-section {
+        padding: 3.5rem 1.25rem 3rem;
+      }
+      .office-inner {
+        padding: 2.4rem 1.5rem 2rem;
+      }
+      .office-quote {
+        font-size: clamp(1.05rem, 4.2vw, 1.8rem);
+        margin-bottom: 2rem;
+      }
+      .office-name { font-size: .75rem; }
+      .office-role { font-size: .5rem; }
 
       /* ── Interstellar gate ── */
       .ig-gate {
@@ -1683,6 +1776,34 @@
   <p class="gm-attr">— F. Scott Fitzgerald, El Gran Gatsby</p>
   <p class="gm-sub">Esa luz al final del muelle siempre fuiste tú.</p>
 
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
+<!-- ══════════════ THE OFFICE ══════════════ -->
+<div class="office-section">
+  <div class="office-inner">
+
+    <div class="office-rec" aria-hidden="true">
+      <span class="office-rec-dot"></span> REC
+    </div>
+    <div class="office-tag" aria-hidden="true">The Office · S09E25</div>
+
+    <blockquote class="office-quote">
+      "Ojalá hubiera una forma de saber que estás<br>
+      en <em>los buenos viejos tiempos</em><br>
+      antes de que terminen.<br>
+      Yo ya sé que los nuestros lo eran."
+    </blockquote>
+
+    <div class="office-lower">
+      <div>
+        <span class="office-name">Andy Bernard</span>
+        <span class="office-role">The Office &nbsp;·&nbsp; Temporada 9, El Final</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
