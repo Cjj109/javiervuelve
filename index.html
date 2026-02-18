@@ -1279,38 +1279,96 @@ function drawLight(ts) {
   const target = getLuzOn() ? 1 : 0;
   intensity += (target - intensity) * 0.06;
 
+  // Dos fases de respiración: lenta (marea) + micro-ondulación (agua)
   phase += 0.007;
-  const p = (0.5 + 0.5 * Math.sin(phase)) * intensity;
+  const breath   = 0.5 + 0.5 * Math.sin(phase);           // ciclo lento ~15s
+  const ripple   = 0.5 + 0.5 * Math.sin(phase * 3.7 + 1); // micro-ondulación
 
   ctx.clearRect(0, 0, W, H);
   if (intensity < 0.01) return; // totalmente apagado
 
-  const i = intensity; // shorthand
-  /* ── FUENTE ── esquina superior-derecha, lejana, como al otro lado del agua */
-  const g1 = ctx.createRadialGradient(W * 0.94, H * 0.03, 0, W * 0.94, H * 0.03, Math.max(W, H) * 1.5);
-  g1.addColorStop(0,    `rgba(0,200,112,${(0.24 + p * 0.09) * i})`);
-  g1.addColorStop(0.10, `rgba(0,200,112,${(0.13 + p * 0.04) * i})`);
-  g1.addColorStop(0.26, `rgba(0,200,112,${0.055 * i})`);
-  g1.addColorStop(0.45, `rgba(0,180,100,${0.020 * i})`);
-  g1.addColorStop(0.70, `rgba(0,160,90,${0.007 * i})`);
-  g1.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = g1;
+  const i  = intensity;
+  // Respiración compuesta: marea base + pequeño parpadeo de agua
+  const bp = (breath * 0.72 + ripple * 0.28) * i;
+
+  /* ══════════════════════════════════════════════════════
+     CAPA 1 — NÚCLEO DE LA FUENTE
+     Pequeño y concentrado en la esquina sup-derecha.
+     Alta densidad en el centro → caída brusca.
+     Simula el orbe distante — muy brillante pero pequeño.
+  ══════════════════════════════════════════════════════ */
+  const srcX = W * 0.95;
+  const srcY = H * 0.085; // donde está el orbe CSS
+  const coreR = Math.min(W, H) * 0.55; // radio del halo principal
+
+  const gCore = ctx.createRadialGradient(srcX, srcY, 0, srcX, srcY, coreR);
+  gCore.addColorStop(0,    `rgba(0,224,128,${(0.52 + bp * 0.18) * i})`); // núcleo — verde puro, vivo
+  gCore.addColorStop(0.04, `rgba(0,210,118,${(0.30 + bp * 0.10) * i})`);
+  gCore.addColorStop(0.10, `rgba(0,195,108,${(0.14 + bp * 0.05) * i})`);
+  gCore.addColorStop(0.22, `rgba(0,175,96, ${(0.060 + bp * 0.018) * i})`);
+  gCore.addColorStop(0.42, `rgba(0,155,84, ${(0.022 + bp * 0.006) * i})`);
+  gCore.addColorStop(0.70, `rgba(0,130,70, ${0.007 * i})`);
+  gCore.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gCore;
   ctx.fillRect(0, 0, W, H);
 
-  /* ── COLUMNA DE LUZ ── el haz que baja por la derecha */
-  const g2 = ctx.createRadialGradient(W * 0.88, H * 0.45, 0, W * 0.88, H * 0.45, W * 0.6);
-  g2.addColorStop(0,    `rgba(0,200,112,${(0.055 + p * 0.020) * i})`);
-  g2.addColorStop(0.50, `rgba(0,180,100,${0.015 * i})`);
-  g2.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = g2;
+  /* ══════════════════════════════════════════════════════
+     CAPA 2 — CONO DIAGONAL DE LUZ
+     La luz no cae verticalmente — viaja en diagonal hacia
+     la izquierda-abajo, como la luz de un faro sobre el agua.
+     Centro del cono: desplazado hacia el interior de la página.
+  ══════════════════════════════════════════════════════ */
+  const coneX = W * 0.78;
+  const coneY = H * 0.55;
+  const coneR = Math.max(W, H) * 1.1;
+
+  const gCone = ctx.createRadialGradient(srcX, srcY, coreR * 0.08, coneX, coneY, coneR);
+  gCone.addColorStop(0,    `rgba(0,190,104,${(0.075 + bp * 0.025) * i})`);
+  gCone.addColorStop(0.18, `rgba(0,175,94, ${(0.038 + bp * 0.010) * i})`);
+  gCone.addColorStop(0.40, `rgba(0,155,82, ${(0.016 + bp * 0.004) * i})`);
+  gCone.addColorStop(0.68, `rgba(0,130,68, ${0.006 * i})`);
+  gCone.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gCone;
   ctx.fillRect(0, 0, W, H);
 
-  /* ── ECO PROFUNDO ── la luz atraviesa toda la página hasta abajo */
-  const g3 = ctx.createRadialGradient(W * 0.82, H, 0, W * 0.82, H, W * 0.9);
-  g3.addColorStop(0,    `rgba(0,200,112,${(0.038 + p * 0.010) * i})`);
-  g3.addColorStop(0.55, `rgba(0,180,100,${0.010 * i})`);
-  g3.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = g3;
+  /* ══════════════════════════════════════════════════════
+     CAPA 3 — VELO ATMOSFÉRICO (niebla sobre el agua)
+     Cubre TODA la página. Intensidad muy baja, uniforme.
+     Tinte ligeramente más frío (cian) que las capas anteriores —
+     como la luz verde dispersada en la atmósfera nocturna.
+     Esta capa es la "estela" que se siente en toda la página.
+  ══════════════════════════════════════════════════════ */
+  const fogX = W * 0.62;
+  const fogY = H * 0.38;
+  const fogR = Math.max(W, H) * 1.65;
+
+  const gFog = ctx.createRadialGradient(srcX, srcY * 0.5, 0, fogX, fogY, fogR);
+  gFog.addColorStop(0,    `rgba(0,168,90, ${(0.035 + bp * 0.008) * i})`);
+  gFog.addColorStop(0.25, `rgba(0,152,82, ${(0.018 + bp * 0.004) * i})`);
+  gFog.addColorStop(0.55, `rgba(0,132,72, ${0.008 * i})`);
+  gFog.addColorStop(0.82, `rgba(0,110,58, ${0.003 * i})`);
+  gFog.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gFog;
+  ctx.fillRect(0, 0, W, H);
+
+  /* ══════════════════════════════════════════════════════
+     CAPA 4 — ECO DEL FONDO (reflexión en el agua oscura)
+     La luz llega al "suelo" de la página muy atenuada.
+     Centro desplazado hacia la izquierda — no es vertical
+     sino que la luz se dispersa mientras viaja.
+     Respiración más lenta — es el eco más lejano.
+  ══════════════════════════════════════════════════════ */
+  const echoX = W * 0.55;
+  const echoY = H;       // pie del viewport
+  const echoR = W * 1.2;
+
+  const echoBreath = 0.5 + 0.5 * Math.sin(phase * 0.6 + 2.1); // fase diferente — no sincronizado
+  const gEcho = ctx.createRadialGradient(echoX, echoY, 0, echoX, echoY, echoR);
+  gEcho.addColorStop(0,    `rgba(0,145,76, ${(0.018 + echoBreath * 0.007) * i})`);
+  gEcho.addColorStop(0.38, `rgba(0,120,62, ${0.008 * i})`);
+  gEcho.addColorStop(0.72, `rgba(0,95,48,  ${0.003 * i})`);
+  gEcho.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gEcho;
   ctx.fillRect(0, 0, W, H);
 }
 requestAnimationFrame(drawLight);
