@@ -26,7 +26,7 @@
       --gold:  #f0b000;   /* oro cálido */
       --gold2: rgba(240,176,0,0.18);
       --text:  #dde8e2;   /* blanco neutro-verdoso */
-      --muted: rgba(195,215,205,0.72);
+      --muted: rgba(195,215,205,0.80);
       --line:  rgba(240,176,0,0.16);
       --green: #00c87a;   /* verde del canvas/orbe — LA LUZ */
     }
@@ -131,17 +131,6 @@
     }
 
 
-    .scroll-hint {
-      position: absolute; bottom: 2rem; left: 50%;
-      transform: translateX(-50%);
-    }
-    .arr {
-      width: 17px; height: 17px;
-      border-right: 1.5px solid rgba(240,176,0,.38);
-      border-bottom: 1.5px solid rgba(240,176,0,.38);
-      transform: rotate(45deg);
-      animation: bounce 1.7s ease-in-out infinite;
-    }
 
     /* ════════════════════════════════════
        SECCIÓN BASE
@@ -154,7 +143,7 @@
     .s-label {
       font-size: .6rem; letter-spacing: .42em;
       text-transform: uppercase;
-      color: rgba(240,176,0,.6);
+      color: rgba(240,176,0,.78);
       display: block; margin-bottom: .6rem;
     }
     .s-title {
@@ -268,20 +257,10 @@
       margin-left: auto; margin-right: auto;
     }
 
-    .sw { height: 184px; perspective: 900px; cursor: pointer; }
+    .sw { height: 184px; cursor: pointer; }
     .sw-inner {
       width: 100%; height: 100%; position: relative;
-      -webkit-transform-style: preserve-3d;
-      transform-style: preserve-3d;
-      transition: transform .6s cubic-bezier(.4,0,.2,1);
       border-radius: 10px;
-    }
-    .sw.flipped .sw-inner { transform: rotateY(180deg); }
-    /* Tilt solo en dispositivos con puntero real — en touch interfiere con el flip */
-    @media (hover: hover) {
-      .sw:hover:not(.flipped) .sw-inner {
-        transform: rotateY(-9deg) rotateX(3deg);
-      }
     }
     .sw-watermark {
       position: absolute;
@@ -301,8 +280,7 @@
     .sw-front, .sw-back {
       position: absolute; inset: 0;
       border-radius: 10px;
-      -webkit-backface-visibility: hidden;
-      backface-visibility: hidden;
+      transition: opacity .38s ease, transform .38s ease;
     }
 
     /* ── Cara frontal ── */
@@ -312,8 +290,10 @@
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: .55rem;
-      /* SIN overflow:hidden — rompe preserve-3d en Safari/iOS */
+      opacity: 1; transform: scale(1); z-index: 1;
     }
+    .sw.flipped .sw-front { opacity: 0; transform: scale(.94); z-index: 0; }
+    .sw.flipped .sw-back  { opacity: 1; transform: scale(1);   z-index: 1; }
     .sw-front::before {
       content: ''; position: absolute;
       top: 0; left: 0; right: 0; height: 3px;
@@ -341,7 +321,7 @@
     /* ── Cara trasera ── */
     .sw-back {
       background: #060e0b;
-      transform: rotateY(180deg);
+      opacity: 0; transform: scale(.94); z-index: 0;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       padding: 1rem .9rem; gap: .5rem;
@@ -1706,9 +1686,6 @@
     <div class="ghl-orb"></div>
   </div>
 
-  <div class="scroll-hint">
-    <div class="arr"></div>
-  </div>
 </div>
 
 <!-- ══════════════ EL GRUPO ══════════════ -->
