@@ -224,79 +224,57 @@
     .cp-name.hi { color: var(--gold); }
 
     /* ════════════════════════════════════
-       SHARED — mosaico de lo que compartimos
+       SWATCHES — muestrario de lo compartido
+       Como fichas de tienda de pinturas:
+       franja de color arriba, nombre abajo
     ════════════════════════════════════ */
-    .shared-items {
+    .swatches {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .9rem;
+      grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+      gap: 6px;
       margin-top: 2.8rem;
     }
 
-    .si {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 1.3rem 1.2rem 1.2rem;
-      position: relative; overflow: hidden;
-      transition: border-color .3s, background .3s, transform .3s;
+    .sw {
+      border-radius: 7px;
+      overflow: hidden;
       cursor: default;
+      transition: transform .25s, box-shadow .25s;
     }
-    .si::after {
-      content: '';
-      position: absolute; bottom: -20px; right: -20px;
-      width: 60px; height: 60px;
-      background: radial-gradient(circle, rgba(240,176,0,.06) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .si:hover {
-      border-color: rgba(240,176,0,.3);
-      background: rgba(6,15,28,.85);
-      transform: translateY(-2px);
+    .sw:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,.35);
+      z-index: 1; position: relative;
     }
 
-    /* tamaños de celda */
-    .si.wide   { grid-column: span 2; }
-    .si.full   { grid-column: span 3; }
-    .si.tall   { grid-row: span 2; }
+    /* Franja de color — el "chip" de pintura */
+    .sw-band {
+      height: 72px;
+    }
+    .sw.g  .sw-band { background: linear-gradient(145deg, rgba(240,176,0,.22) 0%, rgba(240,176,0,.1) 100%); }
+    .sw.gr .sw-band { background: linear-gradient(145deg, rgba(0,200,122,.2)  0%, rgba(0,200,122,.09) 100%); }
+    .sw.d  .sw-band { background: linear-gradient(145deg, rgba(195,215,205,.1) 0%, rgba(195,215,205,.04) 100%); }
 
-    /* acento verde — para elementos ligados al verde/Liga */
-    .si.green-accent {
-      border-color: rgba(0,200,122,.18);
-    }
-    .si.green-accent::after {
-      background: radial-gradient(circle, rgba(0,200,122,.06) 0%, transparent 70%);
-    }
-    .si.green-accent:hover {
-      border-color: rgba(0,200,122,.4);
-      background: rgba(0,8,4,.85);
-    }
-    .si.green-accent .si-title { color: var(--green); }
-
-    .si-icon {
-      font-size: 1.2rem; margin-bottom: .65rem;
-      display: block; opacity: .75;
-    }
-    .si-title {
+    /* Etiqueta con el nombre */
+    .sw-label {
+      padding: .55rem .6rem .6rem;
       font-family: 'Cinzel', Georgia, serif;
-      font-size: .88rem; font-weight: 600;
-      letter-spacing: .06em; text-transform: uppercase;
-      color: var(--gold); margin-bottom: .35rem;
-      line-height: 1.2;
+      font-size: .62rem; font-weight: 600;
+      letter-spacing: .07em; text-transform: uppercase;
+      line-height: 1.3; text-align: center;
     }
-    .si.full .si-title {
-      font-size: 1rem;
-    }
-    .si-sub {
-      font-size: .72rem; color: var(--muted);
-      line-height: 1.65; font-family: 'Inter', sans-serif;
-    }
-    .si-num {
-      position: absolute; top: .9rem; right: 1rem;
-      font-family: 'Cinzel', Georgia, serif;
-      font-size: .65rem; color: rgba(240,176,0,.2);
-      font-weight: 400; letter-spacing: .04em;
-    }
+    .sw.g  .sw-label { background: rgba(240,176,0,.08); color: rgba(240,176,0,.85); }
+    .sw.gr .sw-label { background: rgba(0,200,122,.07); color: rgba(0,200,122,.9); }
+    .sw.d  .sw-label { background: rgba(195,215,205,.05); color: rgba(195,215,205,.6); }
+
+    /* Estado seleccionado — como marcar un chip */
+    .sw.picked { transform: translateY(-4px) scale(1.06); position: relative; z-index: 2; }
+    .sw.g.picked  .sw-band { background: linear-gradient(145deg, rgba(240,176,0,.55) 0%, rgba(240,176,0,.28) 100%); box-shadow: inset 0 0 0 1.5px rgba(240,176,0,.7); }
+    .sw.gr.picked .sw-band { background: linear-gradient(145deg, rgba(0,200,122,.5)  0%, rgba(0,200,122,.25) 100%); box-shadow: inset 0 0 0 1.5px rgba(0,200,122,.75); }
+    .sw.d.picked  .sw-band { background: linear-gradient(145deg, rgba(195,215,205,.28) 0%, rgba(195,215,205,.12) 100%); box-shadow: inset 0 0 0 1.5px rgba(195,215,205,.45); }
+    .sw.g.picked  .sw-label { background: rgba(240,176,0,.18); color: var(--gold); }
+    .sw.gr.picked .sw-label { background: rgba(0,200,122,.16); color: var(--green); }
+    .sw.d.picked  .sw-label { background: rgba(195,215,205,.12); color: var(--text); }
 
     /* ════════════════════════════════════
        DIVIDER
@@ -1122,20 +1100,14 @@
         gap: .9rem;
       }
 
-      /* ── Shared items ── */
-      .shared-items {
-        grid-template-columns: repeat(2, 1fr);
-        gap: .75rem;
-        margin-top: 2rem;
+      /* ── Swatches ── */
+      .swatches {
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 5px;
+        margin-top: 1.8rem;
       }
-      .si.wide  { grid-column: span 2; }
-      .si.full  { grid-column: span 2; }
-      .si.tall  { grid-row: span 1; }
-      .si { padding: 1.1rem 1rem 1rem; }
-      .si-icon { font-size: 1.05rem; margin-bottom: .5rem; }
-      .si-title { font-size: .8rem; }
-      .si.full .si-title { font-size: .88rem; }
-      .si-sub { font-size: .7rem; }
+      .sw-band { height: 60px; }
+      .sw-label { font-size: .58rem; padding: .48rem .5rem .52rem; }
 
       /* ── Divider ── */
       .divider {
@@ -1515,59 +1487,23 @@
   <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
 
-  <div class="shared-items">
-
-    <!-- 11 años La Merced — full width, el más grande -->
-    <div class="si full">
-      <span class="si-num">2005 — 2016</span>
-      <span class="si-icon">🏫</span>
-      <div class="si-title">Once años en La Merced</div>
-      <p class="si-sub">Kinder, primaria, liceo — juntos toda la formación. Eso no se simula. Once años de recreos, pasillos y aulas compartidas moldean para siempre.</p>
-    </div>
-
-    <!-- Teatro -->
-    <div class="si wide">
-      <span class="si-icon">🎭</span>
-      <div class="si-title">Teatro</div>
-      <p class="si-sub">Hércules · El Príncipe de Egipto. Fuera del colegio, por gusto. No cualquier grupo hace eso.</p>
-    </div>
-
-    <!-- Fortnite -->
-    <div class="si green-accent">
-      <span class="si-icon">🎮</span>
-      <div class="si-title">Fortnite</div>
-      <p class="si-sub">Cjj1092534 &amp; xaveris18</p>
-    </div>
-
-    <!-- Real Madrid -->
-    <div class="si">
-      <span class="si-icon">⚽</span>
-      <div class="si-title">Real Madrid</div>
-      <p class="si-sub">Tú, Carlos y David. El mismo idioma, la misma tribuna.</p>
-    </div>
-
-    <!-- League of Legends -->
-    <div class="si green-accent wide">
-      <span class="si-icon">⚔️</span>
-      <div class="si-title">League of Legends</div>
-      <p class="si-sub">Tu juego. Tu mundo. Parte del lenguaje del grupo durante años.</p>
-    </div>
-
-    <!-- UCAB -->
-    <div class="si">
-      <span class="si-icon">🎓</span>
-      <div class="si-title">La UCAB</div>
-      <p class="si-sub">Carreras distintas. Mismo grupo. La amistad sobrevivió al cambio.</p>
-    </div>
-
-    <!-- 20 años — full width, cierre -->
-    <div class="si full">
-      <span class="si-num">2005 — 2026</span>
-      <span class="si-icon">⏳</span>
-      <div class="si-title">Veinte años</div>
-      <p class="si-sub">Prácticamente toda una vida. La nuestra y la tuya. Ese es el peso real de lo que estamos hablando.</p>
-    </div>
-
+  <!-- Muestrario — toca para seleccionar -->
+  <div class="swatches" id="swatches">
+    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Real Madrid</div></div>
+    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Fortnite</div></div>
+    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">League of Legends</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Teatro</div></div>
+    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Fútbol</div></div>
+    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Videojuegos</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Hércules</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Príncipe de Egipto</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">La Merced</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Los recreos</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">La UCAB</div></div>
+    <div class="sw gr"><div class="sw-band"></div><div class="sw-label">Humor</div></div>
+    <div class="sw g"><div class="sw-band"></div><div class="sw-label">Champions League</div></div>
+    <div class="sw d"><div class="sw-band"></div><div class="sw-label">Graduaciones</div></div>
+    <div class="sw g"><div class="sw-band"></div><div class="sw-label">20 años</div></div>
   </div>
 </div>
 
@@ -2083,6 +2019,11 @@ if (dockLight) {
     dockLight.classList.toggle('apagada', !luzOn);
   });
 }
+
+/* ─── Swatches — toca para marcar ─── */
+document.querySelectorAll('.sw').forEach(sw => {
+  sw.addEventListener('click', () => sw.classList.toggle('picked'));
+});
 
 /* ─── Interstellar gate ─── */
 const igGate = document.getElementById('ig-gate');
