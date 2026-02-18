@@ -19,14 +19,14 @@
        --muted : texto secundario neutro-verde (sin dominante azul)
     */
     :root {
-      --dark:  #010608;   /* negro — agua profunda, tinte casi neutro */
-      --bg1:   #030c10;   /* azul-teal muy oscuro */
-      --card:  #060f1c;   /* azul-marino — la sombra, el agua */
-      --card2: #08152a;   /* azul profundo — fondo de cards secundarias */
+      --dark:  #010608;   /* negro — base */
+      --bg1:   #020b08;   /* oscuro casi neutro, mínimo verde */
+      --card:  #050d0a;   /* dark neutral-green — armoniza con la luz verde */
+      --card2: #07110d;   /* dark neutral-green más profundo */
       --gold:  #f0b000;   /* oro cálido */
       --gold2: rgba(240,176,0,0.18);
-      --text:  #dde8e2;   /* blanco neutro-verdoso — no pelea con el verde */
-      --muted: rgba(195,215,205,0.52); /* neutro-verde suave, sin dominante azul */
+      --text:  #dde8e2;   /* blanco neutro-verdoso */
+      --muted: rgba(195,215,205,0.52);
       --line:  rgba(240,176,0,0.16);
       --green: #00c87a;   /* verde del canvas/orbe — LA LUZ */
     }
@@ -224,46 +224,78 @@
     .cp-name.hi { color: var(--gold); }
 
     /* ════════════════════════════════════
-       MOMENTOS — lista manifiesto
+       SHARED — mosaico de lo que compartimos
     ════════════════════════════════════ */
-    .moments { margin-top: 2.8rem; }
-
-    .moment {
+    .shared-items {
       display: grid;
-      grid-template-columns: 56px 1fr;
-      gap: 0 2rem;
-      align-items: start;
-      padding: 2rem 0;
-      border-top: 1px solid var(--line);
-      transition: background .3s;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .9rem;
+      margin-top: 2.8rem;
     }
-    .moment:last-child { border-bottom: 1px solid var(--line); }
-    .moment:hover { background: transparent; }
-    .moment:hover .m-num { color: var(--gold); }
 
-    .m-num {
-      font-family: 'Cinzel', Georgia, serif;
-      font-size: 1.1rem; font-weight: 400;
-      color: rgba(240,176,0,.35);
-      letter-spacing: .05em;
-      padding-top: .15rem;
-      transition: color .3s;
+    .si {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 1.3rem 1.2rem 1.2rem;
+      position: relative; overflow: hidden;
+      transition: border-color .3s, background .3s, transform .3s;
+      cursor: default;
     }
-    .m-content { }
-    .m-title {
-      font-family: 'Cinzel', Georgia, serif;
-      font-size: 1rem; color: var(--gold);
-      margin-bottom: .5rem; font-weight: 400;
-      letter-spacing: .04em;
+    .si::after {
+      content: '';
+      position: absolute; bottom: -20px; right: -20px;
+      width: 60px; height: 60px;
+      background: radial-gradient(circle, rgba(240,176,0,.06) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .m-desc { font-size: .88rem; color: var(--muted); line-height: 1.75; }
-    .m-badge {
-      display: inline-block; margin-top: .6rem;
-      font-size: .57rem; font-weight: 600; letter-spacing: .16em;
-      text-transform: uppercase; padding: .16rem .6rem;
-      border-radius: 2px;
-      border: 1px solid rgba(240,176,0,.4);
-      color: rgba(240,176,0,.65);
+    .si:hover {
+      border-color: rgba(240,176,0,.3);
+      background: rgba(6,15,28,.85);
+      transform: translateY(-2px);
+    }
+
+    /* tamaños de celda */
+    .si.wide   { grid-column: span 2; }
+    .si.full   { grid-column: span 3; }
+    .si.tall   { grid-row: span 2; }
+
+    /* acento verde — para elementos ligados al verde/Liga */
+    .si.green-accent {
+      border-color: rgba(0,200,122,.18);
+    }
+    .si.green-accent::after {
+      background: radial-gradient(circle, rgba(0,200,122,.06) 0%, transparent 70%);
+    }
+    .si.green-accent:hover {
+      border-color: rgba(0,200,122,.4);
+      background: rgba(0,8,4,.85);
+    }
+    .si.green-accent .si-title { color: var(--green); }
+
+    .si-icon {
+      font-size: 1.2rem; margin-bottom: .65rem;
+      display: block; opacity: .75;
+    }
+    .si-title {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .88rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: .35rem;
+      line-height: 1.2;
+    }
+    .si.full .si-title {
+      font-size: 1rem;
+    }
+    .si-sub {
+      font-size: .72rem; color: var(--muted);
+      line-height: 1.65; font-family: 'Inter', sans-serif;
+    }
+    .si-num {
+      position: absolute; top: .9rem; right: 1rem;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .65rem; color: rgba(240,176,0,.2);
+      font-weight: 400; letter-spacing: .04em;
     }
 
     /* ════════════════════════════════════
@@ -313,7 +345,7 @@
     .letters-section {
       position: relative; z-index: 1;
       background: radial-gradient(ellipse 70% 60% at 50% 50%,
-        rgba(8,22,38,.7) 0%, transparent 75%);
+        rgba(2,12,7,.6) 0%, transparent 75%);
     }
     .letters-inner {
       max-width: 880px; margin: 0 auto;
@@ -359,7 +391,7 @@
       font-family: 'Inter', system-ui, sans-serif;
       font-size: clamp(.9rem, 1.8vw, .98rem);
       font-style: normal; font-weight: 300;
-      line-height: 1.95; color: rgba(210,228,218,.88);
+      line-height: 1.95; color: rgba(215,232,222,.88);
     }
     .letter-body p + p { margin-top: 1rem; }
     .letter-body strong {
@@ -467,7 +499,7 @@
       position: relative; z-index: 1;
       text-align: center; padding: 1.6rem 1rem 3.5rem;
       border-top: 1px solid rgba(240,176,0,.06);
-      font-size: .7rem; color: rgba(195,215,205,.15);
+      font-size: .7rem; color: rgba(195,218,205,.15);
       letter-spacing: .16em;
     }
 
@@ -506,7 +538,7 @@
 
     .gphoto-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(3,12,24,.85) 0%, transparent 55%);
+      background: linear-gradient(to top, rgba(1,10,5,.85) 0%, transparent 55%);
       display: flex; flex-direction: column;
       justify-content: flex-end;
       padding: 1.2rem;
@@ -539,7 +571,7 @@
     /* ── Lightbox ── */
     .lb {
       position: fixed; inset: 0; z-index: 1000;
-      background: rgba(3,12,24,.96);
+      background: rgba(1,8,4,.96);
       display: flex; align-items: center; justify-content: center;
       padding: 1.5rem;
       opacity: 0; pointer-events: none;
@@ -739,11 +771,126 @@
       line-height: 1.6; font-family: 'Inter', sans-serif;
     }
 
+    /* ════════════════════════════════════
+       INTERSTELLAR GATE — entrada cinématica
+    ════════════════════════════════════ */
+    .ig-gate {
+      margin-top: 3rem;
+      border: 1px solid rgba(0,200,122,.2);
+      border-left: 3px solid var(--green);
+      border-radius: 8px;
+      background: rgba(2,10,6,.72);
+      overflow: hidden;
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .ig-gate.ig-hidden {
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+    }
+
+    .ig-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .75rem 1.4rem;
+      border-bottom: 1px solid rgba(0,200,122,.1);
+    }
+    .ig-status {
+      display: flex; align-items: center; gap: .55rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .55rem; letter-spacing: .3em; text-transform: uppercase;
+      color: var(--green);
+    }
+    .ig-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
+      animation: ig-pulse 1.9s ease-in-out infinite;
+    }
+    .ig-dot:nth-child(2) { animation-delay: .35s; }
+    .ig-dot:nth-child(3) { animation-delay: .7s; }
+    @keyframes ig-pulse {
+      0%,100% { opacity: .9; transform: scale(1); }
+      50%     { opacity: .25; transform: scale(.65); }
+    }
+    .ig-daycount {
+      font-family: 'Inter', sans-serif;
+      font-size: .53rem; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    .ig-daycount strong {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: .78rem; color: var(--gold); font-weight: 600;
+    }
+
+    .ig-body {
+      padding: 1.8rem 1.4rem 1.4rem;
+    }
+
+    /* Waveform — 11 barras simétricas en montaña */
+    .ig-waveform {
+      display: flex; align-items: center; justify-content: center;
+      gap: 4px; height: 54px; margin-bottom: 1.5rem;
+    }
+    .ig-bar {
+      width: 3px; border-radius: 2px;
+      background: var(--green);
+      animation: ig-wave 1.5s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .ig-bar:nth-child(1)  { height: 10px; animation-delay:  0s; }
+    .ig-bar:nth-child(2)  { height: 20px; animation-delay: .1s; }
+    .ig-bar:nth-child(3)  { height: 32px; animation-delay: .2s; }
+    .ig-bar:nth-child(4)  { height: 44px; animation-delay: .3s; }
+    .ig-bar:nth-child(5)  { height: 50px; animation-delay: .4s; }
+    .ig-bar:nth-child(6)  { height: 54px; animation-delay: .5s; }
+    .ig-bar:nth-child(7)  { height: 50px; animation-delay: .4s; }
+    .ig-bar:nth-child(8)  { height: 44px; animation-delay: .3s; }
+    .ig-bar:nth-child(9)  { height: 32px; animation-delay: .2s; }
+    .ig-bar:nth-child(10) { height: 20px; animation-delay: .1s; }
+    .ig-bar:nth-child(11) { height: 10px; animation-delay:  0s; }
+    @keyframes ig-wave {
+      0%,100% { transform: scaleY(1); opacity: .75; }
+      50%     { transform: scaleY(.38); opacity: .3; }
+    }
+
+    /* Botón play */
+    .ig-play {
+      width: 100%; padding: .85rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(0,200,122,.5);
+      border-radius: 5px;
+      color: var(--green);
+      font-family: 'Inter', sans-serif;
+      font-size: .68rem; letter-spacing: .3em; text-transform: uppercase;
+      cursor: pointer;
+      transition: background .25s, border-color .25s, letter-spacing .25s;
+    }
+    .ig-play:hover {
+      background: rgba(0,200,122,.07);
+      border-color: var(--green);
+      letter-spacing: .38em;
+    }
+    .ig-play:active { background: rgba(0,200,122,.13); }
+    .ig-play:disabled { cursor: default; }
+
+    .ig-meta {
+      margin-top: .8rem; text-align: center;
+      font-family: 'Inter', sans-serif;
+      font-size: .52rem; letter-spacing: .14em; text-transform: uppercase;
+      color: rgba(195,215,205,.25);
+    }
+
+    /* Letters grid — oculto hasta que el gate se activa */
+    .letters-grid.gate-locked {
+      opacity: 0;
+      transform: translateY(22px);
+      pointer-events: none;
+    }
+
     /* ── Header REC de cada carta ── */
     .letter-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: .72rem 1.5rem;
-      background: rgba(3,12,24,.55);
+      background: rgba(1,10,5,.55);
       border-bottom: 1px solid rgba(240,176,0,.07);
     }
     .letter-rec {
@@ -781,7 +928,7 @@
     .letter-log-wrap::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0; height: 40px;
-      background: linear-gradient(to bottom, var(--card), transparent);
+      background: linear-gradient(to bottom, #050d0a, transparent);
       z-index: 2; pointer-events: none;
     }
     .letter-log {
@@ -975,32 +1122,20 @@
         gap: .9rem;
       }
 
-      /* ── Momentos ── */
-      .moments {
+      /* ── Shared items ── */
+      .shared-items {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .75rem;
         margin-top: 2rem;
       }
-      .moment {
-        grid-template-columns: 40px 1fr;
-        gap: 0 1.2rem;
-        padding: 1.4rem 0;
-      }
-      .m-num {
-        font-size: .95rem;
-        padding-top: .1rem;
-      }
-      .m-title {
-        font-size: .92rem;
-        margin-bottom: .4rem;
-      }
-      .m-desc {
-        font-size: .84rem;
-        line-height: 1.7;
-      }
-      .m-badge {
-        font-size: .54rem;
-        letter-spacing: .13em;
-        padding: .14rem .5rem;
-      }
+      .si.wide  { grid-column: span 2; }
+      .si.full  { grid-column: span 2; }
+      .si.tall  { grid-row: span 1; }
+      .si { padding: 1.1rem 1rem 1rem; }
+      .si-icon { font-size: 1.05rem; margin-bottom: .5rem; }
+      .si-title { font-size: .8rem; }
+      .si.full .si-title { font-size: .88rem; }
+      .si-sub { font-size: .7rem; }
 
       /* ── Divider ── */
       .divider {
@@ -1048,6 +1183,27 @@
       .letters-grid {
         gap: 1.1rem;
         margin-top: 2rem;
+      }
+
+      /* ── Interstellar gate ── */
+      .ig-gate {
+        margin-top: 1.8rem;
+      }
+      .ig-header {
+        padding: .65rem 1.1rem;
+      }
+      .ig-body {
+        padding: 1.3rem 1.1rem 1.1rem;
+      }
+      .ig-waveform {
+        height: 44px; gap: 3px; margin-bottom: 1.2rem;
+      }
+      .ig-bar:nth-child(6) { height: 44px; }
+      .ig-bar:nth-child(5),
+      .ig-bar:nth-child(7) { height: 40px; }
+      .ig-play {
+        padding: .78rem 1rem;
+        font-size: .63rem; letter-spacing: .25em;
       }
 
       /* Días de silencio counter */
@@ -1353,55 +1509,65 @@
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
 
-<!-- ══════════════ MOMENTOS ══════════════ -->
+<!-- ══════════════ LO QUE COMPARTIMOS ══════════════ -->
 <div class="s">
-  <span class="s-label">Lo que compartíamos</span>
-  <h2 class="s-title">Más que amigos — <em>cómplices</em></h2>
+  <span class="s-label">Un mundo en común</span>
+  <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
 
-  <div class="moments">
-    <div class="moment">
-      <span class="m-num">I</span>
-      <div class="m-content">
-        <div class="m-title">Teatro</div>
-        <p class="m-desc">Hércules y El Príncipe de Egipto — fuera del colegio. No cualquier grupo de panas hace teatro juntos. Nosotros sí.</p>
-      </div>
+  <div class="shared-items">
+
+    <!-- 11 años La Merced — full width, el más grande -->
+    <div class="si full">
+      <span class="si-num">2005 — 2016</span>
+      <span class="si-icon">🏫</span>
+      <div class="si-title">Once años en La Merced</div>
+      <p class="si-sub">Kinder, primaria, liceo — juntos toda la formación. Eso no se simula. Once años de recreos, pasillos y aulas compartidas moldean para siempre.</p>
     </div>
-    <div class="moment">
-      <span class="m-num">II</span>
-      <div class="m-content">
-        <div class="m-title">League of Legends</div>
-        <p class="m-desc">Tu juego. Tu mundo. Horas de League que eran parte del lenguaje del grupo.<br><span class="m-badge">League of Legends</span></p>
-      </div>
+
+    <!-- Teatro -->
+    <div class="si wide">
+      <span class="si-icon">🎭</span>
+      <div class="si-title">Teatro</div>
+      <p class="si-sub">Hércules · El Príncipe de Egipto. Fuera del colegio, por gusto. No cualquier grupo hace eso.</p>
     </div>
-    <div class="moment">
-      <span class="m-num">III</span>
-      <div class="m-content">
-        <div class="m-title">Real Madrid</div>
-        <p class="m-desc">Tú, Carlos y David. Del Madrid los tres. Ese idioma que solo entiende el que lo vive.<br><span class="m-badge">Real Madrid</span></p>
-      </div>
+
+    <!-- Fortnite -->
+    <div class="si green-accent">
+      <span class="si-icon">🎮</span>
+      <div class="si-title">Fortnite</div>
+      <p class="si-sub">Cjj1092534 &amp; xaveris18</p>
     </div>
-    <div class="moment">
-      <span class="m-num">IV</span>
-      <div class="m-content">
-        <div class="m-title">Once años en La Merced</div>
-        <p class="m-desc">Kinder, primaria, liceo. Once años en el mismo colegio. Eso no se simula — eso te moldea junto a las mismas personas.</p>
-      </div>
+
+    <!-- Real Madrid -->
+    <div class="si">
+      <span class="si-icon">⚽</span>
+      <div class="si-title">Real Madrid</div>
+      <p class="si-sub">Tú, Carlos y David. El mismo idioma, la misma tribuna.</p>
     </div>
-    <div class="moment">
-      <span class="m-num">V</span>
-      <div class="m-content">
-        <div class="m-title">La UCAB</div>
-        <p class="m-desc">Carreras distintas, mismo grupo. La amistad sobrevivió al cambio de etapa. Eso no es poco.</p>
-      </div>
+
+    <!-- League of Legends -->
+    <div class="si green-accent wide">
+      <span class="si-icon">⚔️</span>
+      <div class="si-title">League of Legends</div>
+      <p class="si-sub">Tu juego. Tu mundo. Parte del lenguaje del grupo durante años.</p>
     </div>
-    <div class="moment">
-      <span class="m-num">VI</span>
-      <div class="m-content">
-        <div class="m-title">Veinte años</div>
-        <p class="m-desc">Es prácticamente toda una vida. La nuestra y la tuya. Ese es el peso de lo que estamos hablando.</p>
-      </div>
+
+    <!-- UCAB -->
+    <div class="si">
+      <span class="si-icon">🎓</span>
+      <div class="si-title">La UCAB</div>
+      <p class="si-sub">Carreras distintas. Mismo grupo. La amistad sobrevivió al cambio.</p>
     </div>
+
+    <!-- 20 años — full width, cierre -->
+    <div class="si full">
+      <span class="si-num">2005 — 2026</span>
+      <span class="si-icon">⏳</span>
+      <div class="si-title">Veinte años</div>
+      <p class="si-sub">Prácticamente toda una vida. La nuestra y la tuya. Ese es el peso real de lo que estamos hablando.</p>
+    </div>
+
   </div>
 </div>
 
@@ -1443,7 +1609,37 @@
       Esto es lo que queríamos haberte dicho.
     </p>
 
-    <div class="letters-grid">
+    <!-- GATE: entrada cinématica al estilo Interstellar -->
+    <div class="ig-gate" id="ig-gate" aria-label="Reproductor de transmisión">
+      <div class="ig-header">
+        <div class="ig-status">
+          <span class="ig-dot"></span>
+          <span class="ig-dot"></span>
+          <span class="ig-dot"></span>
+          TRANSMISIÓN RECIBIDA
+        </div>
+        <div class="ig-daycount">DÍA <strong id="ig-days">0</strong></div>
+      </div>
+      <div class="ig-body">
+        <div class="ig-waveform" aria-hidden="true">
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+          <span class="ig-bar"></span>
+        </div>
+        <button class="ig-play" id="ig-play">▶ REPRODUCIR TRANSMISIÓN</button>
+        <p class="ig-meta">2 grabaciones &nbsp;·&nbsp; 13 Mayo 2024 &nbsp;·&nbsp; Sin respuesta</p>
+      </div>
+    </div>
+
+    <div class="letters-grid gate-locked">
 
       <!-- CARTA CARLOS -->
       <div class="letter">
@@ -1885,6 +2081,36 @@ if (dockLight) {
   dockLight.addEventListener('click', () => {
     luzOn = !luzOn;
     dockLight.classList.toggle('apagada', !luzOn);
+  });
+}
+
+/* ─── Interstellar gate ─── */
+const igGate = document.getElementById('ig-gate');
+const igPlay = document.getElementById('ig-play');
+const igDaysEl = document.getElementById('ig-days');
+const lettersGrid = document.querySelector('.letters-grid');
+
+if (igDaysEl) igDaysEl.textContent = silencio;
+
+if (igPlay) {
+  igPlay.addEventListener('click', () => {
+    igPlay.textContent = 'CARGANDO...';
+    igPlay.disabled = true;
+    igPlay.style.opacity = '.45';
+    setTimeout(() => {
+      // Gate se desvanece y sube
+      igGate.classList.add('ig-hidden');
+      // Letters grid se revela con transición
+      if (lettersGrid) {
+        lettersGrid.classList.remove('gate-locked');
+        lettersGrid.style.transition = 'opacity .9s ease, transform .9s ease';
+        // Forzar reflow para que la transición sea visible
+        lettersGrid.offsetHeight;
+        lettersGrid.style.opacity = '1';
+        lettersGrid.style.transform = 'translateY(0)';
+        lettersGrid.style.pointerEvents = 'auto';
+      }
+    }, 650);
   });
 }
 
