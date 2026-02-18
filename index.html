@@ -899,12 +899,14 @@
       pointer-events: none;
     }
 
-    /* Polaroids — se revelan al entrar en viewport */
+    /* Polaroids — ocultas hasta que se toca el panel */
     .office-polaroids {
-      display: flex; justify-content: center; align-items: flex-end;
+      display: none;
+      justify-content: center; align-items: flex-end;
       gap: 1.8rem; flex-wrap: wrap;
       margin-top: 3rem; padding: 0 .5rem 1rem;
     }
+    .office-section.revealed .office-polaroids { display: flex; }
     .polaroid {
       background: #f4efe8;
       padding: .72rem .72rem 2rem;
