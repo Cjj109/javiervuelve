@@ -2158,24 +2158,24 @@ function getLuzOn() { return typeof luzOn === 'undefined' ? true : luzOn; }
 
 function drawLight(ts) {
   requestAnimationFrame(drawLight);
-  if (ts - lastTs < 48) return; // ~20fps
+  // dt basado en tiempo real; cap de 100ms para evitar salto tras volver de otra pestaña
+  const dt = Math.min(ts - lastTs, 100);
+  if (dt < 33) return; // ~30fps
   lastTs = ts;
 
   // Fundido al apagar/encender
   const target = getLuzOn() ? 1 : 0;
   intensity += (target - intensity) * 0.06;
 
-  // Dos fases de respiración: lenta (marea) + micro-ondulación (agua)
-  phase += 0.007;
-  const breath   = 0.5 + 0.5 * Math.sin(phase);           // ciclo lento ~15s
-  const ripple   = 0.5 + 0.5 * Math.sin(phase * 3.7 + 1); // micro-ondulación
+  // Phase proporcional al tiempo real — sin saltos aunque el dispositivo pierda frames
+  phase += 0.007 * (dt / 50);
+  const breath = 0.5 + 0.5 * Math.sin(phase); // respiración suave única
 
   ctx.clearRect(0, 0, W, H);
   if (intensity < 0.01) return; // totalmente apagado
 
   const i  = intensity;
-  // Respiración compuesta: marea base + pequeño parpadeo de agua
-  const bp = (breath * 0.72 + ripple * 0.28) * i;
+  const bp = breath * i;
 
   /* ══════════════════════════════════════════════════════
      CAPA 1 — NÚCLEO eliminado (Opción C).
