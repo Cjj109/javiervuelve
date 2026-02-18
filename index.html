@@ -846,7 +846,7 @@
     .office-section {
       position: relative; z-index: 1;
       padding: 5rem 1.5rem 4rem;
-      display: flex; justify-content: center;
+      display: flex; flex-direction: column; align-items: center;
     }
     .office-inner {
       max-width: 700px; width: 100%;
@@ -856,6 +856,8 @@
       border-radius: 12px;
       padding: 2.8rem 3rem 2.4rem;
       text-align: center;
+      cursor: pointer;
+      transition: opacity .45s ease, transform .45s ease;
     }
     /* Línea caliente en la parte superior — warm amber, distinta del oro frío */
     .office-inner::before {
@@ -863,6 +865,24 @@
       top: 0; left: 10%; right: 10%; height: 1.5px;
       background: linear-gradient(to right, transparent, rgba(240,200,80,.45), transparent);
       border-radius: 1px;
+    }
+    /* Hint sutil al pie del panel */
+    .office-inner::after {
+      content: '▾  ver los momentos  ▾';
+      display: block; margin-top: 1.6rem;
+      font-family: 'Inter', sans-serif;
+      font-size: .42rem; letter-spacing: .32em; text-transform: uppercase;
+      color: rgba(240,200,80,.2);
+      animation: hint-pulse 3s ease-in-out infinite;
+    }
+    @keyframes hint-pulse {
+      0%, 100% { opacity: .5; }
+      50% { opacity: 1; }
+    }
+    .office-section.revealed .office-inner {
+      opacity: 0;
+      transform: scale(.97) translateY(-6px);
+      pointer-events: none;
     }
 
     /* Polaroids — se revelan al entrar en viewport */
@@ -2386,21 +2406,22 @@ document.querySelectorAll('.sw').forEach(sw => {
   sw.addEventListener('click', () => sw.classList.toggle('flipped'));
 });
 
-/* ─── Polaroids — se revelan al entrar en viewport ─── */
+/* ─── The Office — toca el panel para revelar las polaroids ─── */
 const polaroids = document.querySelectorAll('.polaroid');
-const officePolaroids = document.getElementById('office-polaroids');
-if (polaroids.length && officePolaroids) {
-  const polaroidObs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      polaroids.forEach((p, i) => {
-        setTimeout(() => p.classList.add('shot'), i * 280);
-      });
-      polaroidObs.disconnect();
+const officeInner = document.getElementById('office-inner');
+const officeSection = document.getElementById('office-section');
+if (officeInner && polaroids.length) {
+  officeInner.addEventListener('click', () => {
+    officeSection.classList.add('revealed');
+    // Colapsar la tarjeta tras el fade-out
+    setTimeout(() => { officeInner.style.display = 'none'; }, 480);
+    // Revelar polaroids escalonadas
+    polaroids.forEach((p, i) => {
+      setTimeout(() => p.classList.add('shot'), 320 + i * 300);
     });
-  }, { threshold: 0.2 });
-  polaroidObs.observe(officePolaroids);
+  });
 
+  // Cada polaroid abre el lightbox
   polaroids.forEach(p => {
     p.addEventListener('click', () => {
       lbImg.src = p.dataset.src;
