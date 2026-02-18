@@ -56,57 +56,18 @@
       padding: 5rem 1.5rem 4rem;
       background:
         /* Halo dorado alrededor del "20" */
-        radial-gradient(ellipse 60% 45% at 50% 40%,
-          rgba(240,176,0,.06) 0%, transparent 70%),
-        /* Atmósfera de agua nocturna en la parte baja */
+        radial-gradient(ellipse 55% 40% at 50% 38%,
+          rgba(240,176,0,.07) 0%, transparent 70%),
+        /* Neblina verde desde la derecha — la orilla de Javier */
+        radial-gradient(ellipse 55% 70% at 92% 75%,
+          rgba(0,200,112,.13) 0%, rgba(0,200,112,.04) 45%, transparent 70%),
+        /* Atmósfera de agua oscura en la parte baja */
         linear-gradient(to top,
-          rgba(0,15,9,.35) 0%,
-          rgba(0,10,6,.12) 18%,
-          transparent 35%),
-        /* Halo verde muy sutil desde la derecha (la orilla de Javier) */
-        radial-gradient(ellipse 40% 55% at 88% 68%,
-          rgba(0,200,112,.05) 0%, transparent 65%);
+          rgba(0,18,10,.5) 0%,
+          rgba(0,12,7,.15) 20%,
+          transparent 40%);
     }
 
-    /* Runas LoL en esquinas */
-    .rune { position: absolute; pointer-events: none; }
-    .rune::before, .rune::after {
-      content: ''; position: absolute;
-      background: var(--gold); opacity: .5; border-radius: 1px;
-    }
-    .rune.tl { top: 16px; left: 16px; }
-    .rune.tl::before { width: 20px; height: 1.5px; top: 0; left: 0; }
-    .rune.tl::after  { width: 1.5px; height: 20px; top: 0; left: 0; }
-    .rune.tr { top: 16px; right: 16px; }
-    .rune.tr::before { width: 20px; height: 1.5px; top: 0; right: 0; }
-    .rune.tr::after  { width: 1.5px; height: 20px; top: 0; right: 0; }
-    .rune.bl { bottom: 16px; left: 16px; }
-    .rune.bl::before { width: 20px; height: 1.5px; bottom: 0; left: 0; }
-    .rune.bl::after  { width: 1.5px; height: 20px; bottom: 0; left: 0; }
-    .rune.br { bottom: 16px; right: 16px; }
-    .rune.br::before { width: 20px; height: 1.5px; bottom: 0; right: 0; }
-    .rune.br::after  { width: 1.5px; height: 20px; bottom: 0; right: 0; }
-
-    /* SVG hexágono decorativo */
-    .hero-hex {
-      position: absolute;
-      width: clamp(240px, 48vw, 460px);
-      height: clamp(240px, 48vw, 460px);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      opacity: .055;
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-family: 'Inter', sans-serif;
-      font-size: .62rem;
-      letter-spacing: .38em;
-      text-transform: uppercase;
-      color: var(--gold);
-      opacity: .75;
-      margin-bottom: 2.2rem;
-    }
 
     .hero-num {
       font-family: 'Cinzel', Georgia, serif;
@@ -132,43 +93,20 @@
 
     .hero-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(1.6rem, 5vw, 4rem);
+      font-size: clamp(2rem, 7vw, 5rem);
       font-weight: 300;
-      line-height: 1.25;
-      margin-top: 1.8rem;
+      line-height: 1.2;
+      margin-top: 1.4rem;
       color: var(--text);
-      max-width: 560px;
-      /* evita overflow en mobile */
-      word-break: keep-all;
-      overflow-wrap: break-word;
+      letter-spacing: .04em;
     }
     .hero-title .name {
       color: var(--gold);
       font-style: italic;
       font-weight: 400;
-      text-shadow: 0 0 18px rgba(240,176,0,.3);
+      text-shadow: 0 0 28px rgba(240,176,0,.4);
     }
 
-    .hero-desc {
-      font-size: clamp(.85rem, 2.2vw, .98rem);
-      color: var(--muted);
-      line-height: 1.9;
-      max-width: 380px;
-      margin: 1.3rem auto 0;
-    }
-
-    .hero-from {
-      display: flex; align-items: center;
-      gap: .8rem; margin-top: 2.2rem;
-      max-width: 340px; width: 100%;
-    }
-    .hfl { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--line)); }
-    .hfr { flex: 1; height: 1px; background: linear-gradient(to left, transparent, var(--line)); }
-    .hf-label {
-      font-size: .6rem; letter-spacing: .28em;
-      text-transform: uppercase; color: rgba(240,176,0,.6);
-      white-space: nowrap;
-    }
 
     .scroll-hint {
       position: absolute; bottom: 2rem; left: 50%;
@@ -656,55 +594,51 @@
     ═══════════════════════════════ */
     .gatsby-hero-light {
       position: absolute;
-      /* El orbe queda aprox. al 30% desde abajo, 10% desde la derecha */
-      bottom: 14%; right: 7%;
+      bottom: 12%; right: 6%;
       display: flex; flex-direction: column;
       align-items: center;
       z-index: 2; pointer-events: none;
     }
-    /* Rayo hacia arriba — el haz del faro */
     .ghl-beam-up {
-      width: 1px; height: 80px;
-      background: linear-gradient(to top, rgba(0,220,120,.55), transparent);
+      width: 2px; height: 120px;
+      background: linear-gradient(to top, rgba(0,220,120,.7), transparent);
     }
-    /* El orbe: la luz */
     .ghl-orb {
-      width: 18px; height: 18px;
+      width: 26px; height: 26px;
       background: var(--green);
       border-radius: 50%; flex-shrink: 0;
       box-shadow:
-        0 0 0  5px rgba(0,200,122,.08),
-        0 0 22px 9px  rgba(0,200,122,.52),
-        0 0 70px 28px rgba(0,200,122,.22),
-        0 0 150px 55px rgba(0,200,122,.10),
-        0 0 280px 90px rgba(0,200,122,.05);
+        0 0 0  6px rgba(0,200,122,.12),
+        0 0 28px 12px rgba(0,200,122,.65),
+        0 0 90px 36px rgba(0,200,122,.28),
+        0 0 180px 70px rgba(0,200,122,.14),
+        0 0 340px 110px rgba(0,200,122,.07);
       animation: gdock 3.4s ease-in-out infinite;
     }
-    /* Rayo hacia abajo — reflejo sobre el agua */
     .ghl-beam-down {
-      width: 1px; height: 60px;
-      background: linear-gradient(to bottom, rgba(0,220,120,.45), transparent);
+      width: 2px; height: 80px;
+      background: linear-gradient(to bottom, rgba(0,220,120,.6), transparent);
     }
-    /* Brillo difuso del agua */
     .ghl-water {
-      width: 130px; height: 18px;
+      width: 180px; height: 24px;
       background: radial-gradient(ellipse 100% 100% at 50% 0%,
-        rgba(0,200,112,.16) 0%, transparent 100%);
-      filter: blur(9px);
-      margin-top: -4px;
+        rgba(0,200,112,.22) 0%, transparent 100%);
+      filter: blur(12px);
+      margin-top: -6px;
     }
-    /* Etiqueta: la referencia explícita */
     .ghl-label {
-      margin-top: 10px;
+      margin-top: 12px;
       font-family: 'Inter', sans-serif;
       font-size: .5rem; letter-spacing: .26em;
       text-transform: uppercase;
-      color: rgba(0,200,112,.4);
+      color: rgba(0,200,112,.45);
       white-space: nowrap;
     }
     @media (max-width: 640px) {
-      .gatsby-hero-light { bottom: 10%; right: 4%; }
-      .ghl-label { font-size: .42rem; letter-spacing: .18em; }
+      .gatsby-hero-light { bottom: 8%; right: 5%; }
+      .ghl-orb { width: 22px; height: 22px; }
+      .ghl-beam-up { height: 90px; }
+      .ghl-beam-down { height: 60px; }
     }
 
     @keyframes gdock {
@@ -967,28 +901,13 @@
 
 <!-- ══════════════ HERO ══════════════ -->
 <div class="hero">
-  <div class="rune tl"></div><div class="rune tr"></div>
-  <div class="rune bl"></div><div class="rune br"></div>
 
-  <span class="hero-eyebrow">Colegio La Merced · UCAB · 2005</span>
   <div class="hero-num">20</div>
   <div class="hero-anos">años de amistad</div>
 
   <h1 class="hero-title">
-    Para <span class="name">Javier</span>,<br>
-    nuestro pana de toda la vida
+    Para <span class="name">Javier</span>
   </h1>
-
-  <p class="hero-desc">
-    Desde kinder hasta la universidad.<br>
-    Eso no se olvida, y tampoco se rinde fácil.
-  </p>
-
-  <div class="hero-from">
-    <div class="hfl"></div>
-    <span class="hf-label">Carlos &amp; Anthonny</span>
-    <div class="hfr"></div>
-  </div>
 
   <!-- La luz al final del muelle — The Great Gatsby -->
   <div class="gatsby-hero-light" aria-hidden="true">
