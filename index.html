@@ -83,6 +83,37 @@
       margin-top: .8rem;
     }
 
+    /* Tap para ver la línea de tiempo */
+    .hero-ano-btn {
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    .hero-ano-btn .hero-anos::after {
+      content: ' ▾';
+      opacity: .35;
+      margin-left: .15em;
+      display: inline-block;
+      transition: transform .35s ease;
+    }
+    .hero-ano-btn.expanded .hero-anos::after {
+      transform: rotate(180deg);
+    }
+    .hero-timeline {
+      width: 100%; max-width: 620px;
+      overflow: hidden;
+      max-height: 0; opacity: 0; margin-top: 0;
+      transition: max-height .55s cubic-bezier(.4,0,.2,1),
+                  opacity .4s ease .1s,
+                  margin-top .4s ease;
+    }
+    .hero-timeline.open {
+      max-height: 220px; opacity: 1; margin-top: 1.6rem;
+    }
+    .hero-timeline .years-track { margin-top: 0; }
+
     .hero-title {
       font-family: 'Cormorant Garamond', Georgia, serif;
       font-size: clamp(2.2rem, 8vw, 5.5rem);
@@ -1055,6 +1086,9 @@
       opacity: 0;
       transform: translateY(22px);
       pointer-events: none;
+      height: 0;
+      overflow: hidden;
+      margin-top: 0;
     }
 
     /* ── Header REC de cada carta ── */
@@ -1307,9 +1341,9 @@
       .sw-back-title { font-size: .46rem; }
       .sw-back-rule { width: 20px; }
       .sw-items li { font-size: .54rem; }
-      .office-polaroids { gap: 1.2rem; padding-bottom: .5rem; }
-      .polaroid { width: min(200px, 44vw); padding: .6rem .6rem 1.7rem; }
-      .polaroid-caption { font-size: .82rem; margin-top: .5rem; }
+      .office-polaroids { flex-direction: column; align-items: center; gap: 1.6rem; margin-top: 2rem; padding-bottom: 1rem; }
+      .polaroid { width: min(300px, 82vw); padding: .75rem .75rem 2.2rem; }
+      .polaroid-caption { font-size: .88rem; margin-top: .6rem; }
 
       /* ── Divider ── */
       .divider {
@@ -1607,8 +1641,19 @@
 <!-- ══════════════ HERO ══════════════ -->
 <div class="hero">
 
-  <div class="hero-num">20</div>
-  <div class="hero-anos">años de amistad</div>
+  <div class="hero-ano-btn" id="hero-ano-btn" role="button" tabindex="0" aria-expanded="false">
+    <div class="hero-num">20</div>
+    <div class="hero-anos">años de amistad</div>
+  </div>
+
+  <div class="hero-timeline" id="hero-timeline" aria-hidden="true">
+    <div class="years-track">
+      <div class="year-block"><span class="yb-num">2005</span><span class="yb-label">Kinder</span></div>
+      <div class="year-block"><span class="yb-num">2011</span><span class="yb-label">Liceo</span></div>
+      <div class="year-block"><span class="yb-num">2016</span><span class="yb-label">Graduación</span></div>
+      <div class="year-block"><span class="yb-num">UCAB</span><span class="yb-label">Universidad</span></div>
+    </div>
+  </div>
 
   <h1 class="hero-title">
     Para <span class="name">Javier</span>
@@ -1638,25 +1683,6 @@
     <div class="crew-person"><div class="cp-ring">A</div><span class="cp-name">Arthur</span></div>
     <div class="crew-person"><div class="cp-ring">Z</div><span class="cp-name">Zachiro</span></div>
     <div class="crew-person"><div class="cp-ring">D</div><span class="cp-name">David</span></div>
-  </div>
-
-  <div class="years-track">
-    <div class="year-block">
-      <span class="yb-num">2005</span>
-      <span class="yb-label">Kinder</span>
-    </div>
-    <div class="year-block">
-      <span class="yb-num">2011</span>
-      <span class="yb-label">Liceo</span>
-    </div>
-    <div class="year-block">
-      <span class="yb-num">2016</span>
-      <span class="yb-label">Graduación</span>
-    </div>
-    <div class="year-block">
-      <span class="yb-num">UCAB</span>
-      <span class="yb-label">Universidad</span>
-    </div>
   </div>
 
 
@@ -2337,6 +2363,21 @@ if (dockLight) {
   dockLight.addEventListener('click', () => {
     luzOn = !luzOn;
     dockLight.classList.toggle('apagada', !luzOn);
+  });
+}
+
+/* ─── Hero: "20 años de amistad" toca para ver la línea de tiempo ─── */
+const heroAnoBtn = document.getElementById('hero-ano-btn');
+const heroTimeline = document.getElementById('hero-timeline');
+if (heroAnoBtn && heroTimeline) {
+  heroAnoBtn.addEventListener('click', () => {
+    const open = heroTimeline.classList.toggle('open');
+    heroAnoBtn.classList.toggle('expanded', open);
+    heroAnoBtn.setAttribute('aria-expanded', open);
+    heroTimeline.setAttribute('aria-hidden', !open);
+  });
+  heroAnoBtn.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); heroAnoBtn.click(); }
   });
 }
 
