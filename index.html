@@ -1663,25 +1663,16 @@ function drawLight(ts) {
   const bp = (breath * 0.72 + ripple * 0.28) * i;
 
   /* ══════════════════════════════════════════════════════
-     CAPA 1 — NÚCLEO DE LA FUENTE
-     Pequeño y concentrado en la esquina sup-derecha.
-     Alta densidad en el centro → caída brusca.
-     Simula el orbe distante — muy brillante pero pequeño.
+     CAPA 1 — NÚCLEO eliminado (Opción C).
+     El orbe CSS (.ghl-orb) ya es el núcleo: tiene box-shadow
+     multicapa (hasta 240px de spread) que actúa como halo
+     concentrado. Dibujar un segundo núcleo en canvas sobre
+     el mismo punto creaba un "doble foco" visible en móvil.
+     Las capas 2-4 proveen toda la atmósfera atmosférica.
   ══════════════════════════════════════════════════════ */
   const srcX = W * 0.95;
-  const srcY = H * 0.085; // donde está el orbe CSS
-  const coreR = Math.min(W, H) * 0.55; // radio del halo principal
-
-  const gCore = ctx.createRadialGradient(srcX, srcY, 0, srcX, srcY, coreR);
-  gCore.addColorStop(0,    `rgba(0,224,128,${(0.52 + bp * 0.18) * i})`); // núcleo — verde puro, vivo
-  gCore.addColorStop(0.04, `rgba(0,210,118,${(0.30 + bp * 0.10) * i})`);
-  gCore.addColorStop(0.10, `rgba(0,195,108,${(0.14 + bp * 0.05) * i})`);
-  gCore.addColorStop(0.22, `rgba(0,175,96, ${(0.060 + bp * 0.018) * i})`);
-  gCore.addColorStop(0.42, `rgba(0,155,84, ${(0.022 + bp * 0.006) * i})`);
-  gCore.addColorStop(0.70, `rgba(0,130,70, ${0.007 * i})`);
-  gCore.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gCore;
-  ctx.fillRect(0, 0, W, H);
+  const srcY = H * 0.085; // posición de referencia del orbe CSS
+  const coreR = Math.min(W, H) * 0.55; // radio usado por capa 2
 
   /* ══════════════════════════════════════════════════════
      CAPA 2 — CONO DIAGONAL DE LUZ
