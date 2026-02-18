@@ -9,25 +9,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
   <style>
     /* ════════════════════════════════════
-       PALETA: una sola — negro + oro
+       PALETA: agua nocturna bajo luz de luna verde
        ════════════════════════════════════
-       --dark  : fondo base
-       --gold  : único acento (Real Madrid / LoL Legendary border)
-       --text  : blanco frío
-       --muted : texto secundario
-       --card  : superficies elevadas
+       --dark  : fondo base (agua profunda)
+       --card  : azul-marino — la SOMBRA, el agua que sostiene la luz
+       --green : verde del canvas — LA LUZ, no el fondo
+       --gold  : único acento cálido (Real Madrid / LoL Legendary)
+       --text  : blanco neutro-verdoso — legible sin pelear con el verde
+       --muted : texto secundario neutro-verde (sin dominante azul)
     */
     :root {
-      --dark:  #010509;
-      --bg1:   #030a12;
-      --card:  #060f1c;
-      --card2: #08152a;
-      --gold:  #f0b000;
+      --dark:  #010608;   /* negro — agua profunda, tinte casi neutro */
+      --bg1:   #030c10;   /* azul-teal muy oscuro */
+      --card:  #060f1c;   /* azul-marino — la sombra, el agua */
+      --card2: #08152a;   /* azul profundo — fondo de cards secundarias */
+      --gold:  #f0b000;   /* oro cálido */
       --gold2: rgba(240,176,0,0.18);
-      --text:  #dde6f2;
-      --muted: rgba(190,210,230,0.5);
+      --text:  #dde8e2;   /* blanco neutro-verdoso — no pelea con el verde */
+      --muted: rgba(195,215,205,0.52); /* neutro-verde suave, sin dominante azul */
       --line:  rgba(240,176,0,0.16);
-      --green: #00c87a;
+      --green: #00c87a;   /* verde del canvas/orbe — LA LUZ */
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -358,7 +359,7 @@
       font-family: 'Inter', system-ui, sans-serif;
       font-size: clamp(.9rem, 1.8vw, .98rem);
       font-style: normal; font-weight: 300;
-      line-height: 1.95; color: rgba(210,225,242,.88);
+      line-height: 1.95; color: rgba(210,228,218,.88);
     }
     .letter-body p + p { margin-top: 1rem; }
     .letter-body strong {
@@ -466,7 +467,7 @@
       position: relative; z-index: 1;
       text-align: center; padding: 1.6rem 1rem 3.5rem;
       border-top: 1px solid rgba(240,176,0,.06);
-      font-size: .7rem; color: rgba(190,210,230,.15);
+      font-size: .7rem; color: rgba(195,215,205,.15);
       letter-spacing: .16em;
     }
 
@@ -639,7 +640,7 @@
     .gatsby-moment {
       position: relative; z-index: 1;
       text-align: center;
-      padding: 5rem 1.5rem 6rem;
+      padding: 9rem 1.5rem 10rem;
       overflow: hidden;
       /* Night water background — deep, dark, with green glow centered at beacon */
       background:
@@ -707,7 +708,7 @@
     .gm-attr {
       font-size: .6rem; letter-spacing: .28em;
       text-transform: uppercase; color: var(--muted);
-      margin-bottom: 2rem;
+      margin-bottom: 2.8rem;
     }
     .gm-sub {
       font-size: .72rem; letter-spacing: .14em;
@@ -805,14 +806,14 @@
     }
     .log-msg {
       font-family: 'Inter', sans-serif;
-      font-size: .75rem; color: rgba(190,210,230,.38);
+      font-size: .75rem; color: rgba(195,215,205,.38);
       line-height: 1.45;
     }
     .log-entry.log-hoy .log-day {
       color: rgba(240,176,0,.75);
     }
     .log-entry.log-hoy .log-msg {
-      color: rgba(190,210,230,.75);
+      color: rgba(195,215,205,.75);
       font-weight: 400;
     }
 
