@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Para Javier — de Carlos y Anthonny</title>
+  <meta name="description" content="20 años de amistad. Para Javier — un mensaje de Carlos y Anthonny." />
+  <meta property="og:title" content="Para Javier — de Carlos y Anthonny" />
+  <meta property="og:description" content="20 años de amistad. Un mensaje de Carlos y Anthonny." />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="es_ES" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400&display=swap" rel="stylesheet">
@@ -33,6 +38,24 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    /* Focus visible — accesibilidad teclado */
+    :focus { outline: none; }
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    button:focus-visible,
+    .hero-ano-btn:focus-visible,
+    .sw:focus-visible,
+    .gphoto:focus-visible,
+    .polaroid:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .gatsby-hero-light:focus-visible .ghl-orb {
+      box-shadow: 0 0 0 4px rgba(240,176,0,.4), 0 0 14px 7px rgba(0,200,122,.62);
+    }
 
     body {
       background: var(--dark);
@@ -249,23 +272,150 @@
     .cp-name.hi { color: var(--gold); }
 
     /* ════════════════════════════════════
-       SWATCHES — categorías con flip 3D
-       Paleta de la página: gold / green / dim
-       Toca → rota y muestra lo que hay dentro
+       SWATCHES — fragmentos Kintsugi; al unirlos → jarrón
     ════════════════════════════════════ */
+    .swatches-wrap {
+      position: relative;
+      margin-top: 2.8rem;
+      min-height: 420px;
+    }
+    .swatches.assembling { pointer-events: none; }
+    .swatches.assembled { opacity: 0; pointer-events: none; transition: opacity .5s ease; }
+
+    /* Estado inicial: tarjetas enteras (rectángulos con esquinas redondeadas) */
+    .swatches-wrap:not(.swatches-broken) .sw {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      border-radius: 10px;
+      transition: clip-path .55s cubic-bezier(.4, 0, .2, 1), border-radius .4s ease;
+    }
+    .swatches-wrap:not(.swatches-broken) .sw::before {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      border-radius: 10px;
+      transition: clip-path .55s cubic-bezier(.4, 0, .2, 1);
+    }
+    .swatches-wrap:not(.swatches-broken) .sw-inner,
+    .swatches-wrap:not(.swatches-broken) .sw-front,
+    .swatches-wrap:not(.swatches-broken) .sw-back {
+      border-radius: 10px;
+    }
+
+    /* Animación de rotura: ligero temblor */
+    .swatches-wrap.swatches-breaking .swatches {
+      animation: sw-break-shake 0.5s ease-out;
+    }
+    @keyframes sw-break-shake {
+      0%, 100% { transform: translateX(0); }
+      15% { transform: translateX(-3px); }
+      30% { transform: translateX(3px); }
+      45% { transform: translateX(-2px); }
+      60% { transform: translateX(2px); }
+      75% { transform: translateX(-1px); }
+    }
+
     .swatches {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 2.8rem;
+      gap: 12px;
       max-width: 680px;
-      margin-left: auto; margin-right: auto;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .sw { height: 184px; cursor: pointer; }
+    /* Fragmentos: solo cuando ya están "rotos" — mismos fragmentos que el jarrón de abajo (SVG) */
+    .sw {
+      height: 184px; cursor: pointer;
+      position: relative;
+      transition: filter .3s ease, transform .3s ease;
+    }
+    .sw::before {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      pointer-events: none;
+      border: 1.5px solid rgba(240,176,0,.55);
+      border-radius: 0;
+      opacity: .85;
+    }
+    .swatches-wrap.swatches-broken .sw {
+      border-radius: 0;
+      transition: clip-path .5s cubic-bezier(.4, 0, .2, 1), border-radius .3s ease;
+    }
+    .swatches-wrap.swatches-broken .sw::before {
+      border-radius: 0;
+      transition: clip-path .5s cubic-bezier(.4, 0, .2, 1);
+    }
+    /* Fragmentos con polygon() — compatible con Safari (url() no aplica clip en Safari) */
+    .swatches-wrap.swatches-broken .sw:nth-child(1) {
+      clip-path: polygon(0 0, 100% 0, 96% 42%, 58% 48%, 22% 100%, 0 88%);
+      -webkit-clip-path: polygon(0 0, 100% 0, 96% 42%, 58% 48%, 22% 100%, 0 88%);
+      transition-delay: 0ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(1)::before {
+      clip-path: polygon(0 0, 100% 0, 96% 42%, 58% 48%, 22% 100%, 0 88%);
+      -webkit-clip-path: polygon(0 0, 100% 0, 96% 42%, 58% 48%, 22% 100%, 0 88%);
+      transition-delay: 0ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(2) {
+      clip-path: polygon(4% 0, 100% 0, 100% 45%, 78% 52%, 42% 100%, 0 100%, 0 48%);
+      -webkit-clip-path: polygon(4% 0, 100% 0, 100% 45%, 78% 52%, 42% 100%, 0 100%, 0 48%);
+      transition-delay: 60ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(2)::before {
+      clip-path: polygon(4% 0, 100% 0, 100% 45%, 78% 52%, 42% 100%, 0 100%, 0 48%);
+      -webkit-clip-path: polygon(4% 0, 100% 0, 100% 45%, 78% 52%, 42% 100%, 0 100%, 0 48%);
+      transition-delay: 60ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(3) {
+      clip-path: polygon(0 8%, 92% 0, 100% 55%, 100% 100%, 20% 100%, 0 82%);
+      -webkit-clip-path: polygon(0 8%, 92% 0, 100% 55%, 100% 100%, 20% 100%, 0 82%);
+      transition-delay: 120ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(3)::before {
+      clip-path: polygon(0 8%, 92% 0, 100% 55%, 100% 100%, 20% 100%, 0 82%);
+      -webkit-clip-path: polygon(0 8%, 92% 0, 100% 55%, 100% 100%, 20% 100%, 0 82%);
+      transition-delay: 120ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(4) {
+      clip-path: polygon(8% 0, 100% 0, 100% 90%, 80% 100%, 0 100%, 0 18%);
+      -webkit-clip-path: polygon(8% 0, 100% 0, 100% 90%, 80% 100%, 0 100%, 0 18%);
+      transition-delay: 180ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(4)::before {
+      clip-path: polygon(8% 0, 100% 0, 100% 90%, 80% 100%, 0 100%, 0 18%);
+      -webkit-clip-path: polygon(8% 0, 100% 0, 100% 90%, 80% 100%, 0 100%, 0 18%);
+      transition-delay: 180ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(5) {
+      clip-path: polygon(0 0, 100% 5%, 100% 100%, 18% 96%, 0 78%);
+      -webkit-clip-path: polygon(0 0, 100% 5%, 100% 100%, 18% 96%, 0 78%);
+      transition-delay: 240ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(5)::before {
+      clip-path: polygon(0 0, 100% 5%, 100% 100%, 18% 96%, 0 78%);
+      -webkit-clip-path: polygon(0 0, 100% 5%, 100% 100%, 18% 96%, 0 78%);
+      transition-delay: 240ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(6) {
+      clip-path: polygon(0 5%, 100% 0, 100% 100%, 82% 96%, 0 85%);
+      -webkit-clip-path: polygon(0 5%, 100% 0, 100% 100%, 82% 96%, 0 85%);
+      transition-delay: 300ms;
+    }
+    .swatches-wrap.swatches-broken .sw:nth-child(6)::before {
+      clip-path: polygon(0 5%, 100% 0, 100% 100%, 82% 96%, 0 85%);
+      -webkit-clip-path: polygon(0 5%, 100% 0, 100% 100%, 82% 96%, 0 85%);
+      transition-delay: 300ms;
+    }
+
+    .sw.sw-fly {
+      position: fixed !important;
+      z-index: 100;
+      transition: transform 1s cubic-bezier(.25,.46,.45,.94), opacity 1s ease;
+      transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(0);
+      opacity: 0;
+    }
+    .sw.sw-fly .sw-inner { border-radius: 0; }
+
     .sw-inner {
       width: 100%; height: 100%; position: relative;
-      border-radius: 10px;
+      border-radius: 0;
     }
     .sw-watermark {
       position: absolute;
@@ -284,7 +434,7 @@
 
     .sw-front, .sw-back {
       position: absolute; inset: 0;
-      border-radius: 10px;
+      border-radius: 0;
       transition: opacity .38s ease, transform .38s ease;
     }
 
@@ -302,7 +452,7 @@
     .sw-front::before {
       content: ''; position: absolute;
       top: 0; left: 0; right: 0; height: 3px;
-      border-radius: 10px 10px 0 0;
+      border-radius: 0;
     }
     .sw-front::after {
       content: ''; position: absolute;
@@ -379,6 +529,29 @@
     .sw-dim .sw-back-title    { color: rgba(195,215,205,.62); }
     .sw-dim .sw-back-rule     { background: rgba(195,215,205,.55); }
     .sw-dim .sw-items li      { color: rgba(195,215,205,.88); }
+
+    /* Vase que aparece al unir todos los fragmentos */
+    .swatches-vase {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%) scale(0.85);
+      opacity: 0; pointer-events: none;
+      width: clamp(140px, 30vw, 200px);
+      transition: opacity .8s ease .4s, transform .8s cubic-bezier(.25,.46,.45,.94) .4s;
+    }
+    .swatches-wrap.assembled .swatches-vase {
+      opacity: 1; transform: translate(-50%, -50%) scale(1);
+    }
+    .swatches-vase .kintsugi-svg { width: 100%; height: auto; }
+    .swatches-assembled-text {
+      position: absolute; left: 0; right: 0; bottom: -2.5rem;
+      text-align: center;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1rem, 2.5vw, 1.35rem);
+      font-style: italic; color: var(--gold);
+      opacity: 0;
+      transition: opacity .6s ease 1.2s;
+    }
+    .swatches-wrap.assembled .swatches-assembled-text { opacity: 1; }
 
     /* ════════════════════════════════════
        DIVIDER
@@ -497,37 +670,89 @@
         rgba(240,176,0,.05) 0%, transparent 70%);
     }
 
-    /* SVG del jarrón Kintsugi */
+    /* SVG del jarrón Kintsugi — 3D interactivo */
     .kintsugi-wrap {
       display: flex; justify-content: center;
       margin-bottom: 3rem;
+      position: relative;
+      perspective: 1000px;
+      transform-style: preserve-3d;
+      transition: transform 0.1s ease-out;
+    }
+    .kintsugi-glow {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      background: radial-gradient(circle 90px at var(--mx, 50%) var(--my, 50%), rgba(255, 223, 0, 0.35) 0%, transparent 100%);
+      mix-blend-mode: color-dodge;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 10;
+      border-radius: 50%;
     }
     .kintsugi-svg {
       width: clamp(160px, 35vw, 240px);
       height: clamp(180px, 40vw, 270px);
       overflow: visible;
     }
-    /* Las grietas se dibujan solas */
+    /* Las grietas se dibujan solas — oro hiperrealista */
     .k-crack {
       fill: none;
-      stroke: var(--gold);
+      stroke: url(#real-gold);
       stroke-linecap: round;
       stroke-dasharray: 300;
       stroke-dashoffset: 300;
       transition: stroke-dashoffset 0s;
+      filter: drop-shadow(0 0 4px rgba(240, 176, 0, 0.6));
+    }
+    .kc-sw {
+      stroke: url(#real-gold-sw);
     }
     .k-crack.draw { stroke-dashoffset: 0; }
     .k-vessel {
       fill: none;
-      stroke: rgba(240,176,0,.15);
+      stroke: rgba(240,176,0,.22);
       stroke-width: 1;
     }
+    .k-ceramic { opacity: .92; }
     .k-gold-fill {
-      fill: var(--gold);
+      fill: url(#real-gold);
       opacity: 0;
       transition: opacity .4s;
+      filter: drop-shadow(0 0 6px rgba(240, 176, 0, 0.8));
+    }
+    .kg-sw {
+      fill: url(#real-gold-sw);
     }
     .k-gold-fill.show { opacity: .55; }
+    /* Shimmer glint en grietas — se activa tras dibujar */
+    .k-crack.shimmer {
+      filter: drop-shadow(0 0 4px rgba(240,176,0,0.6))
+              drop-shadow(0 0 1px rgba(255,255,255,0.3));
+      animation: crack-shimmer 4s ease-in-out infinite;
+      animation-delay: var(--shimmer-delay, 0s);
+    }
+    @keyframes crack-shimmer {
+      0%, 100% { filter: drop-shadow(0 0 4px rgba(240,176,0,0.6)); }
+      50%      { filter: drop-shadow(0 0 8px rgba(240,176,0,0.9))
+                         drop-shadow(0 0 2px rgba(255,255,255,0.4)); }
+    }
+    /* Aura pulsante alrededor del jarrón */
+    .k-aura {
+      animation: kintsugi-aura-ring 6s ease-in-out infinite;
+      transform-origin: center;
+    }
+    @keyframes kintsugi-aura-ring {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%      { opacity: 0.8; transform: scale(1.06); }
+    }
+    .kintsugi-svg > ellipse:first-of-type {
+      animation: kintsugi-aura 5s ease-in-out infinite;
+    }
+    @keyframes kintsugi-aura {
+      0%, 100% { opacity: 0.7; }
+      50%      { opacity: 1; }
+    }
 
     /* Título Kintsugi */
     .kintsugi-kanji {
@@ -540,11 +765,23 @@
       font-family: 'Cinzel', Georgia, serif;
       font-size: clamp(2rem, 8vw, 5rem);
       font-weight: 600; letter-spacing: .1em; line-height: 1;
-      color: var(--gold);
-      text-shadow:
-        0 0 24px rgba(240,176,0,.4),
-        0 0 70px rgba(240,176,0,.14);
+      background: linear-gradient(
+        105deg,
+        #bf953f 0%, #fcf6ba 20%, #b38728 40%,
+        #fbf5b7 55%, #aa771c 70%, #bf953f 100%
+      );
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: title-shimmer 6s ease-in-out infinite;
+      filter: drop-shadow(0 0 24px rgba(240,176,0,.4))
+              drop-shadow(0 0 70px rgba(240,176,0,.14));
       margin-bottom: .8rem;
+    }
+    @keyframes title-shimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
     }
     .kintsugi-def {
       font-family: 'Cormorant Garamond', Georgia, serif;
@@ -572,6 +809,40 @@
       margin-top: 1rem; font-size: .6rem;
       letter-spacing: .36em; text-transform: uppercase;
       color: rgba(240,176,0,.5);
+    }
+
+    /* ════════════════════════════════════
+       HABBO HOTEL — Sala interactiva
+    ════════════════════════════════════ */
+    .room-section {
+      position: relative; z-index: 1;
+      max-width: 880px; margin: 0 auto;
+      padding: 5rem 1.25rem;
+      text-align: center;
+    }
+    .room-canvas-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      aspect-ratio: 4 / 3;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #1c2830;
+      box-shadow: 0 4px 32px rgba(0,0,0,.4);
+    }
+    .room-canvas-wrap canvas {
+      display: block;
+      width: 100%; height: 100%;
+    }
+    .room-hint {
+      font-family: 'Inter', sans-serif;
+      font-size: .6rem; letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: .6;
+      margin-top: 1rem;
     }
 
     /* ════════════════════════════════════
@@ -696,9 +967,9 @@
     ════════════════════════════════════ */
 
     /* ═══════════════════════════════
-       Luz verde en el hero (full dock)
+       La luz verde al final del muelle — The Great Gatsby
+       Referencia directa a la película: muelle + luz al fondo
     ═══════════════════════════════ */
-    /* La luz al final del muelle — solo en el hero, no te sigue */
     .gatsby-hero-light {
       position: absolute;
       top: 8%; right: 6%;
@@ -709,25 +980,98 @@
       opacity: .9;
       transition: opacity .4s;
     }
-    .ghl-beam-up   { display: none; }
-    .ghl-beam-down { display: none; }
-    .ghl-water     { display: none; }
-    .ghl-label     { display: none; }
-    /* Solo el orbe — pequeño, lejano, al otro lado del agua */
+    /* El muelle — se adentra en el agua hacia la luz */
+    .ghl-dock {
+      position: absolute;
+      left: -140px; top: 50%;
+      width: 145px; height: 1px;
+      transform: translateY(-50%);
+      background: linear-gradient(90deg,
+        rgba(0,20,12,.45) 0%,
+        rgba(0,50,28,.28) 35%,
+        rgba(0,90,50,.14) 75%,
+        rgba(0,200,122,.15) 98%,
+        transparent 100%);
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    .gatsby-hero-light.apagada .ghl-dock { opacity: .3; }
+    /* Haz de luz sobre el agua */
+    .gatsby-hero-light::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 90px; height: 2px;
+      transform: translate(-100%, -50%) rotate(-38deg);
+      background: linear-gradient(90deg, transparent 0%, rgba(0,200,122,.18) 25%, rgba(0,220,124,.35) 55%, transparent 100%);
+      pointer-events: none;
+      transition: opacity .4s;
+    }
+    .gatsby-hero-light.apagada::before { opacity: 0; }
+    /* Etiqueta — referencia directa a la película */
+    .ghl-label {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: .54rem; font-style: italic;
+      letter-spacing: .16em; text-transform: none;
+      color: rgba(0,200,122,.8);
+      margin-top: .5rem;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .35s ease, transform .35s ease;
+      pointer-events: none;
+      text-align: center;
+      line-height: 1.35;
+    }
+    .ghl-label-cite {
+      font-family: 'Inter', sans-serif;
+      font-size: .46rem; font-style: normal;
+      letter-spacing: .24em;
+      color: rgba(0,200,122,.55);
+      display: block;
+      margin-top: .25rem;
+    }
+    .gatsby-hero-light:hover .ghl-label,
+    .gatsby-hero-light:focus .ghl-label,
+    .gatsby-hero-light:focus-visible .ghl-label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .gatsby-hero-light.apagada .ghl-label { color: rgba(0,200,122,.3); }
+    .gatsby-hero-light.apagada .ghl-label-cite { color: rgba(0,200,122,.2); }
+    /* Pulso único cuando el usuario llega a la sección Gatsby */
+    .gatsby-hero-light.ghl-pulse .ghl-orb {
+      animation: gdock-pulse 1.4s ease-out 1;
+    }
+    @keyframes gdock-pulse {
+      0%,100% { transform: scale(1); opacity: .65; }
+      45% { transform: scale(1.35); opacity: 1; }
+    }
     .ghl-orb {
       width: 10px; height: 10px;
-      background: var(--green);
       border-radius: 50%; flex-shrink: 0;
-      box-shadow:
-        0 0 0  4px rgba(0,200,122,.14),
-        0 0 14px  7px rgba(0,200,122,.62),
-        0 0 48px 20px rgba(0,200,122,.26),
-        0 0 110px 50px rgba(0,200,122,.11),
-        0 0 240px 90px rgba(0,200,122,.05);
-      animation: gdock 4s ease-in-out infinite;
-      transition: background .5s, box-shadow .5s, opacity .5s;
     }
-    /* Estado: luz apagada */
+    .ghl-orb, .gm-orb {
+      background-color: #00ff66;
+      box-shadow:
+        0 0 10px #00ff66,
+        0 0 30px #00ff66,
+        0 0 80px rgba(0, 255, 102, 0.6),
+        0 0 150px rgba(0, 255, 102, 0.2);
+      animation: pulse-bloom 4s infinite alternate cubic-bezier(0.4, 0, 0.6, 1);
+      transition: all 0.5s ease;
+    }
+    @keyframes pulse-bloom {
+      0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 10px #00ff66, 0 0 40px rgba(0,255,102,0.4);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px #00ff66, 0 0 80px #00ff66, 0 0 150px rgba(0,255,102,0.6), 0 0 220px rgba(0,255,102,0.2);
+        opacity: 1;
+      }
+    }
     .gatsby-hero-light.apagada .ghl-orb {
       background: #001a0d;
       box-shadow: 0 0 4px 2px rgba(0,80,40,.08);
@@ -735,20 +1079,10 @@
       opacity: .2;
     }
 
-    /* Jesus — interactivo */
-    .crew-person.jesus-gone { cursor: pointer; }
-    .crew-person.jesus-gone .cp-name,
-    .crew-person.jesus-gone .cp-ring {
-      text-decoration: line-through;
-      opacity: .25;
-      transition: opacity .6s, text-decoration .3s;
-    }
+    /* Jesus — tócalo para tacharlo */
     .crew-person[data-jesus] { cursor: pointer; user-select: none; }
 
-    @keyframes gdock {
-      0%,100% { opacity:.65; transform:scale(1); }
-      50%      { opacity:1;  transform:scale(1.15); }
-    }
+    /* gdock reemplazado por pulse-bloom — mantener referencia vacía por .apagada */
 
     /* ── Sección The Great Gatsby — cinematográfica ── */
     .gatsby-moment {
@@ -790,14 +1124,7 @@
     }
     .gm-orb {
       width: 12px; height: 12px;
-      background: var(--green);
       border-radius: 50%;
-      box-shadow:
-        0 0 0 5px  rgba(0,220,124,.07),
-        0 0 18px 7px rgba(0,220,124,.42),
-        0 0 60px 22px rgba(0,220,124,.16),
-        0 0 120px 45px rgba(0,220,124,.07);
-      animation: gdock 3.4s ease-in-out infinite;
     }
 
     /* Diálogo Gatsby — dos líneas */
@@ -1263,6 +1590,24 @@
       50%      { box-shadow: 0 0 0 5px rgba(240,176,0,.06), 0 0 42px rgba(240,176,0,.32); }
     }
 
+    .skip-link {
+      position: absolute; left: -9999px; z-index: 9999;
+      padding: .6rem 1rem; background: var(--gold); color: var(--dark);
+      font-size: .85rem; font-weight: 600; text-decoration: none;
+      border-radius: 4px;
+    }
+    .skip-link:focus { left: 1rem; top: 1rem; outline: 2px solid var(--text); outline-offset: 2px; }
+
+    /* Respetar preferencia de menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+      .ghl-orb, .gm-orb { animation: none !important; }
+      .ig-dot, .ig-bar, .rec-dot, .office-rec-dot { animation: none; }
+      .k-crack.shimmer { animation: none !important; }
+      .k-aura { animation: none !important; }
+      .kintsugi-title { animation: none !important; background-position: 0 center !important; }
+    }
+
     /* ════════════════════════════════════
        MOBILE — max-width: 640px
        Ajustes generales de espaciado,
@@ -1354,11 +1699,11 @@
         gap: .9rem;
       }
 
-      /* ── Swatches ── */
+      /* ── Swatches (fragmentos Kintsugi) ── */
+      .swatches-wrap { min-height: 380px; margin-top: 2rem; }
       .swatches {
         grid-template-columns: repeat(2, 1fr);
         gap: 9px;
-        margin-top: 1.8rem;
       }
       .sw { height: 160px; }
       .sw-watermark { font-size: 4.8rem; }
@@ -1533,6 +1878,11 @@
         margin-top: .4rem;
       }
 
+      /* ── Habbo room ── */
+      .room-section { padding: 3rem 1rem; }
+      .room-canvas-wrap { aspect-ratio: 4 / 3; border-radius: 8px; }
+      .room-hint { font-size: .55rem; }
+
       /* ── Kintsugi / Close ── */
       .close-section {
         padding: 4rem 1.25rem 4rem;
@@ -1613,6 +1963,7 @@
        Ajustes finos para iPhone SE / mini
     ════════════════════════════════════ */
     @media (max-width: 390px) {
+      .room-section { padding: 2.5rem .75rem; }
       .hero {
         min-height: unset;
         padding: 3rem 1rem 2.5rem;
@@ -1662,9 +2013,10 @@
   </style>
 </head>
 <body>
-
+<a href="#main" class="skip-link">Ir al contenido</a>
 <canvas id="cvs"></canvas>
 
+<main id="main">
 <!-- ══════════════ HERO ══════════════ -->
 <div class="hero">
 
@@ -1687,8 +2039,10 @@
   </h1>
 
   <!-- La luz al final del muelle — The Great Gatsby -->
-  <div class="gatsby-hero-light" aria-hidden="true">
+  <div class="gatsby-hero-light" id="gatsby-hero-light" role="button" tabindex="0" aria-label="La luz verde al final del muelle — The Great Gatsby">
+    <div class="ghl-dock" aria-hidden="true"></div>
     <div class="ghl-orb"></div>
+    <span class="ghl-label">La luz verde al final del muelle<span class="ghl-label-cite">The Great Gatsby</span></span>
   </div>
 
 </div>
@@ -1730,10 +2084,11 @@
   <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
 
-  <!-- Muestrario de categorías — toca para girar -->
+  <!-- Fragmentos del jarrón — al tocarlos todos se unen -->
+  <div class="swatches-wrap" id="swatches-wrap">
   <div class="swatches" id="swatches">
 
-    <div class="sw sw-green">
+    <div class="sw sw-green" role="button" tabindex="0" aria-label="Ver categoría Videojuegos" data-piece="1">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">Videojuegos</div>
@@ -1747,7 +2102,7 @@
       </div>
     </div>
 
-    <div class="sw sw-gold">
+    <div class="sw sw-gold" role="button" tabindex="0" aria-label="Ver categoría Deporte" data-piece="2">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">Deporte</div>
@@ -1761,7 +2116,7 @@
       </div>
     </div>
 
-    <div class="sw sw-dim">
+    <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Teatro" data-piece="3">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">Teatro</div>
@@ -1775,7 +2130,7 @@
       </div>
     </div>
 
-    <div class="sw sw-dim">
+    <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Educación" data-piece="4">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">Educación</div>
@@ -1789,7 +2144,7 @@
       </div>
     </div>
 
-    <div class="sw sw-dim">
+    <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Humor" data-piece="5">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">Humor</div>
@@ -1803,7 +2158,7 @@
       </div>
     </div>
 
-    <div class="sw sw-gold">
+    <div class="sw sw-gold" role="button" tabindex="0" aria-label="Ver categoría 20 años" data-piece="6">
       <div class="sw-inner">
         <div class="sw-front">
           <div class="sw-cat-name">20 años</div>
@@ -1817,6 +2172,58 @@
       </div>
     </div>
 
+  </div>
+  <div class="swatches-vase" id="swatches-vase" aria-hidden="true">
+    <svg class="kintsugi-svg swatches-vase-svg" viewBox="0 0 200 230" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="kg-glow-sw" cx="50%" cy="55%" r="50%">
+          <stop offset="0%" stop-color="rgba(240,176,0,.08)"/>
+          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
+        </radialGradient>
+        <linearGradient id="real-gold-sw" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#bf953f" />
+          <stop offset="25%" stop-color="#fcf6ba" />
+          <stop offset="50%" stop-color="#b38728" />
+          <stop offset="75%" stop-color="#fbf5b7" />
+          <stop offset="100%" stop-color="#aa771c" />
+        </linearGradient>
+        <radialGradient id="ceramic-fill-sw" cx="50%" cy="45%" r="55%">
+          <stop offset="0%"  stop-color="rgba(22,18,14,0.85)"/>
+          <stop offset="60%" stop-color="rgba(14,11,8,0.90)"/>
+          <stop offset="100%" stop-color="rgba(8,6,4,0.95)"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="130" rx="70" ry="70" fill="url(#kg-glow-sw)"/>
+      <!-- Relleno cerámico -->
+      <path class="k-ceramic" fill="url(#ceramic-fill-sw)" stroke="none" d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
+      <path class="k-ceramic" fill="url(#ceramic-fill-sw)" stroke="none" d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38 Z"/>
+      <ellipse class="k-ceramic" cx="100" cy="202" rx="30" ry="8" fill="url(#ceramic-fill-sw)" stroke="none"/>
+      <!-- Contornos -->
+      <path class="k-vessel" stroke="rgba(240,176,0,.22)" stroke-width="1.4" fill="none" d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
+      <path class="k-vessel" stroke="rgba(240,176,0,.22)" stroke-width="1.2" fill="none" d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38"/>
+      <ellipse class="k-vessel" cx="100" cy="20" rx="20" ry="7" stroke-width="1.4" fill="none"/>
+      <ellipse cx="100" cy="20" rx="16" ry="4.5" fill="rgba(0,0,0,.25)" stroke="none"/>
+      <ellipse class="k-vessel" cx="100" cy="202" rx="30" ry="8" stroke-width="1.2" fill="none"/>
+      <!-- Grietas originales -->
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.7" stroke-opacity=".8" fill="none" stroke-dasharray="300" stroke-dashoffset="300" d="M 100,22 C 97,35 104,48 99,62 C 94,78 105,92 100,110 C 95,128 103,148 100,170 C 98,185 100,198 100,205"/>
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.1" stroke-opacity=".65" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 99,92 C 88,96 74,93 62,100 C 57,105 55,118 56,130"/>
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.1" stroke-opacity=".65" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 101,128 C 114,133 130,128 140,136 C 148,142 147,158 143,170"/>
+      <!-- Grietas adicionales -->
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.0" stroke-opacity=".6" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 100,170 C 92,176 82,182 76,190 C 73,195 72,199 74,203"/>
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".9" stroke-opacity=".55" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 100,148 C 110,155 120,162 126,172 C 130,180 128,192 126,200"/>
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".8" stroke-opacity=".5" fill="none" stroke-dasharray="150" stroke-dashoffset="150" d="M 74,93 C 68,102 64,112 66,124"/>
+      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".9" stroke-opacity=".5" fill="none" stroke-dasharray="150" stroke-dashoffset="150" d="M 97,42 C 88,44 82,50 78,58"/>
+      <!-- Nodos dorados -->
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.2" cx="99" cy="62"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.8" cx="99" cy="92"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.2" cx="100" cy="128"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.8" cx="100" cy="168"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.5" cx="74" cy="93"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.2" cx="76" cy="190"/>
+      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.2" cx="126" cy="172"/>
+    </svg>
+  </div>
+  <p class="swatches-assembled-text" id="swatches-assembled-text">Así nos recomponemos.</p>
   </div>
 </div>
 
@@ -2023,8 +2430,27 @@
   </div>
 </div>
 
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
+<!-- ══════════════ HABBO HOTEL ROOM ══════════════ -->
+<div class="room-section" id="room-section">
+  <span class="s-label" style="text-align:center;display:block;">Nuestro rincón virtual</span>
+  <h2 class="s-title" style="text-align:center;">Donde <em>todo empezó</em></h2>
+  <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
+  <p style="text-align:center;font-family:'Cinzel',serif;color:var(--gold);font-size:.95rem;letter-spacing:.08em;margin-bottom:.8rem;">Habbo Hotel</p>
+
+  <!-- Canvas isométrico -->
+  <div class="room-canvas-wrap">
+    <canvas id="room-cvs" aria-label="Sala Habbo Hotel — toca las baldosas para mover los personajes"></canvas>
+  </div>
+
+  <p class="room-hint">Toca una baldosa para mover a los personajes</p>
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
 <!-- ══════════════ KINTSUGI ══════════════ -->
-<div class="close-section">
+<div class="close-section" id="kintsugi">
 
   <!-- Jarrón Kintsugi con grietas doradas — SVG animado -->
   <div class="kintsugi-wrap">
@@ -2034,13 +2460,39 @@
           <stop offset="0%"  stop-color="rgba(240,176,0,.08)"/>
           <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
         </radialGradient>
+        <linearGradient id="real-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#bf953f" />
+          <stop offset="25%" stop-color="#fcf6ba" />
+          <stop offset="50%" stop-color="#b38728" />
+          <stop offset="75%" stop-color="#fbf5b7" />
+          <stop offset="100%" stop-color="#aa771c" />
+        </linearGradient>
+        <radialGradient id="ceramic-fill" cx="50%" cy="45%" r="55%">
+          <stop offset="0%"  stop-color="rgba(22,18,14,0.85)"/>
+          <stop offset="60%" stop-color="rgba(14,11,8,0.90)"/>
+          <stop offset="100%" stop-color="rgba(8,6,4,0.95)"/>
+        </radialGradient>
+        <radialGradient id="ceramic-highlight" cx="45%" cy="25%" r="50%">
+          <stop offset="0%"  stop-color="rgba(240,176,0,0.04)"/>
+          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
+        </radialGradient>
       </defs>
 
       <!-- Glow sutil de fondo -->
       <ellipse cx="100" cy="130" rx="70" ry="70" fill="url(#kg-glow)"/>
+      <!-- Aura exterior pulsante -->
+      <ellipse class="k-aura" cx="100" cy="130" rx="85" ry="85" fill="none" stroke="rgba(240,176,0,0.06)" stroke-width="0.5"/>
 
       <!-- ── VASIJA japonesa: cuello, hombros, cuerpo, base ── -->
-      <!-- Cuerpo principal -->
+      <!-- Relleno cerámico — capa sólida detrás del contorno -->
+      <path class="k-ceramic" fill="url(#ceramic-fill)" stroke="none"
+        d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
+      <path class="k-ceramic" fill="url(#ceramic-highlight)" stroke="none"
+        d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
+      <path class="k-ceramic" fill="url(#ceramic-fill)" stroke="none"
+        d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38 Z"/>
+      <ellipse class="k-ceramic" cx="100" cy="202" rx="30" ry="8" fill="url(#ceramic-fill)" stroke="none"/>
+      <!-- Cuerpo principal — contorno -->
       <path class="k-vessel" stroke-width="1.4"
         d="
           M 88,38
@@ -2072,7 +2524,7 @@
         d="M 100,22 C 97,35 104,48 99,62 C 94,78 105,92 100,110 C 95,128 103,148 100,170 C 98,185 100,198 100,205"/>
       <!-- Ramal izquierdo — sale del centro del cuerpo -->
       <path class="k-crack" id="kc2" stroke-width="1.1" stroke-opacity=".65"
-        d="M 99,92 C 88,96 74,93 62,100 C 54,105 52,118 54,130"/>
+        d="M 99,92 C 88,96 74,93 62,100 C 57,105 55,118 56,130"/>
       <!-- Ramal derecho — sale más abajo -->
       <path class="k-crack" id="kc3" stroke-width="1.1" stroke-opacity=".65"
         d="M 101,128 C 114,133 130,128 140,136 C 148,142 147,158 143,170"/>
@@ -2082,6 +2534,27 @@
       <!-- Grieta del hombro derecho -->
       <path class="k-crack" id="kc5" stroke-width=".85" stroke-opacity=".45"
         d="M 103,58 C 114,60 122,66 128,74"/>
+      <!-- Ramal izquierdo del cuello -->
+      <path class="k-crack" id="kc6" stroke-width=".75" stroke-opacity=".4"
+        d="M 95,35 C 90,36 86,37 83,39"/>
+      <!-- Sub-ramal de kc2 — bifurcación descendente -->
+      <path class="k-crack" id="kc7" stroke-width=".8" stroke-opacity=".5"
+        d="M 74,93 C 68,102 64,112 66,124"/>
+      <!-- Sub-ramal de kc3 — bifurcación hacia el borde -->
+      <path class="k-crack" id="kc8" stroke-width=".75" stroke-opacity=".45"
+        d="M 130,128 C 136,120 142,114 146,118"/>
+      <!-- Grieta baja izquierda — hacia la base -->
+      <path class="k-crack" id="kc9" stroke-width="1.0" stroke-opacity=".6"
+        d="M 100,170 C 92,176 82,182 76,190 C 73,195 72,199 74,203"/>
+      <!-- Grieta baja derecha — simétrica irregular -->
+      <path class="k-crack" id="kc10" stroke-width=".9" stroke-opacity=".55"
+        d="M 100,148 C 110,155 120,162 126,172 C 130,180 128,192 126,200"/>
+      <!-- Micro-grieta del hombro izquierdo -->
+      <path class="k-crack" id="kc11" stroke-width=".6" stroke-opacity=".35"
+        d="M 78,58 C 74,62 70,68 68,75"/>
+      <!-- Micro-grieta superior derecha -->
+      <path class="k-crack" id="kc12" stroke-width=".55" stroke-opacity=".3"
+        d="M 128,74 C 134,80 138,88 136,96"/>
 
       <!-- ── NODOS DORADOS en las intersecciones ── -->
       <circle class="k-gold-fill" id="kg1" cx="99"  cy="62"  r="3.2"/>
@@ -2089,6 +2562,13 @@
       <circle class="k-gold-fill" id="kg3" cx="100" cy="128" r="3.2"/>
       <circle class="k-gold-fill" id="kg4" cx="100" cy="168" r="2.8"/>
       <circle class="k-gold-fill" id="kg5" cx="97"  cy="42"  r="2.2"/>
+      <circle class="k-gold-fill" id="kg6"  cx="83"  cy="39"  r="1.8"/>
+      <circle class="k-gold-fill" id="kg7"  cx="74"  cy="93"  r="2.5"/>
+      <circle class="k-gold-fill" id="kg8"  cx="130" cy="128" r="2.5"/>
+      <circle class="k-gold-fill" id="kg9"  cx="100" cy="148" r="2.8"/>
+      <circle class="k-gold-fill" id="kg10" cx="76"  cy="190" r="2.2"/>
+      <circle class="k-gold-fill" id="kg11" cx="126" cy="172" r="2.2"/>
+      <circle class="k-gold-fill" id="kg12" cx="78"  cy="58"  r="1.8"/>
     </svg>
   </div>
 
@@ -2111,6 +2591,7 @@
 </div>
 
 <footer>Colegio La Merced 2005 &nbsp;·&nbsp; UCAB 2016 &nbsp;·&nbsp; Siempre panas</footer>
+</main>
 
 <script>
 /* ═══════════════════════════════════════════
@@ -2341,8 +2822,10 @@ function closeLb() {
 const kintsugiObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (!e.isIntersecting) return;
-    const cracks = document.querySelectorAll('.k-crack');
-    const fills  = document.querySelectorAll('.k-gold-fill');
+    const svg = document.querySelector('#kintsugi .kintsugi-svg');
+    if (!svg) return;
+    const cracks = svg.querySelectorAll('.k-crack');
+    const fills  = svg.querySelectorAll('.k-gold-fill');
     // Calcular longitud real de cada grieta para dasharray
     cracks.forEach(c => {
       const len = c.getTotalLength ? c.getTotalLength() : 200;
@@ -2358,10 +2841,18 @@ const kintsugiObs = new IntersectionObserver(entries => {
     fills.forEach((f, i) => {
       setTimeout(() => f.classList.add('show'), 600 + i * 200);
     });
+    // Shimmer metálico tras completar las grietas
+    const totalCrackTime = cracks.length * 350 + 1200;
+    setTimeout(() => {
+      cracks.forEach((c, i) => {
+        c.style.setProperty('--shimmer-delay', `${i * 0.6}s`);
+        c.classList.add('shimmer');
+      });
+    }, totalCrackTime);
     kintsugiObs.unobserve(e.target);
   });
 }, { threshold: 0.3 });
-const kSvg = document.querySelector('.kintsugi-svg');
+const kSvg = document.querySelector('#kintsugi .kintsugi-svg');
 if (kSvg) kintsugiObs.observe(kSvg);
 
 lbClose.addEventListener('click', closeLb);
@@ -2372,10 +2863,22 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); }
 const dockLight = document.querySelector('.gatsby-hero-light');
 let luzOn = true;
 if (dockLight) {
-  dockLight.addEventListener('click', () => {
-    luzOn = !luzOn;
-    dockLight.classList.toggle('apagada', !luzOn);
-  });
+  const toggleLight = () => { luzOn = !luzOn; dockLight.classList.toggle('apagada', !luzOn); };
+  dockLight.addEventListener('click', toggleLight);
+  dockLight.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLight(); } });
+}
+/* Cuando llegas a la sección Gatsby, la luz del hero pulsa una vez */
+const gatsbyMoment = document.querySelector('.gatsby-moment');
+if (dockLight && gatsbyMoment) {
+  const ghlPulseObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      dockLight.classList.add('ghl-pulse');
+      setTimeout(() => dockLight.classList.remove('ghl-pulse'), 1500);
+      ghlPulseObs.unobserve(e.target);
+    });
+  }, { threshold: 0.2 });
+  ghlPulseObs.observe(gatsbyMoment);
 }
 
 /* ─── Hero: "20 años de amistad" toca para ver la línea de tiempo ─── */
@@ -2393,9 +2896,81 @@ if (heroAnoBtn && heroTimeline) {
   });
 }
 
-/* ─── Swatches — toca para girar y ver lo que hay dentro ─── */
+/* ─── Swatches — fragmentos Kintsugi: toca cada uno; al tocarlos todos se unen ─── */
+const swatchesEl = document.getElementById('swatches');
+const swatchesWrap = document.getElementById('swatches-wrap');
+const TOTAL_PIECES = 6;
+const touchedPieces = new Set();
+let kintsugiAssembled = false;
+
+function checkAndAssembleKintsugi() {
+  if (kintsugiAssembled || touchedPieces.size < TOTAL_PIECES) return;
+  if (!swatchesWrap || !swatchesWrap.classList.contains('swatches-broken')) return;
+  kintsugiAssembled = true;
+  const swList = document.querySelectorAll('.sw');
+  swatchesEl.classList.add('assembling');
+  const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+
+  swList.forEach(sw => {
+    const r = sw.getBoundingClientRect();
+    sw.style.position = 'fixed';
+    sw.style.left = r.left + 'px';
+    sw.style.top = r.top + 'px';
+    sw.style.width = r.width + 'px';
+    sw.style.height = r.height + 'px';
+    const flyX = cx - r.left - r.width / 2;
+    const flyY = cy - r.top - r.height / 2;
+    sw.style.setProperty('--fly-x', flyX + 'px');
+    sw.style.setProperty('--fly-y', flyY + 'px');
+  });
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      swList.forEach(sw => sw.classList.add('sw-fly'));
+    });
+  });
+
+  setTimeout(() => {
+    swatchesWrap.classList.add('assembled');
+    swatchesEl.classList.remove('assembling');
+    const vase = document.getElementById('swatches-vase');
+    if (vase) {
+      const cracks = vase.querySelectorAll('.kc-sw');
+      const dots = vase.querySelectorAll('.kg-sw');
+      cracks.forEach((c, i) => {
+        const len = c.getTotalLength ? c.getTotalLength() : 200;
+        c.style.strokeDasharray = len;
+        c.style.strokeDashoffset = len;
+        c.style.transition = `stroke-dashoffset ${0.8 + i * 0.2}s cubic-bezier(.4,0,.2,1) ${i * 0.15}s`;
+        setTimeout(() => { c.style.strokeDashoffset = '0'; }, 80);
+      });
+      dots.forEach((d, i) => { setTimeout(() => d.style.opacity = '0.55', 500 + i * 120); });
+      // Shimmer metálico en swatches vase
+      const swCrackTime = cracks.length * 150 + 1000;
+      setTimeout(() => {
+        cracks.forEach((c, i) => {
+          c.style.setProperty('--shimmer-delay', `${i * 0.8}s`);
+          c.classList.add('shimmer');
+        });
+      }, swCrackTime);
+    }
+    setTimeout(() => {
+      const k = document.getElementById('kintsugi');
+      if (k) k.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 2500);
+  }, 1100);
+}
+
 document.querySelectorAll('.sw').forEach(sw => {
-  sw.addEventListener('click', () => sw.classList.toggle('flipped'));
+  const flip = () => {
+    sw.classList.toggle('flipped');
+    if (sw.classList.contains('flipped')) {
+      const piece = sw.getAttribute('data-piece');
+      if (piece) touchedPieces.add(piece);
+      checkAndAssembleKintsugi();
+    }
+  };
+  sw.addEventListener('click', flip);
+  sw.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); } });
 });
 
 /* ─── The Office — toca el panel para revelar las polaroids ─── */
@@ -2456,7 +3031,12 @@ if (igPlay) {
   });
 }
 
-/* ─── Jesus: tócalo para borrarlo ─── */
+/* Swatches empiezan ya fragmentados — listas para ser tocadas */
+if (swatchesWrap) {
+  swatchesWrap.classList.add('swatches-broken');
+}
+
+/* ─── Jesus: tócalo → se tacha (solo visual, sin romper nada) ─── */
 const jesusPerson = document.querySelector('[data-jesus]');
 let jesusGone = false;
 if (jesusPerson) {
@@ -2465,7 +3045,6 @@ if (jesusPerson) {
     jesusGone = true;
     const ring = jesusPerson.querySelector('.cp-ring');
     const name = jesusPerson.querySelector('.cp-name');
-    // Flicker rápido antes de desaparecer
     jesusPerson.style.transition = 'opacity .12s';
     jesusPerson.style.opacity = '0.4';
     setTimeout(() => { jesusPerson.style.opacity = '1'; }, 120);
@@ -2477,6 +3056,713 @@ if (jesusPerson) {
     }, 360);
   });
 }
+
+/* ═══════════════════════════════════════════
+   HABBO HOTEL — Sala interactiva v5
+   Sprites reales de Habbo via API oficial
+═══════════════════════════════════════════ */
+(function HabboRoom() {
+  'use strict';
+
+  const canvas = document.getElementById('room-cvs');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const wrap = canvas.parentElement;
+  const section = document.getElementById('room-section');
+
+  const COLS = 8, ROWS = 8;
+  let cW, cH, dpr, tW, tH, originX, originY, tileDepth;
+  let characters = [], furniture = [], bubbles = [];
+  let selIdx = 0, animId = null, lastT = 0, bubbleTimer = 0;
+  let hoverCol = -1, hoverRow = -1;
+  let imagesLoaded = 0;
+
+  /* ── Load real Habbo avatar sprites ── */
+  function loadImg(src) {
+    const img = new Image();
+    img.onload = () => { imagesLoaded++; };
+    img.src = src;
+    return img;
+  }
+  const IMG_CARLOS = loadImg('data:image/png;base64,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');
+  const IMG_JAVIER = loadImg('data:image/png;base64,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');
+  const IMG_ANTHONNY = loadImg('data:image/png;base64,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');
+
+  function resize() {
+    const r = wrap.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cW = r.width; cH = r.height;
+    canvas.width = cW * dpr; canvas.height = cH * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    /* The isometric grid spans:
+       Width:  (COLS + ROWS) * tW/2   (diamond shape)
+       Height: (COLS + ROWS) * tH/2 + wallH + charH + tileDepth
+       We need everything to fit with padding */
+    const pad = 12;
+    const availW = cW - pad * 2;
+    const availH = cH - pad * 2;
+    /* Solve for tW given the constraints */
+    const wScale = availW / ((COLS + ROWS) * 24); /* tW = 48*sc, halfW = 24*sc */
+    const hScale = availH / ((COLS + ROWS) * 12 + 4 * 24 + 3.2 * 24 + 8); /* tiles + wall + char + depth */
+    const sc = Math.min(wScale, hScale);
+    tW = 48 * sc; tH = 24 * sc;
+    tileDepth = Math.max(3, tH * 0.35);
+    originX = cW / 2;
+    /* Wall height is tH*4, character height ~tH*3.2, we need those above the top tile */
+    const wallH = tH * 4;
+    const charH = tH * 3.2;
+    originY = wallH + charH + pad;
+  }
+
+  function toScr(c, r) { return { x: originX + (c - r) * tW / 2, y: originY + (c + r) * tH / 2 }; }
+  function toGrid(sx, sy) {
+    const dx = sx - originX, dy = sy - originY;
+    return { c: Math.round((dx / (tW / 2) + dy / (tH / 2)) / 2), r: Math.round((dy / (tH / 2) - dx / (tW / 2)) / 2) };
+  }
+
+  /* ══════════════ HABBO TILES — Classic teal checkerboard ══════════════ */
+  function drawTile(c, r, hl) {
+    const { x, y } = toScr(c, r);
+    const d = tileDepth;
+    const even = (c + r) % 2 === 0;
+    /* Right side face (darkest) */
+    ctx.beginPath();
+    ctx.moveTo(x + tW/2, y); ctx.lineTo(x, y + tH/2);
+    ctx.lineTo(x, y + tH/2 + d); ctx.lineTo(x + tW/2, y + d);
+    ctx.closePath();
+    ctx.fillStyle = even ? '#1a5a60' : '#165258';
+    ctx.fill();
+    /* Left side face (dark) */
+    ctx.beginPath();
+    ctx.moveTo(x - tW/2, y); ctx.lineTo(x, y + tH/2);
+    ctx.lineTo(x, y + tH/2 + d); ctx.lineTo(x - tW/2, y + d);
+    ctx.closePath();
+    ctx.fillStyle = even ? '#2a6e76' : '#24666c';
+    ctx.fill();
+    /* Top face */
+    ctx.beginPath();
+    ctx.moveTo(x, y - tH/2); ctx.lineTo(x + tW/2, y);
+    ctx.lineTo(x, y + tH/2); ctx.lineTo(x - tW/2, y);
+    ctx.closePath();
+    ctx.fillStyle = hl ? (even ? '#88dde8' : '#78d0e0') : (even ? '#6db8c2' : '#5dabb5');
+    ctx.fill();
+    /* Highlight edge (top-left) */
+    ctx.strokeStyle = even ? '#82d0da' : '#72c0cc';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x - tW/2, y); ctx.lineTo(x, y - tH/2); ctx.lineTo(x + tW/2, y);
+    ctx.stroke();
+    /* Shadow edge (bottom-right) */
+    ctx.strokeStyle = even ? '#4a9098' : '#3e8890';
+    ctx.beginPath();
+    ctx.moveTo(x + tW/2, y); ctx.lineTo(x, y + tH/2); ctx.lineTo(x - tW/2, y);
+    ctx.stroke();
+    /* Side depth outline */
+    ctx.strokeStyle = '#0e3a3e';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(x + tW/2, y); ctx.lineTo(x + tW/2, y + d);
+    ctx.lineTo(x, y + tH/2 + d); ctx.lineTo(x - tW/2, y + d);
+    ctx.lineTo(x - tW/2, y);
+    ctx.stroke();
+  }
+
+  /* ══════════════ HABBO WALLS — Classic striped panels ══════════════ */
+  function drawWalls() {
+    const wallH = tH * 4;
+    /* Back wall (row=0) */
+    for (let c = 0; c < COLS; c++) {
+      const { x, y } = toScr(c, 0);
+      const x0 = x, y0 = y - tH / 2;
+      const x1 = x + tW / 2, y1 = y;
+      ctx.beginPath();
+      ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+      ctx.lineTo(x1, y1 - wallH); ctx.lineTo(x0, y0 - wallH);
+      ctx.closePath();
+      ctx.fillStyle = '#a0b8c4';
+      ctx.fill();
+      const stripes = 6;
+      for (let i = 0; i < stripes; i++) {
+        const t = i / stripes;
+        const sy0 = y0 - wallH + t * wallH;
+        const sy1 = y1 - wallH + t * wallH;
+        ctx.strokeStyle = i % 2 === 0 ? '#92aab6' : '#b0c8d0';
+        ctx.lineWidth = wallH / stripes * 0.45;
+        ctx.beginPath();
+        ctx.moveTo(x0, sy0 + wallH / stripes * 0.5);
+        ctx.lineTo(x1, sy1 + wallH / stripes * 0.5);
+        ctx.stroke();
+      }
+      /* Baseboard */
+      ctx.fillStyle = '#708898';
+      ctx.beginPath();
+      ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+      ctx.lineTo(x1, y1 - wallH * 0.12); ctx.lineTo(x0, y0 - wallH * 0.12);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#7a98a8'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1, y1 - wallH); ctx.stroke();
+    }
+    /* Left wall (col=0) */
+    for (let r = 0; r < ROWS; r++) {
+      const { x, y } = toScr(0, r);
+      const x0 = x - tW / 2, y0 = y;
+      const x1 = x, y1 = y - tH / 2;
+      ctx.beginPath();
+      ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+      ctx.lineTo(x1, y1 - wallH); ctx.lineTo(x0, y0 - wallH);
+      ctx.closePath();
+      ctx.fillStyle = '#8aa4b2';
+      ctx.fill();
+      const stripes = 6;
+      for (let i = 0; i < stripes; i++) {
+        const t = i / stripes;
+        const sy0 = y0 - wallH + t * wallH;
+        const sy1 = y1 - wallH + t * wallH;
+        ctx.strokeStyle = i % 2 === 0 ? '#7e98a6' : '#98b4c0';
+        ctx.lineWidth = wallH / stripes * 0.45;
+        ctx.beginPath();
+        ctx.moveTo(x0, sy0 + wallH / stripes * 0.5);
+        ctx.lineTo(x1, sy1 + wallH / stripes * 0.5);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#607888';
+      ctx.beginPath();
+      ctx.moveTo(x0, y0); ctx.lineTo(x1, y1);
+      ctx.lineTo(x1, y1 - wallH * 0.12); ctx.lineTo(x0, y0 - wallH * 0.12);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = '#6a8898'; ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y0 - wallH); ctx.stroke();
+    }
+    /* Corner line */
+    const { x: cx, y: cy } = toScr(0, 0);
+    ctx.strokeStyle = '#4a6878'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(cx, cy - tH / 2); ctx.lineTo(cx, cy - tH / 2 - wallH); ctx.stroke();
+    /* Ceiling trim */
+    ctx.strokeStyle = '#c0d4de'; ctx.lineWidth = 1.5;
+    for (let c = 0; c < COLS; c++) {
+      const { x, y } = toScr(c, 0);
+      ctx.beginPath();
+      ctx.moveTo(x, y - tH / 2 - wallH);
+      ctx.lineTo(x + tW / 2, y - wallH);
+      ctx.stroke();
+    }
+  }
+
+  /* ══════════════ WALL DECORATIONS ══════════════ */
+  function drawWallDecor() {
+    const wallH = tH * 4;
+    /* Poster — "20 AÑOS" on back wall at col 4 (centered) */
+    const { x: px3, y: py3 } = toScr(4, 0);
+    const pLeft = px3 + tW * 0.25;
+    const pTop = py3 - tH / 2 - wallH * 0.7;
+    const pw = tW * 0.35, ph = wallH * 0.4;
+    ctx.fillStyle = '#2a2a3c';
+    ctx.fillRect(pLeft - pw/2 - 2, pTop - 2, pw + 4, ph + 4);
+    ctx.fillStyle = '#f0b000';
+    ctx.fillRect(pLeft - pw/2, pTop, pw, ph);
+    ctx.fillStyle = '#1a1a2e';
+    ctx.font = `bold ${Math.max(7, tW * 0.12)}px "Cinzel", serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('20', pLeft, pTop + ph * 0.55);
+    ctx.font = `${Math.max(5, tW * 0.045)}px "Inter", sans-serif`;
+    ctx.fillText('AÑOS', pLeft, pTop + ph * 0.82);
+
+    /* Window on back wall at col 5 */
+    const { x: wx, y: wy } = toScr(5, 0);
+    const wLeft = wx + tW * 0.25;
+    const wTop = wy - tH / 2 - wallH * 0.75;
+    const ww = tW * 0.28, wh = wallH * 0.38;
+    ctx.fillStyle = '#4a5a68';
+    ctx.fillRect(wLeft - ww/2 - 1, wTop - 1, ww + 2, wh + 2);
+    ctx.fillStyle = '#88c8e8';
+    ctx.fillRect(wLeft - ww/2, wTop, ww, wh);
+    ctx.fillStyle = '#c0d0d8';
+    ctx.fillRect(wLeft - 1, wTop, 2, wh);
+    ctx.fillRect(wLeft - ww/2, wTop + wh/2 - 1, ww, 2);
+  }
+
+  /* ══════════════ CHARACTERS — Real Habbo sprites ══════════════ */
+  function initChars() {
+    characters = [
+      { name: 'Carlos', col: 3, row: 2, path: [], wt: 0, bob: 0, img: IMG_CARLOS },
+      { name: 'Javier', col: 2, row: 5, path: [], wt: 0, bob: 2.1, img: IMG_JAVIER },
+      { name: 'Anthonny', col: 6, row: 3, path: [], wt: 0, bob: 4.2, img: IMG_ANTHONNY }
+    ];
+  }
+
+  function drawChar(ch, dt) {
+    const { x, y } = toScr(ch.col, ch.row);
+    ch.bob += dt * 0.0025;
+    const bob = Math.sin(ch.bob) * 0.5;
+    /* Real Habbo sprites are 128x220. Scale so character is about 1.5 tiles tall */
+    const charH = tH * 3.2;
+    const charW = charH * (128 / 220);
+    /* Push down so feet touch the tile — sprite has ~12% transparent padding at bottom */
+    const feetOffset = charH * 0.12;
+    const bY = y + bob + feetOffset;
+
+    /* Shadow */
+    ctx.fillStyle = 'rgba(0,0,0,.18)';
+    ctx.beginPath();
+    ctx.ellipse(x, y + tH * 0.05, tW * 0.22, tH * 0.12, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Draw the real sprite image */
+    if (ch.img.complete && ch.img.naturalWidth > 0) {
+      ctx.imageSmoothingEnabled = false; /* Keep pixel-art crisp! */
+      ctx.drawImage(ch.img, x - charW / 2, bY - charH, charW, charH);
+      ctx.imageSmoothingEnabled = true;
+    }
+
+    /* Name tag (classic Habbo: dark bg pill, white bold text) */
+    const fs = Math.max(7, tW * 0.14);
+    ctx.font = `bold ${fs}px "Inter", sans-serif`;
+    ctx.textAlign = 'center';
+    const nameW = ctx.measureText(ch.name).width;
+    const tagY = bY - charH - fs - 2;
+    ctx.fillStyle = 'rgba(0,0,0,.6)';
+    roundRect(x - nameW / 2 - 4, tagY, nameW + 8, fs + 4, 3);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(ch.name, x, tagY + (fs + 4) / 2);
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  /* ══════════════ FURNITURE ══════════════ */
+  function initFurniture() {
+    furniture = [
+      { id: 'sofa', col: 1, row: 5, sc: 1, sr: 1 },
+      { id: 'drinks', col: 7, row: 2, sc: 1, sr: 1 },
+      { id: 'table', col: 4, row: 5, sc: 1, sr: 1 },
+      { id: 'plant', col: 5, row: 6, sc: 1, sr: 1 }
+    ];
+  }
+
+  function px(x, y, w, h) { ctx.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); }
+
+  function drawFurn(f) {
+    const { x, y } = toScr(f.col, f.row);
+    const s = tW / 12;
+    if (f.id === 'sofa') {
+      /* Habbo HC sofa — isometric box with cushions */
+      const sw = tW * 0.55, sh = tH * 0.5;
+      const seatH = sh * 2.5, backH = sh * 1.8;
+      /* Front face (seat) */
+      ctx.fillStyle = '#8B4513';
+      ctx.beginPath();
+      ctx.moveTo(x - sw, y); ctx.lineTo(x, y + sh);
+      ctx.lineTo(x, y + sh - seatH); ctx.lineTo(x - sw, y - seatH);
+      ctx.closePath(); ctx.fill();
+      /* Top face (seat surface) */
+      ctx.fillStyle = '#D2691E';
+      ctx.beginPath();
+      ctx.moveTo(x - sw, y - seatH); ctx.lineTo(x, y + sh - seatH);
+      ctx.lineTo(x + sw, y - seatH); ctx.lineTo(x, y - sh - seatH);
+      ctx.closePath(); ctx.fill();
+      /* Right face */
+      ctx.fillStyle = '#A0522D';
+      ctx.beginPath();
+      ctx.moveTo(x, y + sh); ctx.lineTo(x + sw, y);
+      ctx.lineTo(x + sw, y - seatH); ctx.lineTo(x, y + sh - seatH);
+      ctx.closePath(); ctx.fill();
+      /* Cushion on top */
+      ctx.fillStyle = '#E8A050';
+      ctx.beginPath();
+      ctx.moveTo(x - sw * 0.8, y - seatH - sh * 0.1);
+      ctx.lineTo(x, y + sh * 0.7 - seatH);
+      ctx.lineTo(x + sw * 0.8, y - seatH - sh * 0.1);
+      ctx.lineTo(x, y - sh * 0.8 - seatH);
+      ctx.closePath(); ctx.fill();
+      /* Back rest */
+      ctx.fillStyle = '#6B3410';
+      ctx.beginPath();
+      ctx.moveTo(x - sw, y - seatH); ctx.lineTo(x, y - sh - seatH);
+      ctx.lineTo(x, y - sh - seatH - backH); ctx.lineTo(x - sw, y - seatH - backH);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#8B4513';
+      ctx.beginPath();
+      ctx.moveTo(x, y - sh - seatH); ctx.lineTo(x + sw, y - seatH);
+      ctx.lineTo(x + sw, y - seatH - backH); ctx.lineTo(x, y - sh - seatH - backH);
+      ctx.closePath(); ctx.fill();
+      /* Outline */
+      ctx.strokeStyle = '#3a1a08'; ctx.lineWidth = 0.8;
+      ctx.strokeRect(x - sw, y - seatH - backH, sw * 2, seatH + backH + sh);
+    }
+    if (f.id === 'drinks') {
+      /* Habbo vending machine — isometric box */
+      const bw = tW * 0.35, bh = tH * 0.25, tall = s * 7;
+      /* Left face */
+      ctx.fillStyle = '#b8c0c8';
+      ctx.beginPath();
+      ctx.moveTo(x - bw, y); ctx.lineTo(x, y + bh);
+      ctx.lineTo(x, y + bh - tall); ctx.lineTo(x - bw, y - tall);
+      ctx.closePath(); ctx.fill();
+      /* Right face */
+      ctx.fillStyle = '#d0d8e0';
+      ctx.beginPath();
+      ctx.moveTo(x, y + bh); ctx.lineTo(x + bw, y);
+      ctx.lineTo(x + bw, y - tall); ctx.lineTo(x, y + bh - tall);
+      ctx.closePath(); ctx.fill();
+      /* Top face */
+      ctx.fillStyle = '#e0e8f0';
+      ctx.beginPath();
+      ctx.moveTo(x - bw, y - tall); ctx.lineTo(x, y + bh - tall);
+      ctx.lineTo(x + bw, y - tall); ctx.lineTo(x, y - bh - tall);
+      ctx.closePath(); ctx.fill();
+      /* Screen on right face */
+      ctx.fillStyle = '#222';
+      px(x + bw * 0.1, y + bh - tall + s * 1, bw * 0.7, s * 2.5);
+      ctx.fillStyle = '#3388cc';
+      px(x + bw * 0.15, y + bh - tall + s * 1.2, bw * 0.6, s * 2);
+      /* Drink buttons */
+      ctx.fillStyle = '#cc2222';
+      px(x + bw * 0.15, y + bh - tall + s * 3.8, s * 0.5, s * 0.5);
+      ctx.fillStyle = '#22aa44';
+      px(x + bw * 0.45, y + bh - tall + s * 3.8, s * 0.5, s * 0.5);
+      /* Slot */
+      ctx.fillStyle = '#888';
+      px(x + bw * 0.2, y + bh - tall + s * 5, bw * 0.5, s * 0.4);
+      /* Red stripe */
+      ctx.fillStyle = '#cc3333';
+      px(x + bw * 0.05, y + bh - tall + s * 4.8, bw * 0.8, s * 0.3);
+    }
+    if (f.id === 'table') {
+      /* Habbo table — isometric diamond top with legs */
+      const tw2 = tW * 0.45, th2 = tH * 0.45;
+      const legH = s * 3;
+      /* Legs */
+      ctx.fillStyle = '#8a7050';
+      px(x - tw2 * 0.6, y - legH, s * 0.6, legH);
+      px(x + tw2 * 0.4, y - legH, s * 0.6, legH);
+      px(x - tw2 * 0.1, y - legH + s * 0.5, s * 0.5, legH - s * 0.5);
+      /* Table top shadow */
+      ctx.fillStyle = '#1a1a2e';
+      ctx.beginPath();
+      ctx.moveTo(x, y - legH - th2 - 1);
+      ctx.lineTo(x + tw2 + 1, y - legH - 1);
+      ctx.lineTo(x, y - legH + th2 - 1);
+      ctx.lineTo(x - tw2 - 1, y - legH - 1);
+      ctx.closePath(); ctx.fill();
+      /* Table top (diamond) */
+      ctx.fillStyle = '#e0d4c0';
+      ctx.beginPath();
+      ctx.moveTo(x, y - legH - th2);
+      ctx.lineTo(x + tw2, y - legH);
+      ctx.lineTo(x, y - legH + th2);
+      ctx.lineTo(x - tw2, y - legH);
+      ctx.closePath(); ctx.fill();
+      /* Highlight stripe */
+      ctx.fillStyle = '#f0e8d8';
+      ctx.beginPath();
+      ctx.moveTo(x, y - legH - th2 * 0.5);
+      ctx.lineTo(x + tw2 * 0.3, y - legH);
+      ctx.lineTo(x, y - legH + th2 * 0.5);
+      ctx.lineTo(x - tw2 * 0.3, y - legH);
+      ctx.closePath(); ctx.fill();
+      /* Item on table: drink can */
+      ctx.fillStyle = '#cc2222';
+      px(x - s * 0.4, y - legH - th2 * 0.3 - s * 1.5, s * 0.8, s * 1.2);
+      ctx.fillStyle = '#e8e8e8';
+      px(x - s * 0.4, y - legH - th2 * 0.3 - s * 1.5, s * 0.8, s * 0.3);
+    }
+    if (f.id === 'plant') {
+      /* Habbo potted plant — isometric pot with foliage */
+      const pw = tW * 0.22, ph = tH * 0.18, potH = s * 2.2;
+      /* Pot front face */
+      ctx.fillStyle = '#a06030';
+      ctx.beginPath();
+      ctx.moveTo(x - pw, y); ctx.lineTo(x, y + ph);
+      ctx.lineTo(x, y + ph - potH); ctx.lineTo(x - pw, y - potH);
+      ctx.closePath(); ctx.fill();
+      /* Pot right face */
+      ctx.fillStyle = '#c08848';
+      ctx.beginPath();
+      ctx.moveTo(x, y + ph); ctx.lineTo(x + pw, y);
+      ctx.lineTo(x + pw, y - potH); ctx.lineTo(x, y + ph - potH);
+      ctx.closePath(); ctx.fill();
+      /* Pot top (dirt) */
+      ctx.fillStyle = '#5a3a20';
+      ctx.beginPath();
+      ctx.moveTo(x - pw, y - potH); ctx.lineTo(x, y + ph - potH);
+      ctx.lineTo(x + pw, y - potH); ctx.lineTo(x, y - ph - potH);
+      ctx.closePath(); ctx.fill();
+      /* Stem */
+      ctx.strokeStyle = '#2a6620'; ctx.lineWidth = s * 0.3;
+      ctx.beginPath(); ctx.moveTo(x, y - potH); ctx.lineTo(x, y - potH - s * 2.5); ctx.stroke();
+      /* Foliage — layered circles */
+      ctx.fillStyle = '#2d8040';
+      ctx.beginPath(); ctx.arc(x, y - potH - s * 3.5, s * 1.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#38a050';
+      ctx.beginPath(); ctx.arc(x + s * 0.5, y - potH - s * 4, s * 1.1, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#249038';
+      ctx.beginPath(); ctx.arc(x - s * 0.4, y - potH - s * 4.2, s * 0.9, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#45b860';
+      ctx.beginPath(); ctx.arc(x + s * 0.2, y - potH - s * 3, s * 0.7, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
+  /* ══════════════ BFS PATHFINDING ══════════════ */
+  function getOccupied() {
+    const g = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+    furniture.forEach(f => {
+      for (let dc = 0; dc < f.sc; dc++)
+        for (let dr = 0; dr < f.sr; dr++) {
+          const nc = f.col + dc, nr = f.row + dr;
+          if (nc < COLS && nr < ROWS) g[nr][nc] = 1;
+        }
+    });
+    characters.forEach(ch => { if (ch.col >= 0 && ch.row >= 0) g[ch.row][ch.col] = 1; });
+    return g;
+  }
+
+  function bfs(sc, sr, ec, er) {
+    if (ec < 0 || ec >= COLS || er < 0 || er >= ROWS) return [];
+    const g = getOccupied();
+    g[sr][sc] = 0;
+    if (g[er][ec] === 1) return [];
+    const q = [{ c: sc, r: sr, p: [] }];
+    const vis = new Set([`${sc},${sr}`]);
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    while (q.length) {
+      const { c, r, p } = q.shift();
+      if (c === ec && r === er) return p;
+      for (const [dc, dr] of dirs) {
+        const nc = c + dc, nr = r + dr, k = `${nc},${nr}`;
+        if (nc >= 0 && nc < COLS && nr >= 0 && nr < ROWS && !vis.has(k) && g[nr][nc] === 0) {
+          vis.add(k);
+          q.push({ c: nc, r: nr, p: [...p, { c: nc, r: nr }] });
+        }
+      }
+    }
+    return [];
+  }
+
+  const WALK_MS = 200;
+  function updateChar(ch, dt) {
+    if (!ch.path.length) return;
+    ch.wt += dt;
+    if (ch.wt >= WALK_MS) { ch.wt = 0; const n = ch.path.shift(); ch.col = n.c; ch.row = n.r; }
+  }
+
+  /* ══════════════ CHAT BUBBLES ══════════════ */
+  /* Messages per character: index 0=Carlos, 1=Javier, 2=Anthonny */
+  const CHAR_MSGS = [
+    [ /* Carlos */
+      "Bobba!", "¿Alguien tiene furnis?", "HC rules!",
+      "¿Quién tiene Habbo Club?", "Los furnis raros lo eran todo",
+      "Pool's closed jk", "Estas paredes cuentan todo"
+    ],
+    [ /* Javier */
+      "¿Ya recargaste los créditos por SMS?",
+      "Yo recargaba créditos por SMS jaja",
+      "¿Entramos a mi sala?", "Habbo Hotel forever",
+      "20 años, pto", "¿Te acuerdas de los tronos HC?",
+      "Manda HABBO al 7722 jaja"
+    ],
+    [ /* Anthonny */
+      "¿Te acuerdas?", "Qué tiempos aquellos",
+      "Los dados Habbo valían oro", "Yo quería el trono HC",
+      "¿Quién organizaba los casinos?", "Pásame furnis raros",
+      "Habbo era la vida"
+    ]
+  ];
+  const BUBBLE_INT = 3500, BUBBLE_DUR = 3500;
+  let msgIdx = [0, 0, 0]; /* Track which message each char is on */
+
+  function updateBubbles(dt) {
+    bubbleTimer += dt;
+    if (bubbleTimer >= BUBBLE_INT) {
+      bubbleTimer = 0;
+      const ci = Math.floor(Math.random() * characters.length);
+      const msgs = CHAR_MSGS[ci];
+      const txt = msgs[msgIdx[ci] % msgs.length];
+      msgIdx[ci]++;
+      bubbles.push({ ci, txt, life: 0 });
+    }
+    bubbles = bubbles.filter(b => { b.life += dt; return b.life < BUBBLE_DUR; });
+  }
+
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawBubble(b) {
+    const ch = characters[b.ci];
+    const { x, y } = toScr(ch.col, ch.row);
+    const a = b.life < 300 ? b.life / 300 : b.life > BUBBLE_DUR - 400 ? (BUBBLE_DUR - b.life) / 400 : 1;
+    const charH = tH * 3.2;
+    const bY = y - charH - 14;
+    const fs = Math.max(7, tW / 6);
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.font = `${fs}px "Inter", sans-serif`;
+    const tw = ctx.measureText(b.txt).width;
+    const pw = tw + fs * 1.4, ph = fs * 2.2;
+    const bx = x - pw / 2, by = bY - ph / 2;
+    /* Classic Habbo white bubble with teal border */
+    ctx.fillStyle = '#fff';
+    roundRect(bx, by, pw, ph, 6); ctx.fill();
+    ctx.strokeStyle = '#6aa8b8'; ctx.lineWidth = 1.5;
+    roundRect(bx, by, pw, ph, 6); ctx.stroke();
+    /* Pointer triangle */
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.moveTo(x - 5, by + ph); ctx.lineTo(x, by + ph + 7); ctx.lineTo(x + 5, by + ph);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = '#6aa8b8'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(x - 5, by + ph); ctx.lineTo(x, by + ph + 7); ctx.lineTo(x + 5, by + ph); ctx.stroke();
+    /* Text */
+    ctx.fillStyle = '#1a2a30';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(b.txt, x, bY);
+    ctx.restore();
+  }
+
+  /* ══════════════ SELECTION INDICATOR ══════════════ */
+  function drawSel() {
+    const ch = characters[selIdx];
+    const { x, y } = toScr(ch.col, ch.row);
+    const pulse = 0.5 + 0.5 * Math.sin(performance.now() * 0.005);
+    ctx.save();
+    ctx.globalAlpha = pulse * 0.7;
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y - tH / 2 - 3);
+    ctx.lineTo(x + tW / 2 + 3, y);
+    ctx.lineTo(x, y + tH / 2 + 3);
+    ctx.lineTo(x - tW / 2 - 3, y);
+    ctx.closePath();
+    ctx.stroke();
+    /* Arrow above */
+    ctx.fillStyle = '#fff';
+    ctx.globalAlpha = pulse * 0.9;
+    const charH = tH * 3.2;
+    const aY = y - charH - Math.sin(performance.now() * 0.004) * 3;
+    ctx.beginPath();
+    ctx.moveTo(x, aY + 6); ctx.lineTo(x - 4, aY); ctx.lineTo(x + 4, aY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ══════════════ RENDER ══════════════ */
+  function render(ts) {
+    animId = requestAnimationFrame(render);
+    const dt = Math.min(ts - lastT, 100);
+    if (dt < 33) return;
+    lastT = ts;
+    ctx.clearRect(0, 0, cW, cH);
+    /* Classic Habbo dark blue-gray background */
+    ctx.fillStyle = '#1c2830';
+    ctx.fillRect(0, 0, cW, cH);
+
+    drawWalls();
+    drawWallDecor();
+
+    /* Painter's algorithm */
+    const entities = [];
+    for (let r = 0; r < ROWS; r++)
+      for (let c = 0; c < COLS; c++) {
+        entities.push({ depth: r + c, type: 'tile', c, r, hl: c === hoverCol && r === hoverRow });
+      }
+    furniture.forEach(f => entities.push({ depth: f.row + f.col + 0.1, type: 'furn', f }));
+    characters.forEach((ch, i) => { updateChar(ch, dt); entities.push({ depth: ch.row + ch.col + 0.2, type: 'char', ch, i }); });
+    entities.sort((a, b) => a.depth - b.depth);
+
+    entities.forEach(e => {
+      if (e.type === 'tile') drawTile(e.c, e.r, e.hl);
+      else if (e.type === 'furn') drawFurn(e.f);
+      else if (e.type === 'char') drawChar(e.ch, dt);
+    });
+
+    drawSel();
+    updateBubbles(dt);
+    bubbles.forEach(drawBubble);
+  }
+
+  /* ══════════════ INPUT ══════════════ */
+  function handleInput(cx, cy) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = cx - rect.left, my = cy - rect.top;
+    const charH = tH * 3.2;
+    for (let i = 0; i < characters.length; i++) {
+      const ch = characters[i];
+      const { x, y } = toScr(ch.col, ch.row);
+      if (Math.hypot(mx - x, my - (y - charH / 2)) < tW * 0.6) { selIdx = i; return; }
+    }
+    const { c, r } = toGrid(mx, my);
+    if (c >= 0 && c < COLS && r >= 0 && r < ROWS) {
+      const sel = characters[selIdx];
+      const path = bfs(sel.col, sel.row, c, r);
+      if (path.length) { sel.path = path; sel.wt = 0; }
+    }
+  }
+
+  canvas.addEventListener('click', e => handleInput(e.clientX, e.clientY));
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); handleInput(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const { c, r } = toGrid(e.clientX - rect.left, e.clientY - rect.top);
+    hoverCol = (c >= 0 && c < COLS && r >= 0 && r < ROWS) ? c : -1;
+    hoverRow = (c >= 0 && c < COLS && r >= 0 && r < ROWS) ? r : -1;
+  });
+  canvas.addEventListener('mouseleave', () => { hoverCol = hoverRow = -1; });
+
+  /* ══════════════ INIT ══════════════ */
+  resize();
+  window.addEventListener('resize', resize);
+  initChars();
+  initFurniture();
+  const roomObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !animId) { lastT = performance.now(); animId = requestAnimationFrame(render); }
+      else if (!e.isIntersecting && animId) { cancelAnimationFrame(animId); animId = null; }
+    });
+  }, { threshold: 0.05 });
+  if (section) roomObs.observe(section);
+})();
+
+
+/* ─── Kintsugi 3D Hover & Glow Dinámico ─── */
+const kWrap = document.querySelector('#kintsugi .kintsugi-wrap');
+if (kWrap) {
+  const kGlow = document.createElement('div');
+  kGlow.className = 'kintsugi-glow';
+  kWrap.appendChild(kGlow);
+
+  kWrap.addEventListener('mousemove', (e) => {
+    const rect = kWrap.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotX = ((y - cy) / cy) * -12;
+    const rotY = ((x - cx) / cx) * 12;
+
+    kWrap.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.05, 1.05, 1.05)`;
+
+    kGlow.style.opacity = '1';
+    kGlow.style.setProperty('--mx', `${x}px`);
+    kGlow.style.setProperty('--my', `${y}px`);
+  });
+
+  kWrap.addEventListener('mouseleave', () => {
+    kWrap.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+    kGlow.style.opacity = '0';
+  });
+}
+
 </script>
 </body>
 </html>
