@@ -2905,7 +2905,7 @@ let kintsugiAssembled = false;
 
 function checkAndAssembleKintsugi() {
   if (kintsugiAssembled || touchedPieces.size < TOTAL_PIECES) return;
-  if (!swatchesWrap || !swatchesWrap.classList.contains('swatches-broken')) return;
+  if (!swatchesWrap) return;
   kintsugiAssembled = true;
   const swList = document.querySelectorAll('.sw');
   swatchesEl.classList.add('assembling');
@@ -3031,10 +3031,7 @@ if (igPlay) {
   });
 }
 
-/* Swatches empiezan ya fragmentados — listas para ser tocadas */
-if (swatchesWrap) {
-  swatchesWrap.classList.add('swatches-broken');
-}
+/* Swatches empiezan enteros — al voltear los 6 se ensambla el kintsugi */
 
 /* ─── Jesus: tócalo → se tacha (solo visual, sin romper nada) ─── */
 const jesusPerson = document.querySelector('[data-jesus]');
@@ -3065,8 +3062,12 @@ if (jesusPerson) {
   'use strict';
 
   const canvas = document.getElementById('room-cvs');
+  /* Offscreen buffer to prevent flickering on Safari */
+  const offCanvas = document.createElement('canvas');
+  const offCtx = offCanvas.getContext('2d');
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+  const screenCtx = canvas.getContext('2d');
+  const ctx = offCtx; /* All drawing goes to offscreen buffer — blit to visible in render() */
   const wrap = canvas.parentElement;
   const section = document.getElementById('room-section');
 
@@ -3093,7 +3094,8 @@ if (jesusPerson) {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     cW = r.width; cH = r.height;
     canvas.width = cW * dpr; canvas.height = cH * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    offCanvas.width = cW * dpr; offCanvas.height = cH * dpr;
+    offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     /* The isometric grid spans:
        Width:  (COLS + ROWS) * tW/2   (diamond shape)
        Height: (COLS + ROWS) * tH/2 + wallH + charH + tileDepth
@@ -3688,6 +3690,10 @@ if (jesusPerson) {
     drawSel();
     updateBubbles(dt);
     bubbles.forEach(drawBubble);
+
+    /* Blit offscreen buffer to visible canvas in one shot — prevents Safari flickering */
+    screenCtx.clearRect(0, 0, canvas.width, canvas.height);
+    screenCtx.drawImage(offCanvas, 0, 0);
   }
 
   /* ══════════════ INPUT ══════════════ */
