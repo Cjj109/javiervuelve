@@ -1628,8 +1628,10 @@
     .letter-log {
       max-height: 170px;
       overflow-y: scroll;
+      overflow-x: hidden;
       scrollbar-width: none;
       padding: .8rem 1.5rem;
+      -webkit-overflow-scrolling: touch; /* scroll suave en iOS */
     }
     .letter-log::-webkit-scrollbar { display: none; }
 
@@ -1932,6 +1934,7 @@
       .ig-bar:nth-child(7) { height: 40px; }
       .ig-play {
         padding: .78rem 1rem;
+        min-height: 44px; /* touch target accesible */
         font-size: .63rem; letter-spacing: .25em;
       }
 
@@ -2226,8 +2229,14 @@
       overflow: hidden;
       -webkit-transform: translateZ(0);
       -webkit-overflow-scrolling: touch;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      box-sizing: border-box;
     }
-    .strange-overlay.active { opacity: 1; pointer-events: auto; }
+    .strange-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+      touch-action: none; /* evita scroll/zoom durante el hechizo */
+    }
     .strange-overlay.darkened { background: #000; }
 
     /* ── Sling Ring (CSS puro) ── */
@@ -2518,10 +2527,12 @@
 
     /* ── Mobile ── */
     @media (max-width: 600px) {
-      .strange-btn { width: 140px; height: 140px; }
+      .strange-btn { width: 140px; height: 140px; min-width: 44px; min-height: 44px; }
       .strange-btn-text { font-size: .6rem; }
       .strange-ring { width: 160px; height: 160px; }
       .strange-timeline-clone { grid-template-columns: 1fr 1fr; }
+      .strange-text { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+      .strange-shield { width: 220px; height: 220px; }
       .strange-punch {
         font-size: clamp(1.3rem, 6vw, 1.8rem);
         width: 88%; padding: 0 1rem;
@@ -2695,7 +2706,9 @@
     /* ── Vista cinematográfica (oculta hasta play) ── */
     .tesseract {
       position: relative;
-      width: 100%; min-height: 100vh;
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh; /* evita salto al mostrar/ocultar barra de URL en móvil */
       display: none;
       align-items: center; justify-content: center;
       flex-direction: column;
@@ -2788,7 +2801,9 @@
 
         /* Botón detener */
     .tess-stop {
-      position: fixed; bottom: 2rem; right: 2rem;
+      position: fixed;
+      bottom: max(2rem, env(safe-area-inset-bottom));
+      right: max(2rem, env(safe-area-inset-right));
       z-index: 9999;
       border: 1px solid rgba(240,176,0,.25);
       background: rgba(1,6,8,.85);
@@ -2813,7 +2828,13 @@
       .tess-static { padding: 4rem 1rem; }
       .tess-terminal-body { padding: 2rem 1rem 1.2rem; }
       .tess-msg { padding: 1.5rem 1rem; }
-      .tess-stop { bottom: 1rem; right: 1rem; }
+      .tess-stop {
+        bottom: max(1rem, env(safe-area-inset-bottom));
+        right: max(1rem, env(safe-area-inset-right));
+        min-height: 44px;
+        padding: .6rem 1.2rem;
+      }
+      .tess-counter-num { font-size: clamp(3rem, 12vw, 7rem); }
       .tess-text {
         font-size: clamp(1.25rem, 5vw, 1.6rem);
         line-height: 1.8;
