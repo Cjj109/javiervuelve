@@ -3447,72 +3447,50 @@ function drawLight(ts) {
   const bp = breath * i;
 
   /* ══════════════════════════════════════════════════════
-     CAPA 1 — NÚCLEO eliminado (Opción C).
-     El orbe CSS (.ghl-orb) ya es el núcleo: tiene box-shadow
-     multicapa (hasta 240px de spread) que actúa como halo
-     concentrado. Dibujar un segundo núcleo en canvas sobre
-     el mismo punto creaba un "doble foco" visible en móvil.
-     Las capas 2-4 proveen toda la atmósfera atmosférica.
+     LUZ AMBIENTAL DIFUSA
+     Sin punto de origen fijo — la luz es el ambiente.
+     Tres capas: core (centro), drift (arriba), echo (abajo).
+     El color de cada sección se siente en toda la pantalla.
   ══════════════════════════════════════════════════════ */
-  const srcX = W * 0.95;
-  const srcY = H * 0.085; // posición de referencia del orbe CSS
-  const coreR = Math.min(W, H) * 0.55; // radio usado por capa 2
 
-  /* ══════════════════════════════════════════════════════
-     CAPA 2 — CONO DIAGONAL DE LUZ
-     La luz no cae verticalmente — viaja en diagonal hacia
-     la izquierda-abajo, como la luz de un faro sobre el agua.
-     Centro del cono: desplazado hacia el interior de la página.
-  ══════════════════════════════════════════════════════ */
-  const coneX = W * 0.78;
-  const coneY = H * 0.55;
-  const coneR = Math.max(W, H) * 1.1;
+  /* ── CAPA 1: CORE GLOW — baño central de color ── */
+  const coreX = W * 0.50;
+  const coreY = H * 0.45;
+  const coreR = Math.max(W, H) * 0.85;
 
-  const gCone = ctx.createRadialGradient(srcX, srcY, coreR * 0.08, coneX, coneY, coneR);
-  gCone.addColorStop(0,    `rgba(${cR},${cG},${cB},${(0.075 + bp * 0.025) * i})`);
-  gCone.addColorStop(0.18, `rgba(${c90[0]},${c90[1]},${c90[2]}, ${(0.038 + bp * 0.010) * i})`);
-  gCone.addColorStop(0.40, `rgba(${c80[0]},${c80[1]},${c80[2]}, ${(0.016 + bp * 0.004) * i})`);
-  gCone.addColorStop(0.68, `rgba(${c65[0]},${c65[1]},${c65[2]}, ${0.006 * i})`);
-  gCone.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gCone;
+  const gCore = ctx.createRadialGradient(coreX, coreY, 0, coreX, coreY, coreR);
+  gCore.addColorStop(0,    `rgba(${cR},${cG},${cB}, ${(0.09 + bp * 0.025) * i})`);
+  gCore.addColorStop(0.20, `rgba(${c90[0]},${c90[1]},${c90[2]}, ${(0.06 + bp * 0.012) * i})`);
+  gCore.addColorStop(0.45, `rgba(${c80[0]},${c80[1]},${c80[2]}, ${(0.03 + bp * 0.006) * i})`);
+  gCore.addColorStop(0.72, `rgba(${c65[0]},${c65[1]},${c65[2]}, ${0.012 * i})`);
+  gCore.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gCore;
   ctx.fillRect(0, 0, W, H);
 
-  /* ══════════════════════════════════════════════════════
-     CAPA 3 — VELO ATMOSFÉRICO (niebla sobre el agua)
-     Cubre TODA la página. Intensidad muy baja, uniforme.
-     Tinte ligeramente más frío (cian) que las capas anteriores —
-     como la luz verde dispersada en la atmósfera nocturna.
-     Esta capa es la "estela" que se siente en toda la página.
-  ══════════════════════════════════════════════════════ */
-  const fogX = W * 0.62;
-  const fogY = H * 0.38;
-  const fogR = Math.max(W, H) * 1.65;
+  /* ── CAPA 2: TOP DRIFT — asimetría superior ── */
+  const driftX = W * 0.40;
+  const driftY = H * 0.15;
+  const driftR = Math.max(W, H) * 0.9;
+  const driftBreath = 0.5 + 0.5 * Math.sin(phase * 0.8 + 1.4);
 
-  const gFog = ctx.createRadialGradient(srcX, srcY * 0.5, 0, fogX, fogY, fogR);
-  gFog.addColorStop(0,    `rgba(${c85[0]},${c85[1]},${c85[2]}, ${(0.035 + bp * 0.008) * i})`);
-  gFog.addColorStop(0.25, `rgba(${c76[0]},${c76[1]},${c76[2]}, ${(0.018 + bp * 0.004) * i})`);
-  gFog.addColorStop(0.55, `rgba(${c66[0]},${c66[1]},${c66[2]}, ${0.008 * i})`);
-  gFog.addColorStop(0.82, `rgba(${c55[0]},${c55[1]},${c55[2]}, ${0.003 * i})`);
-  gFog.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gFog;
+  const gDrift = ctx.createRadialGradient(driftX, driftY, 0, driftX, driftY, driftR);
+  gDrift.addColorStop(0,    `rgba(${c85[0]},${c85[1]},${c85[2]}, ${(0.045 + driftBreath * 0.010) * i})`);
+  gDrift.addColorStop(0.30, `rgba(${c76[0]},${c76[1]},${c76[2]}, ${(0.022 + driftBreath * 0.005) * i})`);
+  gDrift.addColorStop(0.60, `rgba(${c66[0]},${c66[1]},${c66[2]}, ${0.008 * i})`);
+  gDrift.addColorStop(1,    'rgba(0,0,0,0)');
+  ctx.fillStyle = gDrift;
   ctx.fillRect(0, 0, W, H);
 
-  /* ══════════════════════════════════════════════════════
-     CAPA 4 — ECO DEL FONDO (reflexión en el agua oscura)
-     La luz llega al "suelo" de la página muy atenuada.
-     Centro desplazado hacia la izquierda — no es vertical
-     sino que la luz se dispersa mientras viaja.
-     Respiración más lenta — es el eco más lejano.
-  ══════════════════════════════════════════════════════ */
+  /* ── CAPA 3: BOTTOM ECHO — profundidad, reflejo ── */
   const echoX = W * 0.55;
-  const echoY = H;       // pie del viewport
-  const echoR = W * 1.2;
+  const echoY = H * 0.95;
+  const echoR = W * 1.0;
+  const echoBreath = 0.5 + 0.5 * Math.sin(phase * 0.6 + 2.1);
 
-  const echoBreath = 0.5 + 0.5 * Math.sin(phase * 0.6 + 2.1); // fase diferente — no sincronizado
   const gEcho = ctx.createRadialGradient(echoX, echoY, 0, echoX, echoY, echoR);
-  gEcho.addColorStop(0,    `rgba(${c73[0]},${c73[1]},${c73[2]}, ${(0.018 + echoBreath * 0.007) * i})`);
-  gEcho.addColorStop(0.38, `rgba(${c60[0]},${c60[1]},${c60[2]}, ${0.008 * i})`);
-  gEcho.addColorStop(0.72, `rgba(${c48[0]},${c48[1]},${c48[2]}, ${0.003 * i})`);
+  gEcho.addColorStop(0,    `rgba(${c73[0]},${c73[1]},${c73[2]}, ${(0.025 + echoBreath * 0.008) * i})`);
+  gEcho.addColorStop(0.35, `rgba(${c60[0]},${c60[1]},${c60[2]}, ${0.012 * i})`);
+  gEcho.addColorStop(0.70, `rgba(${c48[0]},${c48[1]},${c48[2]}, ${0.004 * i})`);
   gEcho.addColorStop(1,    'rgba(0,0,0,0)');
   ctx.fillStyle = gEcho;
   ctx.fillRect(0, 0, W, H);
