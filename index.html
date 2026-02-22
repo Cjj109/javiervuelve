@@ -2191,7 +2191,7 @@
 </div>
 
 <!-- ══════════════ EL GRUPO ══════════════ -->
-<div class="s">
+<div class="s" id="grupo-section">
   <span class="s-label">Colegio La Merced — 2005</span>
   <h2 class="s-title">El grupo que <em>formamos</em></h2>
   <div class="rule"></div>
@@ -2222,7 +2222,7 @@
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
 
 <!-- ══════════════ LO QUE COMPARTIMOS ══════════════ -->
-<div class="s">
+<div class="s" id="swatches-section">
   <span class="s-label">Un mundo en común</span>
   <h2 class="s-title">Todo lo que <em>compartimos</em></h2>
   <div class="rule"></div>
@@ -2436,7 +2436,7 @@
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
 
 <!-- ══════════════ CARTAS ══════════════ -->
-<div class="letters-section">
+<div class="letters-section" id="letters-section">
   <div class="letters-inner">
     <span class="s-label" style="text-align:center;display:block;">Transmisión pendiente</span>
     <h2 class="s-title" style="text-align:center;">Mensajes que <em>nunca llegaron</em></h2>
@@ -2782,6 +2782,21 @@ let phase = 0, lastTs = 0, intensity = 1;
 // luzOn se define abajo, pero el canvas necesita acceso
 function getLuzOn() { return typeof luzOn === 'undefined' ? true : luzOn; }
 
+/* ── Color dinámico tipo Clementine — cambia por sección ── */
+/* Colores RGB base por sección (tono emocional de cada etapa) */
+const SECTION_COLORS = {
+  hero:     [0, 230, 140],   /* verde esperanza — el inicio */
+  grupo:    [0, 210, 255],   /* cyan intenso — la frescura de la amistad */
+  swatches: [0, 230, 140],   /* verde — los recuerdos compartidos */
+  office:   [255, 180, 0],   /* ámbar fuerte — humor, calidez */
+  letters:  [60, 100, 255],  /* azul profundo — melancolía, lo que no se dijo */
+  habbo:    [0, 240, 180],   /* turquesa vivo — nostalgia digital */
+  vinyl:    [255, 50, 70],   /* rojo intenso — pasión, la música */
+  kintsugi: [255, 190, 0]    /* dorado brillante — reparación, cierre */
+};
+let lightR = 0, lightG = 200, lightB = 122; /* actual (interpolado) */
+let targetR = 0, targetG = 200, targetB = 122; /* destino */
+
 function drawLight(ts) {
   requestAnimationFrame(drawLight);
   // dt basado en tiempo real; cap de 100ms para evitar salto tras volver de otra pestaña
@@ -2796,6 +2811,25 @@ function drawLight(ts) {
   // Phase proporcional al tiempo real — sin saltos aunque el dispositivo pierda frames
   phase += 0.007 * (dt / 50);
   const breath = 0.5 + 0.5 * Math.sin(phase); // respiración suave única
+
+  /* Interpolar color hacia el target — transición suave */
+  lightR += (targetR - lightR) * 0.045;
+  lightG += (targetG - lightG) * 0.045;
+  lightB += (targetB - lightB) * 0.045;
+  /* Sync CSS --green with interpolated canvas color */
+  const cR = Math.round(lightR), cG = Math.round(lightG), cB = Math.round(lightB);
+  document.documentElement.style.setProperty('--green',
+    '#' + [cR, cG, cB].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join(''));
+  const c90 = [Math.round(cR*.9), Math.round(cG*.88), Math.round(cB*.9)];
+  const c80 = [Math.round(cR*.8), Math.round(cG*.78), Math.round(cB*.8)];
+  const c65 = [Math.round(cR*.65), Math.round(cG*.65), Math.round(cB*.65)];
+  const c85 = [Math.round(cR*.85), Math.round(cG*.84), Math.round(cB*.85)];
+  const c76 = [Math.round(cR*.76), Math.round(cG*.76), Math.round(cB*.76)];
+  const c66 = [Math.round(cR*.66), Math.round(cG*.66), Math.round(cB*.66)];
+  const c55 = [Math.round(cR*.55), Math.round(cG*.55), Math.round(cB*.55)];
+  const c73 = [Math.round(cR*.73), Math.round(cG*.73), Math.round(cB*.73)];
+  const c60 = [Math.round(cR*.6), Math.round(cG*.6), Math.round(cB*.6)];
+  const c48 = [Math.round(cR*.48), Math.round(cG*.48), Math.round(cB*.48)];
 
   ctx.clearRect(0, 0, W, H);
   if (intensity < 0.01) return; // totalmente apagado
@@ -2826,10 +2860,10 @@ function drawLight(ts) {
   const coneR = Math.max(W, H) * 1.1;
 
   const gCone = ctx.createRadialGradient(srcX, srcY, coreR * 0.08, coneX, coneY, coneR);
-  gCone.addColorStop(0,    `rgba(0,190,104,${(0.075 + bp * 0.025) * i})`);
-  gCone.addColorStop(0.18, `rgba(0,175,94, ${(0.038 + bp * 0.010) * i})`);
-  gCone.addColorStop(0.40, `rgba(0,155,82, ${(0.016 + bp * 0.004) * i})`);
-  gCone.addColorStop(0.68, `rgba(0,130,68, ${0.006 * i})`);
+  gCone.addColorStop(0,    `rgba(${cR},${cG},${cB},${(0.075 + bp * 0.025) * i})`);
+  gCone.addColorStop(0.18, `rgba(${c90[0]},${c90[1]},${c90[2]}, ${(0.038 + bp * 0.010) * i})`);
+  gCone.addColorStop(0.40, `rgba(${c80[0]},${c80[1]},${c80[2]}, ${(0.016 + bp * 0.004) * i})`);
+  gCone.addColorStop(0.68, `rgba(${c65[0]},${c65[1]},${c65[2]}, ${0.006 * i})`);
   gCone.addColorStop(1,    'rgba(0,0,0,0)');
   ctx.fillStyle = gCone;
   ctx.fillRect(0, 0, W, H);
@@ -2846,10 +2880,10 @@ function drawLight(ts) {
   const fogR = Math.max(W, H) * 1.65;
 
   const gFog = ctx.createRadialGradient(srcX, srcY * 0.5, 0, fogX, fogY, fogR);
-  gFog.addColorStop(0,    `rgba(0,168,90, ${(0.035 + bp * 0.008) * i})`);
-  gFog.addColorStop(0.25, `rgba(0,152,82, ${(0.018 + bp * 0.004) * i})`);
-  gFog.addColorStop(0.55, `rgba(0,132,72, ${0.008 * i})`);
-  gFog.addColorStop(0.82, `rgba(0,110,58, ${0.003 * i})`);
+  gFog.addColorStop(0,    `rgba(${c85[0]},${c85[1]},${c85[2]}, ${(0.035 + bp * 0.008) * i})`);
+  gFog.addColorStop(0.25, `rgba(${c76[0]},${c76[1]},${c76[2]}, ${(0.018 + bp * 0.004) * i})`);
+  gFog.addColorStop(0.55, `rgba(${c66[0]},${c66[1]},${c66[2]}, ${0.008 * i})`);
+  gFog.addColorStop(0.82, `rgba(${c55[0]},${c55[1]},${c55[2]}, ${0.003 * i})`);
   gFog.addColorStop(1,    'rgba(0,0,0,0)');
   ctx.fillStyle = gFog;
   ctx.fillRect(0, 0, W, H);
@@ -2867,9 +2901,9 @@ function drawLight(ts) {
 
   const echoBreath = 0.5 + 0.5 * Math.sin(phase * 0.6 + 2.1); // fase diferente — no sincronizado
   const gEcho = ctx.createRadialGradient(echoX, echoY, 0, echoX, echoY, echoR);
-  gEcho.addColorStop(0,    `rgba(0,145,76, ${(0.018 + echoBreath * 0.007) * i})`);
-  gEcho.addColorStop(0.38, `rgba(0,120,62, ${0.008 * i})`);
-  gEcho.addColorStop(0.72, `rgba(0,95,48,  ${0.003 * i})`);
+  gEcho.addColorStop(0,    `rgba(${c73[0]},${c73[1]},${c73[2]}, ${(0.018 + echoBreath * 0.007) * i})`);
+  gEcho.addColorStop(0.38, `rgba(${c60[0]},${c60[1]},${c60[2]}, ${0.008 * i})`);
+  gEcho.addColorStop(0.72, `rgba(${c48[0]},${c48[1]},${c48[2]}, ${0.003 * i})`);
   gEcho.addColorStop(1,    'rgba(0,0,0,0)');
   ctx.fillStyle = gEcho;
   ctx.fillRect(0, 0, W, H);
@@ -3976,6 +4010,58 @@ if (kWrap) {
     kGlow.style.opacity = '0';
   });
 }
+
+/* ─── Eternal Sunshine: color shift por sección ─── */
+(function() {
+  const sectionMap = [
+    { sel: '.hero',             key: 'hero' },
+    { sel: '#grupo-section',    key: 'grupo' },
+    { sel: '#swatches-section', key: 'swatches' },
+    { sel: '#office-section',   key: 'office' },
+    { sel: '#letters-section',  key: 'letters' },
+    { sel: '#room-section',     key: 'habbo' },
+    { sel: '#vinyl-section',    key: 'vinyl' },
+    { sel: '#kintsugi',         key: 'kintsugi' }
+  ];
+
+  const entries = sectionMap
+    .map(s => { const el = document.querySelector(s.sel); return el ? { el, key: s.key } : null; })
+    .filter(Boolean);
+
+  if (!entries.length) return;
+
+  /* Mantener qué secciones están visibles y su ratio */
+  const visibleMap = new Map();
+
+  function updateColor() {
+    /* Elegir la sección con mayor intersectionRatio */
+    let best = null, bestRatio = 0;
+    visibleMap.forEach((ratio, key) => {
+      if (ratio > bestRatio) { bestRatio = ratio; best = key; }
+    });
+    if (!best) return;
+    const c = SECTION_COLORS[best];
+    if (!c) return;
+    targetR = c[0]; targetG = c[1]; targetB = c[2];
+
+    /* --green se actualiza en drawLight() para interpolar suavemente */
+  }
+
+  const obs = new IntersectionObserver((ents) => {
+    ents.forEach(e => {
+      const key = entries.find(s => s.el === e.target)?.key;
+      if (!key) return;
+      if (e.isIntersecting) {
+        visibleMap.set(key, e.intersectionRatio);
+      } else {
+        visibleMap.delete(key);
+      }
+    });
+    updateColor();
+  }, { threshold: [0, 0.15, 0.3, 0.5, 0.7] });
+
+  entries.forEach(s => obs.observe(s.el));
+})();
 
 </script>
 </body>
