@@ -2371,7 +2371,7 @@
 </div>
 
 <!-- ══════════════ GATSBY ══════════════ -->
-<div class="gatsby-moment">
+<div class="gatsby-moment" id="gatsby-section">
 
   <!-- La luz verde — solo el orbe, la neblina la da el fondo de la sección -->
   <div class="gm-orb-wrap" aria-hidden="true">
@@ -2431,6 +2431,23 @@
     </div>
   </div>
 
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
+<!-- ══════════════ HABBO HOTEL ROOM ══════════════ -->
+<div class="room-section" id="room-section">
+  <span class="s-label" style="text-align:center;display:block;">Nuestro rincón virtual</span>
+  <h2 class="s-title" style="text-align:center;">Donde <em>todo empezó</em></h2>
+  <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
+  <p style="text-align:center;font-family:'Cinzel',serif;color:var(--gold);font-size:.95rem;letter-spacing:.08em;margin-bottom:.8rem;">Habbo Hotel</p>
+
+  <!-- Canvas isométrico -->
+  <div class="room-canvas-wrap">
+    <canvas id="room-cvs" aria-label="Sala Habbo Hotel — toca las baldosas para mover los personajes"></canvas>
+  </div>
+
+  <p class="room-hint">Toca una baldosa para mover a los personajes</p>
 </div>
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
@@ -2571,23 +2588,6 @@
 
     </div>
   </div>
-</div>
-
-<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
-
-<!-- ══════════════ HABBO HOTEL ROOM ══════════════ -->
-<div class="room-section" id="room-section">
-  <span class="s-label" style="text-align:center;display:block;">Nuestro rincón virtual</span>
-  <h2 class="s-title" style="text-align:center;">Donde <em>todo empezó</em></h2>
-  <div class="rule" style="margin-left:auto;margin-right:auto;"></div>
-  <p style="text-align:center;font-family:'Cinzel',serif;color:var(--gold);font-size:.95rem;letter-spacing:.08em;margin-bottom:.8rem;">Habbo Hotel</p>
-
-  <!-- Canvas isométrico -->
-  <div class="room-canvas-wrap">
-    <canvas id="room-cvs" aria-label="Sala Habbo Hotel — toca las baldosas para mover los personajes"></canvas>
-  </div>
-
-  <p class="room-hint">Toca una baldosa para mover a los personajes</p>
 </div>
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
@@ -2788,10 +2788,11 @@ const SECTION_COLORS = {
   hero:     [0, 230, 140],   /* verde esperanza — el inicio */
   grupo:    [0, 210, 255],   /* cyan intenso — la frescura de la amistad */
   swatches: [0, 230, 140],   /* verde — los recuerdos compartidos */
+  gatsby:   [0, 255, 120],   /* verde Gatsby — la luz del muelle */
   office:   [255, 180, 0],   /* ámbar fuerte — humor, calidez */
   letters:  [60, 100, 255],  /* azul profundo — melancolía, lo que no se dijo */
   habbo:    [0, 240, 180],   /* turquesa vivo — nostalgia digital */
-  vinyl:    [255, 50, 70],   /* rojo intenso — pasión, la música */
+  vinyl:    [255, 40, 100],   /* rosa intenso — pasión, la música */
   kintsugi: [255, 190, 0]    /* dorado brillante — reparación, cierre */
 };
 let lightR = 0, lightG = 200, lightB = 122; /* actual (interpolado) */
@@ -4017,9 +4018,10 @@ if (kWrap) {
     { sel: '.hero',             key: 'hero' },
     { sel: '#grupo-section',    key: 'grupo' },
     { sel: '#swatches-section', key: 'swatches' },
+    { sel: '#gatsby-section',   key: 'gatsby' },
     { sel: '#office-section',   key: 'office' },
-    { sel: '#letters-section',  key: 'letters' },
     { sel: '#room-section',     key: 'habbo' },
+    { sel: '#letters-section',  key: 'letters' },
     { sel: '#vinyl-section',    key: 'vinyl' },
     { sel: '#kintsugi',         key: 'kintsugi' }
   ];
