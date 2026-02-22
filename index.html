@@ -332,7 +332,7 @@
       pointer-events: none;
       border: 1.5px solid rgba(240,176,0,.55);
       border-radius: 0;
-      opacity: .85;
+      opacity: .92;
     }
     .swatches-wrap.swatches-broken .sw {
       border-radius: 0;
@@ -2355,7 +2355,7 @@
     }
     @keyframes strange-dissolve {
       0%   { opacity: 1; filter: blur(0) brightness(1) saturate(1); transform: scale(1) translateY(0); }
-      25%  { opacity: .85; filter: blur(0.5px) brightness(1.1) saturate(.6); transform: scale(1.005); }
+      25%  { opacity: .92; filter: blur(0.5px) brightness(1.1) saturate(.6); transform: scale(1.005); }
       50%  { opacity: .5; filter: blur(2px) brightness(1.4) saturate(.2); transform: scale(.98) translateY(-3px); }
       75%  { opacity: .2; filter: blur(5px) brightness(2) saturate(0); transform: scale(.94) translateY(-10px); }
       100% { opacity: 0; filter: blur(10px) brightness(3) saturate(0); transform: scale(.88) translateY(-20px); }
@@ -2546,7 +2546,7 @@
       font-size: clamp(.55rem, 1vw, .7rem);
       letter-spacing: .35em;
       text-transform: uppercase;
-      color: rgba(195,215,205,.4);
+      color: rgba(195,215,205,.6);
       text-align: left;
       line-height: 1.6;
     }
@@ -2555,7 +2555,7 @@
       font-family: 'Cormorant Garamond', Georgia, serif;
       font-size: clamp(1rem, 2.2vw, 1.25rem);
       font-weight: 300; line-height: 1.8;
-      color: rgba(215,232,222,.7);
+      color: rgba(215,232,222,.82);
       max-width: 600px; margin: 0 auto;
     }
     .tess-intro + .tess-intro { margin-top: .3rem; }
@@ -2564,9 +2564,9 @@
     .tess-terminal {
       margin: 3rem auto 0;
       max-width: 720px;
-      border: 1px solid rgba(60,100,255,.15);
+      border: 1px solid rgba(60,100,255,.22);
       border-left: 2px solid;
-      border-image: linear-gradient(to bottom, rgba(60,100,255,.4), rgba(0,200,130,.25)) 1;
+      border-image: linear-gradient(to bottom, rgba(60,100,255,.5), rgba(0,200,130,.35)) 1;
       border-radius: 4px;
       background: rgba(2,10,15,.5);
       backdrop-filter: blur(8px);
@@ -2585,21 +2585,21 @@
     .tess-tdot {
       width: 6px; height: 6px; border-radius: 50%;
     }
-    .tess-tdot:nth-child(1) { background: rgba(0,200,130,.6); }
-    .tess-tdot:nth-child(2) { background: rgba(60,100,255,.5); }
-    .tess-tdot:nth-child(3) { background: rgba(0,200,130,.4); }
+    .tess-tdot:nth-child(1) { background: rgba(0,200,130,.75); }
+    .tess-tdot:nth-child(2) { background: rgba(60,100,255,.65); }
+    .tess-tdot:nth-child(3) { background: rgba(0,200,130,.55); }
     .tess-terminal-status {
       font-family: 'Inter', sans-serif;
       font-size: .5rem; letter-spacing: .35em;
       text-transform: uppercase;
-      color: rgba(0,200,130,.6);
+      color: rgba(0,200,130,.75);
       margin-left: .3rem;
     }
     .tess-terminal-day {
       font-family: 'Inter', sans-serif;
       font-size: .55rem; letter-spacing: .2em;
       text-transform: uppercase;
-      color: rgba(195,215,205,.35);
+      color: rgba(195,215,205,.5);
     }
     .tess-terminal-day em {
       font-style: normal;
@@ -2622,7 +2622,7 @@
     }
     .tess-wbar {
       width: 3px; border-radius: 2px;
-      background: rgba(60,100,255,.45);
+      background: rgba(60,100,255,.55);
       animation: tess-wave 1.5s ease-in-out infinite alternate;
     }
     .tess-wbar:nth-child(odd) { animation-delay: -.7s; }
@@ -2637,8 +2637,8 @@
     .tess-play-btn {
       width: 100%; max-width: 580px;
       padding: .9rem 2rem;
-      border: 1px solid rgba(240,176,0,.2);
-      background: transparent;
+      border: 1px solid rgba(240,176,0,.3);
+      background: rgba(240,176,0,.03);
       cursor: pointer;
       font-family: 'Inter', sans-serif;
       font-size: .6rem; letter-spacing: .35em;
@@ -2665,7 +2665,7 @@
       font-family: 'Inter', sans-serif;
       font-size: .45rem; letter-spacing: .3em;
       text-transform: uppercase;
-      color: rgba(195,215,205,.2);
+      color: rgba(195,215,205,.35);
     }
 
     /* ── Vista cinematográfica (oculta hasta play) ── */
@@ -3108,7 +3108,7 @@
           <span class="play-tri"></span>
           reproducir transmisión
         </button>
-        <div class="tess-terminal-meta">2 grabaciones · 13 mayo 2024 · sin respuesta</div>
+        <div class="tess-terminal-meta">1 grabación · 13 mayo 2024 · sin respuesta</div>
       </div>
     </div>
   </div>
