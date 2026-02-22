@@ -2858,12 +2858,7 @@
     Para <span class="name">Javier</span>
   </h1>
 
-  <!-- La luz al final del muelle — The Great Gatsby -->
-  <div class="gatsby-hero-light" id="gatsby-hero-light" role="button" tabindex="0" aria-label="La luz verde al final del muelle — The Great Gatsby">
-    <div class="ghl-dock" aria-hidden="true"></div>
-    <div class="ghl-orb"></div>
-    <span class="ghl-label">La luz verde al final del muelle<span class="ghl-label-cite">The Great Gatsby</span></span>
-  </div>
+
 
 </div>
 
@@ -3387,7 +3382,7 @@ window.addEventListener('resize', resize);
 
 let phase = 0, lastTs = 0, intensity = 1;
 // luzOn se define abajo, pero el canvas necesita acceso
-function getLuzOn() { return typeof luzOn === 'undefined' ? true : luzOn; }
+function getLuzOn() { return true; }
 
 /* ── Color dinámico tipo Clementine — cambia por sección ── */
 /* Colores RGB base por sección (tono emocional de cada etapa) */
@@ -3578,27 +3573,9 @@ lbClose.addEventListener('click', closeLb);
 lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
-/* ─── La luz: tócala para apagarla ─── */
-const dockLight = document.querySelector('.gatsby-hero-light');
+/* La luz ambiental siempre está encendida */
 let luzOn = true;
-if (dockLight) {
-  const toggleLight = () => { luzOn = !luzOn; dockLight.classList.toggle('apagada', !luzOn); };
-  dockLight.addEventListener('click', toggleLight);
-  dockLight.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleLight(); } });
-}
-/* Cuando llegas a la sección Gatsby, la luz del hero pulsa una vez */
-const gatsbyMoment = document.querySelector('.gatsby-moment');
-if (dockLight && gatsbyMoment) {
-  const ghlPulseObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      dockLight.classList.add('ghl-pulse');
-      setTimeout(() => dockLight.classList.remove('ghl-pulse'), 1500);
-      ghlPulseObs.unobserve(e.target);
-    });
-  }, { threshold: 0.2 });
-  ghlPulseObs.observe(gatsbyMoment);
-}
+
 
 /* ─── Hero: "20 años de amistad" toca para ver la línea de tiempo ─── */
 const heroAnoBtn = document.getElementById('hero-ano-btn');
