@@ -5057,6 +5057,9 @@ if (kWrap) {
 
     /* ═══ BEAT 6 — Todo vuelve (3.5s) ═══ */
     setTimeout(function() {
+      /* Quitar el punch antes de quitar el fondo */
+      var oldPunch = overlay.querySelector('.strange-punch');
+      if (oldPunch) oldPunch.remove();
       overlay.classList.remove('darkened');
 
       /* Restaurar TODO en reversa */
