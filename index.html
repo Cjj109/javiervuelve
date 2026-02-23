@@ -2220,11 +2220,11 @@
       width: 100vw; height: 100vh;
       height: 100dvh;
       z-index: 999;
-      background-color: transparent;
+      background: rgba(0,0,0,0);
       display: flex; align-items: center; justify-content: center;
       flex-direction: column;
       opacity: 0;
-      transition: opacity .4s ease, background-color .3s ease;
+      transition: opacity .4s ease, background .6s ease;
       pointer-events: none;
       overflow: hidden;
       -webkit-transform: translateZ(0);
@@ -2237,7 +2237,7 @@
       pointer-events: auto;
       touch-action: none; /* evita scroll/zoom durante el hechizo */
     }
-    .strange-overlay.darkened { background-color: #000 !important; }
+    .strange-overlay.darkened { background: #000; }
 
     /* ── Sling Ring (CSS puro) ── */
     .strange-ring {
@@ -2548,7 +2548,7 @@
         font-size: clamp(.6rem, 2.5vw, .75rem);
         width: 90%;
       }
-      .strange-overlay.darkened { background-color: #000 !important; }
+      .strange-overlay.darkened { background: #000; }
     }
 
 
@@ -5066,21 +5066,11 @@ if (kWrap) {
     /* ═══ BEAT 5 — El punch final ═══ */
     setTimeout(function() {
       ring.style.display = 'none';
-
-      /* Pantalla negra dedicada (no depende del overlay) */
-      var blackScreen = document.createElement('div');
-      blackScreen.id = 'strange-black';
-      blackScreen.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:#000;z-index:10000;display:flex;align-items:center;justify-content:center;';
-      document.body.appendChild(blackScreen);
-
+      overlay.classList.add('darkened');
       setTimeout(function() {
         var punch = document.createElement('div');
         punch.className = 'strange-punch';
-        punch.style.position = 'relative';
-        punch.style.transform = 'none';
-        punch.style.top = 'auto';
-        punch.style.left = 'auto';
-        blackScreen.appendChild(punch);
+        overlay.appendChild(punch);
         typePunch(punch, 'Ni el hechizo m\u00e1s poderoso borra 20 a\u00f1os.', 60);
       }, 500);
     }, t);
@@ -5088,9 +5078,8 @@ if (kWrap) {
 
     /* ═══ BEAT 6 — Todo vuelve (3.5s) ═══ */
     setTimeout(function() {
-      /* Quitar pantalla negra */
-      var bs = document.getElementById('strange-black');
-      if (bs) bs.remove();
+      var oldPunch = overlay.querySelector('.strange-punch');
+      if (oldPunch) oldPunch.remove();
       overlay.classList.remove('darkened');
 
       /* Restaurar TODO en reversa */
