@@ -2220,11 +2220,11 @@
       width: 100vw; height: 100vh;
       height: 100dvh;
       z-index: 999;
-      background: rgba(0,0,0,0);
+      background-color: transparent;
       display: flex; align-items: center; justify-content: center;
       flex-direction: column;
       opacity: 0;
-      transition: opacity .4s ease, background .6s ease;
+      transition: opacity .4s ease, background-color .3s ease;
       pointer-events: none;
       overflow: hidden;
       -webkit-transform: translateZ(0);
@@ -2237,7 +2237,7 @@
       pointer-events: auto;
       touch-action: none; /* evita scroll/zoom durante el hechizo */
     }
-    .strange-overlay.darkened { background: #000; }
+    .strange-overlay.darkened { background-color: #000 !important; }
 
     /* ── Sling Ring (CSS puro) ── */
     .strange-ring {
@@ -2548,7 +2548,7 @@
         font-size: clamp(.6rem, 2.5vw, .75rem);
         width: 90%;
       }
-      .strange-overlay.darkened { background: #000; }
+      .strange-overlay.darkened { background-color: #000 !important; }
     }
 
 
