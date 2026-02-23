@@ -5063,26 +5063,34 @@ if (kWrap) {
       if (heroTitle) heroTitle.classList.remove('strange-resisting');
     }, t);
 
-    /* ═══ BEAT 5 — El punch final (3s) ═══ */
+    /* ═══ BEAT 5 — El punch final ═══ */
     setTimeout(function() {
       ring.style.display = 'none';
-      overlay.classList.add('darkened');
-      overlay.style.backgroundColor = '#000';
+
+      /* Pantalla negra dedicada (no depende del overlay) */
+      var blackScreen = document.createElement('div');
+      blackScreen.id = 'strange-black';
+      blackScreen.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;background:#000;z-index:10000;display:flex;align-items:center;justify-content:center;';
+      document.body.appendChild(blackScreen);
+
       setTimeout(function() {
         var punch = document.createElement('div');
         punch.className = 'strange-punch';
-        overlay.appendChild(punch);
+        punch.style.position = 'relative';
+        punch.style.transform = 'none';
+        punch.style.top = 'auto';
+        punch.style.left = 'auto';
+        blackScreen.appendChild(punch);
         typePunch(punch, 'Ni el hechizo m\u00e1s poderoso borra 20 a\u00f1os.', 60);
       }, 500);
     }, t);
-    t += 4000; /* 500ms dark + 2.6s tipeo + 0.9s lectura */
+    t += 4000;
 
     /* ═══ BEAT 6 — Todo vuelve (3.5s) ═══ */
     setTimeout(function() {
-      /* Quitar el punch antes de quitar el fondo */
-      var oldPunch = overlay.querySelector('.strange-punch');
-      if (oldPunch) oldPunch.remove();
-      overlay.style.backgroundColor = '';
+      /* Quitar pantalla negra */
+      var bs = document.getElementById('strange-black');
+      if (bs) bs.remove();
       overlay.classList.remove('darkened');
 
       /* Restaurar TODO en reversa */
