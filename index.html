@@ -5666,59 +5666,66 @@ if (kWrap) {
   ]};
 
   /* Scene 4: Player 1 — focused, leaning in, controller in hands */
+  /* ═══ SEATED POSE GUIDE ═══
+     legL/R ~75 = thighs go forward (horizontal)
+     shinL/R ~-70 = shins hang down from knee
+     bodyLean ~-10 = torso leans back into seat
+     arms forward ~40-50 = holding controller/keyboard */
+
+  /* Scene 4: Player 1 (Carlos) — intense, leaned forward, mashing buttons */
   SCENE_KF.s4_player1 = { loop:true, duration:3.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:20, armR:25, handL:10, handR:-8, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.25, ease:'easeOut',   pose:{ armL:18, armR:23, handL:12, handR:-6, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-4, hipSway:-0.5, headTilt:-3, shoulderTwist:0.5 }},
-    { t:0.50, ease:'easeInOut', pose:{ armL:22, armR:27, handL:8, handR:-10, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-6, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:19, armR:24, handL:11, handR:-7, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0.5, headTilt:-2, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:20, armR:25, handL:10, handR:-8, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+    { t:0.0,  ease:'easeInOut', pose:{ armL:42, armR:45, handL:18, handR:-15, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.20, ease:'easeOut',   pose:{ armL:38, armR:48, handL:22, handR:-12, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-4, hipSway:-1, headTilt:-5, shoulderTwist:2 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:45, armR:42, handL:15, handR:-20, legL:76, legR:77, shinL:-70, shinR:-70, bodyLean:-7, hipSway:1, headTilt:-2, shoulderTwist:-1.5 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:40, armR:46, handL:20, handR:-14, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-5, hipSway:0.5, headTilt:-4, shoulderTwist:1 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:42, armR:45, handL:18, handR:-15, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 2 — relaxed, leaned back a bit */
-  SCENE_KF.s4_player2 = { loop:true, duration:4.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:18, armR:22, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.30, ease:'easeOut',   pose:{ armL:16, armR:24, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-7, hipSway:0, headTilt:1.5, shoulderTwist:0.3 }},
-    { t:0.55, ease:'easeInOut', pose:{ armL:20, armR:20, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-9, hipSway:0, headTilt:-0.5, shoulderTwist:-0.3 }},
-    { t:0.80, ease:'easeOut',   pose:{ armL:17, armR:23, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0.5, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:18, armR:22, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 4: Player 2 — relaxed, leaned back into couch, legs spread */
+  SCENE_KF.s4_player2 = { loop:true, duration:4.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:38, armR:40, handL:15, handR:-12, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:35, armR:43, handL:18, handR:-10, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-12, hipSway:0, headTilt:2, shoulderTwist:1 }},
+    { t:0.60, ease:'easeInOut', pose:{ armL:40, armR:38, handL:13, handR:-15, legL:82, legR:83, shinL:-74, shinR:-76, bodyLean:-15, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:0.85, ease:'easeOut',   pose:{ armL:37, armR:41, handL:16, handR:-13, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-13, hipSway:0, headTilt:1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:38, armR:40, handL:15, handR:-12, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 3 — excitable, reacts to game moments */
-  SCENE_KF.s4_player3 = { loop:true, duration:5.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:25, handL:10, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-7, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.25, ease:'easeInOut', pose:{ armL:26, armR:23, handL:12, handR:-10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:-1, shoulderTwist:0.5 }},
-    { t:0.45, ease:'easeOut',   pose:{ armL:30, armR:27, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-5, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.55, ease:'easeOutCubic', pose:{ armL:-35, armR:-30, handL:-10, handR:10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:0, hipSway:0, headTilt:-4, shoulderTwist:0 }},
-    { t:0.70, ease:'easeInOut', pose:{ armL:-20, armR:-15, handL:-6, handR:6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-2, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.85, ease:'easeInOut', pose:{ armL:26, armR:24, handL:10, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-6, hipSway:0, headTilt:-1, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:25, handL:10, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-7, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 4: Player 3 — excitable, celebrates a goal mid-game */
+  SCENE_KF.s4_player3 = { loop:true, duration:5.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:40, armR:43, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:0.20, ease:'easeInOut', pose:{ armL:38, armR:41, handL:18, handR:-16, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-8, hipSway:-1, headTilt:-2, shoulderTwist:1 }},
+    { t:0.38, ease:'easeOut',   pose:{ armL:44, armR:46, handL:14, handR:-12, legL:77, legR:79, shinL:-71, shinR:-73, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.48, ease:'easeOutCubic', pose:{ armL:-40, armR:-35, handL:-15, handR:12, legL:72, legR:74, shinL:-64, shinR:-66, bodyLean:2, hipSway:0, headTilt:-6, shoulderTwist:0 }},
+    { t:0.60, ease:'easeInOut', pose:{ armL:-25, armR:-20, handL:-8, handR:8, legL:74, legR:76, shinL:-66, shinR:-68, bodyLean:-2, hipSway:0, headTilt:-4, shoulderTwist:0 }},
+    { t:0.75, ease:'easeInOut', pose:{ armL:36, armR:40, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:40, armR:43, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 4 — focused, subtle controller movements */
-  SCENE_KF.s4_player4 = { loop:true, duration:3.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:25, armR:28, handL:10, handR:-10, legL:30, legR:35, shinL:-13, shinR:-11, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.30, ease:'easeOut',   pose:{ armL:23, armR:26, handL:12, handR:-8, legL:30, legR:35, shinL:-13, shinR:-11, bodyLean:-7, hipSway:0, headTilt:-3, shoulderTwist:0.5 }},
-    { t:0.55, ease:'easeInOut', pose:{ armL:27, armR:30, handL:8, handR:-12, legL:30, legR:35, shinL:-13, shinR:-11, bodyLean:-9, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
-    { t:0.80, ease:'easeOut',   pose:{ armL:24, armR:27, handL:11, handR:-9, legL:30, legR:35, shinL:-13, shinR:-11, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:25, armR:28, handL:10, handR:-10, legL:30, legR:35, shinL:-13, shinR:-11, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+  /* Scene 4: Player 4 — focused gamer, slight body sway with game tension */
+  SCENE_KF.s4_player4 = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:43, armR:46, handL:17, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-11, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:40, armR:44, handL:20, handR:-13, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-9, hipSway:-1.5, headTilt:-4, shoulderTwist:2 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:46, armR:48, handL:14, handR:-18, legL:79, legR:81, shinL:-73, shinR:-75, bodyLean:-12, hipSway:1, headTilt:-1, shoulderTwist:-1.5 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:42, armR:45, handL:18, handR:-15, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-10, hipSway:0, headTilt:-3, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:43, armR:46, handL:17, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-11, hipSway:0, headTilt:-2, shoulderTwist:0 }}
   ]};
 
-  /* Scene 6: Carlos gaming */
-  SCENE_KF.s6_carlos = { loop:true, duration:2.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.30, ease:'easeOut',   pose:{ armL:25, armR:29, handL:16, handR:-12, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-8, hipSway:-1, headTilt:-3, shoulderTwist:1.5 }},
-    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:33, handL:12, handR:-16, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-12, hipSway:1, headTilt:-1, shoulderTwist:-1 }},
-    { t:0.80, ease:'easeOut',   pose:{ armL:27, armR:30, handL:15, handR:-13, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-9, hipSway:0, headTilt:-2, shoulderTwist:0.5 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+  /* Scene 6: Carlos gaming at PC — hunched forward, intense, keyboard warrior */
+  SCENE_KF.s6_carlos = { loop:true, duration:2.8, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:50, armR:55, handL:20, handR:-18, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-4, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:46, armR:58, handL:24, handR:-15, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-2, hipSway:-1.5, headTilt:-5, shoulderTwist:3 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:53, armR:52, handL:18, handR:-22, legL:79, legR:81, shinL:-73, shinR:-75, bodyLean:-5, hipSway:1, headTilt:-2, shoulderTwist:-2 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:48, armR:56, handL:22, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-3, hipSway:0, headTilt:-4, shoulderTwist:1.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:50, armR:55, handL:20, handR:-18, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-4, hipSway:0, headTilt:-3, shoulderTwist:0 }}
   ]};
 
-  /* Scene 6: Javier gaming */
-  SCENE_KF.s6_javier = { loop:true, duration:3.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.25, ease:'easeOut',   pose:{ armL:22, armR:24, handL:14, handR:-10, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-12, hipSway:-1, headTilt:2, shoulderTwist:0.5 }},
-    { t:0.50, ease:'easeInOut', pose:{ armL:26, armR:28, handL:10, handR:-14, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-15, hipSway:1, headTilt:-1, shoulderTwist:-0.5 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:23, armR:25, handL:13, handR:-11, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-13, hipSway:0, headTilt:1, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 6: Javier gaming at PC — more relaxed, leaned back in chair */
+  SCENE_KF.s6_javier = { loop:true, duration:3.2, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:48, armR:50, handL:18, handR:-16, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-12, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:44, armR:53, handL:22, handR:-13, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-10, hipSway:-1, headTilt:2, shoulderTwist:1.5 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:50, armR:48, handL:16, handR:-20, legL:83, legR:85, shinL:-78, shinR:-78, bodyLean:-13, hipSway:1, headTilt:-1, shoulderTwist:-1 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:46, armR:51, handL:20, handR:-15, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-11, hipSway:0, headTilt:1, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:48, armR:50, handL:18, handR:-16, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-12, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
   /* Mirror a pose horizontally — flips kick direction */
@@ -6800,9 +6807,9 @@ if (kWrap) {
         cx.fillRect(couchX, seatY4 - couchH, couchW, couchH);
         cx.restore();
 
-        /* 4 friends on the couch — bigger, with life */
+        /* 4 friends on the couch — seated with proper hip at seat level */
         var spacing = couchW / 5;
-        var hipY4 = seatY4 - 29 * pScale * aS;
+        var hipY4 = seatY4 - 2 * aS; /* hip right at seat cushion */
 
         var s4P1 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player1, t), 11, 0.06);
         drawStickman(cx, couchX + spacing, hipY4, pScale, s4P1, '#f0b000', 0.75, 11);
@@ -7059,13 +7066,51 @@ if (kWrap) {
         cx.beginPath(); cx.moveTo(W*0.55, gY6); cx.lineTo(W*0.95, gY6); cx.stroke();
         cx.restore();
 
-        /* Stickmen at desks — bigger */
-        var hipY6 = gY6 - 29 * 1.15 * aS;
+        /* Gaming chairs */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        function drawChair(chairX, chairGY) {
+          var chairW = u * 0.9, seatH = u * 0.35;
+          var seatCY = chairGY - seatH;
+          /* Seat */
+          cx.globalAlpha = 0.20; cx.lineWidth = 2;
+          cx.beginPath(); cx.moveTo(chairX - chairW/2, seatCY); cx.lineTo(chairX + chairW/2, seatCY); cx.stroke();
+          /* Backrest */
+          cx.globalAlpha = 0.15; cx.lineWidth = 1.5;
+          cx.beginPath(); cx.moveTo(chairX - chairW/2 + 2, seatCY);
+          cx.lineTo(chairX - chairW/2 - 1, seatCY - u * 0.7); cx.stroke();
+          cx.beginPath(); cx.moveTo(chairX + chairW/2 - 2, seatCY);
+          cx.lineTo(chairX + chairW/2 + 1, seatCY - u * 0.7); cx.stroke();
+          /* Back fill */
+          cx.globalAlpha = 0.03;
+          cx.beginPath();
+          cx.moveTo(chairX - chairW/2 + 2, seatCY);
+          cx.lineTo(chairX - chairW/2 - 1, seatCY - u * 0.7);
+          cx.lineTo(chairX + chairW/2 + 1, seatCY - u * 0.7);
+          cx.lineTo(chairX + chairW/2 - 2, seatCY);
+          cx.closePath(); cx.fill();
+          /* Chair legs / base */
+          cx.globalAlpha = 0.18; cx.lineWidth = 1.5;
+          cx.beginPath(); cx.moveTo(chairX, seatCY); cx.lineTo(chairX, chairGY); cx.stroke();
+          cx.beginPath(); cx.moveTo(chairX - chairW*0.5, chairGY); cx.lineTo(chairX + chairW*0.5, chairGY); cx.stroke();
+          /* Wheels */
+          cx.globalAlpha = 0.15;
+          cx.beginPath(); cx.arc(chairX - chairW*0.45, chairGY + 2, 2, 0, Math.PI*2); cx.fill();
+          cx.beginPath(); cx.arc(chairX + chairW*0.45, chairGY + 2, 2, 0, Math.PI*2); cx.fill();
+          return seatCY;
+        }
+        var seatYC = drawChair(W * 0.25, gY6);
+        var seatYJ = drawChair(W * 0.75, gY6);
+        cx.restore();
+
+        /* Stickmen at desks — seated with hip at chair seat */
+        var hipY6C = seatYC - 2 * aS;
+        var hipY6J = seatYJ - 2 * aS;
         var s6CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_carlos, t), 15, 0.08);
-        var cInfo = drawStickman(cx, W*0.25, hipY6, 1.15, s6CarlosPose, '#f0b000', 0.75, 15);
+        var cInfo = drawStickman(cx, W*0.25, hipY6C, 1.15, s6CarlosPose, '#f0b000', 0.75, 15);
 
         var s6JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_javier, t), 16, 0.08);
-        var jInfo = drawStickman(cx, W*0.75, hipY6, 1.15, s6JavierPose, '#f0b000', 0.75, 16);
+        var jInfo = drawStickman(cx, W*0.75, hipY6J, 1.15, s6JavierPose, '#f0b000', 0.75, 16);
 
         /* Headsets */
         cx.save(); cx.strokeStyle = '#f0b000'; cx.lineCap = 'round';
