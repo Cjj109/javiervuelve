@@ -2959,9 +2959,11 @@
       text-align: center;
       line-height: 1.4;
     }
-    .adagio-scene-btn:hover {
-      border-color: rgba(240,176,0,0.6);
-      color: var(--gold);
+    @media (hover: hover) {
+      .adagio-scene-btn:hover {
+        border-color: rgba(240,176,0,0.6);
+        color: var(--gold);
+      }
     }
     .adagio-scene-btn.active {
       border-color: var(--gold);
@@ -6301,32 +6303,31 @@ if (kWrap) {
          Joy of childhood — quick, playful energy */
       draw: function(cx, W, H, t) {
         cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Sky gradient hint */
+        /* Sky gradient — warm afternoon feel */
         cx.save();
-        var skyG = cx.createLinearGradient(0, H*0.1, 0, H*0.78);
-        skyG.addColorStop(0, 'rgba(240,176,0,0.025)');
+        var skyG = cx.createLinearGradient(0, H*0.05, 0, H*0.65);
+        skyG.addColorStop(0, 'rgba(240,176,0,0.04)');
+        skyG.addColorStop(0.6, 'rgba(200,120,30,0.02)');
         skyG.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
         cx.restore();
 
         drawStars(cx, W, H, 8, 0.08, 50);
-        var gY = H*0.78;
+        var gY = H*0.65;
         drawGround(cx, W*0.03, W*0.97, gY, 0.30);
 
-        /* Goal posts — kid-sized, proportional */
+        /* Goal posts — kid-sized */
         cx.save();
         cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
         cx.lineCap = 'round'; cx.lineJoin = 'round';
         cx.globalAlpha = 0.55; cx.lineWidth = 3;
-        var goalTop = gY - 38*aS, goalL = W*0.80, goalR = W*0.88;
+        var goalTop = gY - 52*aS, goalL = W*0.78, goalR = W*0.90;
         cx.beginPath();
         cx.moveTo(goalL, gY); cx.lineTo(goalL, goalTop);
         cx.lineTo(goalR, goalTop); cx.lineTo(goalR, gY);
         cx.stroke();
-        /* Crossbar fill */
         cx.globalAlpha = 0.10;
         cx.fillRect(goalL, goalTop - 2, goalR - goalL, 5);
-        /* Net lines */
         cx.globalAlpha = 0.15; cx.lineWidth = 1;
         for (var i = 0; i < 5; i++) {
           cx.beginPath();
@@ -6340,31 +6341,73 @@ if (kWrap) {
           cx.lineTo(goalR, goalTop + j * (gY - goalTop) / 3);
           cx.stroke();
         }
-
-        /* Soccer ball — bouncing with physics, travels from Carlos toward goal */
-        var ballBounce = Math.abs(Math.sin(t * 2.5)) * 12;
-        var ballX = W*0.72 + sn(10, 0.6, 6);
-        var ballY = gY - 8*aS - ballBounce;
         cx.restore();
+
+        /* Ball arc — cycles from Carlos's foot toward goal and back */
+        var kickCycle = (t % 2.5) / 2.5;
+        var ballProgress = kickCycle < 0.42 ? 0 : Math.min(1, (kickCycle - 0.42) / 0.45);
+        var ballEased = ballProgress * ballProgress * (3 - 2 * ballProgress);
+        var ballStartX = W*0.35, ballEndX = W*0.82;
+        var ballX = ballStartX + (ballEndX - ballStartX) * ballEased;
+        var ballArcHeight = Math.sin(ballEased * Math.PI) * H*0.22;
+        var ballY = gY - 8*aS - ballArcHeight;
         /* Ball shadow */
         cx.save();
         cx.fillStyle = '#f0b000';
-        cx.globalAlpha = 0.14;
+        cx.globalAlpha = 0.14 * (1 - ballArcHeight / (H*0.25));
         cx.beginPath();
         cx.ellipse(ballX, gY - 1, 6*aS, 1.5*aS, 0, 0, Math.PI * 2);
         cx.fill();
         cx.restore();
-        drawSoccerBall(cx, ballX, ballY, 5*aS, 0.70, t * 2);
+        if (ballProgress > 0) {
+          drawSoccerBall(cx, ballX, ballY, 6*aS, 0.75, t * 4);
+          /* Motion trail */
+          cx.save();
+          cx.strokeStyle = '#f0b000';
+          cx.lineWidth = 1;
+          cx.globalAlpha = 0.12;
+          cx.setLineDash([3, 4]);
+          cx.beginPath();
+          for (var bt = 0; bt < ballEased; bt += 0.05) {
+            var bpx = ballStartX + (ballEndX - ballStartX) * bt;
+            var bpy = gY - 8*aS - Math.sin(bt * Math.PI) * H*0.22;
+            if (bt === 0) cx.moveTo(bpx, bpy); else cx.lineTo(bpx, bpy);
+          }
+          cx.stroke();
+          cx.setLineDash([]);
+          cx.restore();
+        } else {
+          /* Ball at Carlos's feet before kick */
+          drawSoccerBall(cx, W*0.35, gY - 8*aS, 6*aS, 0.60, t * 2);
+        }
 
-        /* Kid Carlos — kicking pose, keyframed */
+        /* Dust puff on kick */
+        if (kickCycle > 0.40 && kickCycle < 0.55) {
+          var dustAlpha = 1 - (kickCycle - 0.40) / 0.15;
+          cx.save();
+          cx.fillStyle = '#f0b000';
+          for (var d = 0; d < 5; d++) {
+            var dx = W*0.36 + sn(60+d, 3, 6) * (kickCycle - 0.40) * 40;
+            var dy = gY - 4 + sn(65+d, 2, 4);
+            cx.globalAlpha = dustAlpha * 0.15;
+            cx.beginPath();
+            cx.arc(dx, dy, 2 + sn(70+d, 1, 1), 0, Math.PI * 2);
+            cx.fill();
+          }
+          cx.restore();
+        }
+
+        /* Kid Carlos — kicking, bigger and centered */
         var s0CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s0_carlos, t), 1, 0.12);
-        drawStickman(cx, W*0.42, gY - 29*0.78*aS, 0.78, s0CarlosPose, '#f0b000', 0.70, 1);
+        drawStickman(cx, W*0.32, gY - 29*1.0*aS, 1.0, s0CarlosPose, '#f0b000', 0.80, 1);
 
-        /* Kid Javier — running/chasing, playful */
-        var runPose = addMicroNoise(keyframeWalkPose(t, 1.5, 0), 2, 0.12);
-        runPose.bodyLean = 8;
-        runPose.headTilt = -2;
-        drawStickman(cx, W*0.60 + sn(5, 0.3, 3), gY - 29*0.72*aS, 0.72, runPose, '#f0b000', 0.70, 2);
+        /* Kid Javier — running toward ball, excited */
+        var runPose = addMicroNoise(keyframeWalkPose(t, 1.8, 0), 2, 0.12);
+        runPose.bodyLean = 10;
+        runPose.headTilt = -3;
+        runPose.armL = -45 + sn(20, 1.5, 5);
+        runPose.armR = 50 + sn(21, 1.5, 5);
+        drawStickman(cx, W*0.55 + sn(5, 0.3, 3), gY - 29*0.90*aS, 0.90, runPose, '#f0b000', 0.75, 2);
       }
     },
 
@@ -6372,37 +6415,35 @@ if (kWrap) {
          Same game but stronger, nostalgia layer */
       draw: function(cx, W, H, t) {
         cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Warm evening sky */
+        /* Warm evening sky — deeper sunset */
         cx.save();
-        var skyG = cx.createLinearGradient(0, 0, 0, H*0.88);
-        skyG.addColorStop(0, 'rgba(240,150,50,0.03)');
-        skyG.addColorStop(0.5, 'rgba(200,100,40,0.02)');
+        var skyG = cx.createLinearGradient(0, 0, 0, H*0.65);
+        skyG.addColorStop(0, 'rgba(240,150,50,0.05)');
+        skyG.addColorStop(0.4, 'rgba(220,120,30,0.03)');
         skyG.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
         cx.restore();
 
-        drawStars(cx, W, H, 6, 0.06, 150);
-        var gY1 = H*0.85;
+        drawStars(cx, W, H, 10, 0.08, 150);
+        var gY1 = H*0.68;
         drawGround(cx, W*0.03, W*0.97, gY1, 0.30);
 
-        /* Goal — adult-sized, proportional */
+        /* Goal — adult-sized, bigger */
         cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
         cx.lineCap = 'round'; cx.lineJoin = 'round';
         cx.globalAlpha = 0.55; cx.lineWidth = 3.5;
-        var goalT1 = gY1 - 55*aS, goalL1 = W*0.79, goalR1 = W*0.88;
+        var goalT1 = gY1 - 65*aS, goalL1 = W*0.76, goalR1 = W*0.90;
         cx.beginPath();
         cx.moveTo(goalL1, gY1); cx.lineTo(goalL1, goalT1);
         cx.lineTo(goalR1, goalT1); cx.lineTo(goalR1, gY1);
         cx.stroke();
-        /* Crossbar fill */
         cx.globalAlpha = 0.10;
         cx.fillRect(goalL1, goalT1 - 2, goalR1 - goalL1, 6);
-        /* Net */
         cx.globalAlpha = 0.15; cx.lineWidth = 1.2;
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 6; i++) {
           cx.beginPath();
-          cx.moveTo(goalL1 + i * (goalR1 - goalL1) / 4, goalT1);
-          cx.lineTo(goalL1 + i * (goalR1 - goalL1) / 4, gY1);
+          cx.moveTo(goalL1 + i * (goalR1 - goalL1) / 5, goalT1);
+          cx.lineTo(goalL1 + i * (goalR1 - goalL1) / 5, gY1);
           cx.stroke();
         }
         for (var j = 0; j < 4; j++) {
@@ -6411,29 +6452,81 @@ if (kWrap) {
           cx.lineTo(goalR1, goalT1 + j * (gY1 - goalT1) / 3);
           cx.stroke();
         }
-
-        /* Soccer ball in air after kick — heading toward goal */
-        var ballArc = Math.sin(t * 1.8) * 15;
-        var bx2 = W*0.72 + sn(11, 0.4, 5);
-        var by2 = gY1 - 12*aS - Math.abs(ballArc);
         cx.restore();
-        /* Ball shadow on ground */
+
+        /* Ball arc — powerful shot cycling */
+        var kickCycle1 = (t % 3.0) / 3.0;
+        var ballProgress1 = kickCycle1 < 0.38 ? 0 : Math.min(1, (kickCycle1 - 0.38) / 0.35);
+        var ballEased1 = ballProgress1 * ballProgress1 * (3 - 2 * ballProgress1);
+        var bs1X = W*0.32, be1X = W*0.84;
+        var bx2 = bs1X + (be1X - bs1X) * ballEased1;
+        var ballArc1 = Math.sin(ballEased1 * Math.PI) * H*0.28;
+        var by2 = gY1 - 10*aS - ballArc1;
+        /* Ball shadow */
         cx.save();
         cx.fillStyle = '#f0b000';
-        cx.globalAlpha = 0.12;
+        cx.globalAlpha = 0.12 * (1 - ballArc1 / (H*0.30));
         cx.beginPath();
         cx.ellipse(bx2, gY1 - 1, 7*aS, 1.8*aS, 0, 0, Math.PI * 2);
         cx.fill();
         cx.restore();
-        drawSoccerBall(cx, bx2, by2, 6*aS, 0.70, t * 3);
+        if (ballProgress1 > 0) {
+          drawSoccerBall(cx, bx2, by2, 7*aS, 0.80, t * 5);
+          /* Speed lines behind ball */
+          cx.save();
+          cx.strokeStyle = '#f0b000';
+          cx.lineWidth = 1.2;
+          cx.globalAlpha = 0.10 * (1 - ballEased1);
+          for (var sl = 0; sl < 3; sl++) {
+            var slOff = (sl - 1) * 5;
+            cx.beginPath();
+            cx.moveTo(bx2 - 15 - sl * 8, by2 + slOff);
+            cx.lineTo(bx2 - 5, by2 + slOff * 0.5);
+            cx.stroke();
+          }
+          cx.restore();
+          /* Motion trail */
+          cx.save();
+          cx.strokeStyle = '#f0b000';
+          cx.lineWidth = 1.2;
+          cx.globalAlpha = 0.10;
+          cx.setLineDash([4, 5]);
+          cx.beginPath();
+          for (var bt1 = 0; bt1 < ballEased1; bt1 += 0.04) {
+            var bpx1 = bs1X + (be1X - bs1X) * bt1;
+            var bpy1 = gY1 - 10*aS - Math.sin(bt1 * Math.PI) * H*0.28;
+            if (bt1 === 0) cx.moveTo(bpx1, bpy1); else cx.lineTo(bpx1, bpy1);
+          }
+          cx.stroke();
+          cx.setLineDash([]);
+          cx.restore();
+        } else {
+          drawSoccerBall(cx, W*0.32, gY1 - 10*aS, 7*aS, 0.60, t * 2);
+        }
 
-        /* Adult Carlos — powerful kick, keyframed */
+        /* Dust cloud on strike */
+        if (kickCycle1 > 0.36 && kickCycle1 < 0.52) {
+          var dustA1 = 1 - (kickCycle1 - 0.36) / 0.16;
+          cx.save();
+          cx.fillStyle = '#f0b000';
+          for (var d1 = 0; d1 < 7; d1++) {
+            var dx1 = W*0.33 + sn(80+d1, 4, 8) * (kickCycle1 - 0.36) * 50;
+            var dy1 = gY1 - 5 + sn(85+d1, 3, 5);
+            cx.globalAlpha = dustA1 * 0.18;
+            cx.beginPath();
+            cx.arc(dx1, dy1, 2.5 + sn(90+d1, 1, 1.5), 0, Math.PI * 2);
+            cx.fill();
+          }
+          cx.restore();
+        }
+
+        /* Adult Carlos — powerful kick, bigger */
         var s1CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s1_carlos, t), 3, 0.12);
-        drawStickman(cx, W*0.38, gY1 - 29*1.20*aS, 1.20, s1CarlosPose, '#f0b000', 0.67, 3);
+        drawStickman(cx, W*0.28, gY1 - 29*1.35*aS, 1.35, s1CarlosPose, '#f0b000', 0.80, 3);
 
-        /* Adult Javier — celebrating, keyframed */
+        /* Adult Javier — celebrating, bigger */
         var s1JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s1_javier, t), 4, 0.15);
-        drawStickman(cx, W*0.58, gY1 - 29*1.15*aS, 1.15, s1JavierPose, '#f0b000', 0.67, 4);
+        drawStickman(cx, W*0.52, gY1 - 29*1.30*aS, 1.30, s1JavierPose, '#f0b000', 0.80, 4);
       }
     },
 
@@ -7276,7 +7369,7 @@ if (kWrap) {
 
   function startPlayback(startTime) {
     playBtn.style.display = 'none';
-    if (stopBtn) stopBtn.style.display = '';
+    if (stopBtn) stopBtn.style.display = 'inline-block';
     var hint = playBtn.parentElement.querySelector('.adagio-hint');
     if (hint) hint.style.display = 'none';
     resizeCanvas();
