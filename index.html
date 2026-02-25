@@ -2851,6 +2851,83 @@
       }
     }
 
+    /* ════════════════════════════════════
+       ADAGIO — STICKMAN FLASHBACK
+    ════════════════════════════════════ */
+    .adagio-section {
+      position: relative; z-index: 1;
+      text-align: center;
+      padding: 5rem 1.25rem 3rem;
+    }
+    .adagio-stage {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+    }
+    .adagio-stage canvas {
+      width: 100%; height: 100%;
+      border-radius: 8px;
+      display: block;
+    }
+    .adagio-text {
+      position: absolute;
+      bottom: 15%;
+      left: 50%; transform: translateX(-50%);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.1rem, 3vw, 1.8rem);
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(240,176,0,0.3);
+      opacity: 0;
+      transition: opacity 1s ease;
+      text-align: center;
+      width: 80%;
+      pointer-events: none;
+    }
+    .adagio-text.visible { opacity: 1; }
+    .adagio-play {
+      margin-top: 1.5rem;
+      background: none;
+      border: 1px solid rgba(100,50,160,0.4);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.7rem 2rem;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 44px;
+    }
+    .adagio-play:hover {
+      border-color: rgba(100,50,160,0.8);
+      box-shadow: 0 0 20px rgba(100,50,160,0.2);
+    }
+    .adagio-play:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .adagio-hint {
+      display: block;
+      margin-top: .8rem;
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(195,215,205,0.35);
+    }
+
+    @media (max-width: 600px) {
+      .adagio-section { padding: 3rem 1rem 2rem; }
+      .adagio-stage { aspect-ratio: 4 / 3; }
+      .adagio-text { font-size: clamp(0.95rem, 3vw, 1.8rem); width: 90%; bottom: 10%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .adagio-text { transition-duration: 0.01ms !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -3241,6 +3318,24 @@
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
 
+<!-- ══════════════ ADAGIO — STICKMAN FLASHBACK ══════════════ -->
+<div class="adagio-section" id="adagio-section">
+  <span class="s-label" style="text-align:center;display:block;">Adagio for Strings</span>
+  <h2 class="s-title" style="text-align:center;">Lo que <em>fuiste</em></h2>
+  <div class="rule" style="margin:0 auto 2rem;"></div>
+
+  <div class="adagio-stage">
+    <canvas id="adagio-cvs" aria-label="Animación de recuerdos — stickmen"></canvas>
+    <p class="adagio-text" id="adagio-text"></p>
+  </div>
+
+  <button class="adagio-play" id="adagio-play" aria-label="Reproducir escena">Reproducir</button>
+  <span class="adagio-hint">🔊 activa el sonido</span>
+  <audio id="adagio-audio" src="adagio.mp3" preload="auto"></audio>
+</div>
+
+<div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
+
 <!-- ══════════════ KINTSUGI ══════════════ -->
 <div class="close-section" id="kintsugi">
 
@@ -3417,6 +3512,7 @@ const SECTION_COLORS = {
   habbo:    [0, 240, 180],   /* turquesa vivo — nostalgia digital */
   vinyl:    [255, 40, 100],   /* rosa intenso — pasión, la música */
   strange:  [255, 100, 30],   /* naranja portal — Doctor Strange */
+  adagio:   [100, 50, 160],   /* púrpura profundo — el flashback, la memoria */
   kintsugi: [255, 190, 0]    /* dorado brillante — reparación, cierre */
 };
 let lightR = 0, lightG = 200, lightB = 122; /* actual (interpolado) */
@@ -5115,6 +5211,7 @@ if (kWrap) {
     { sel: '#letters-section',  key: 'letters' },
     { sel: '#vinyl-section',    key: 'vinyl' },
     { sel: '#strange-section',  key: 'strange' },
+    { sel: '#adagio-section',   key: 'adagio' },
     { sel: '#kintsugi',         key: 'kintsugi' }
   ];
 
@@ -5155,6 +5252,1968 @@ if (kWrap) {
   }, { threshold: [0, 0.15, 0.3, 0.5, 0.7] });
 
   entries.forEach(s => obs.observe(s.el));
+})();
+
+/* ═══════════════════════════════════════════
+   ADAGIO FOR STRINGS — STICKMAN FLASHBACK
+   (Improved: fluid animation, emotional depth,
+    hand-drawn feel, Disney principles applied)
+═══════════════════════════════════════════ */
+(function() {
+  var canvas = document.getElementById('adagio-cvs');
+  var ctx = canvas ? canvas.getContext('2d') : null;
+  var audio = document.getElementById('adagio-audio');
+  var playBtn = document.getElementById('adagio-play');
+  var textEl = document.getElementById('adagio-text');
+  if (!canvas || !ctx || !playBtn) return;
+
+  var dpr = window.devicePixelRatio || 1;
+  var animId = null;
+  var residues = [];
+  var gt = 0;
+  var prevTime = 0;
+  var dt = 0;
+
+  /* ─── Persistent particle systems ─── */
+  var embers = [];       // for coda ascending embers
+  var burstParticles = []; // for convergence explosion
+
+  function resizeCanvas() {
+    var rect = canvas.parentElement.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  ctx.fillStyle = 'rgba(1,6,8,0.95)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  /* ═══════════════════════════════════════
+     UTILITIES
+  ═══════════════════════════════════════ */
+
+  /* Multi-layered sine noise — organic, not mechanical */
+  function sn(seed, freq, amp) {
+    var s = seed || 0;
+    var f = freq || 1;
+    var a = amp || 1;
+    return (
+      Math.sin(gt * f + s) * a * 0.6 +
+      Math.sin(gt * f * 1.7 + s * 1.3) * a * 0.25 +
+      Math.sin(gt * f * 0.4 + s * 2.1) * a * 0.15
+    );
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * clamp01(t); }
+  function clamp01(t) { return Math.max(0, Math.min(1, t)); }
+
+  /* Easing functions */
+  function easeInOut(t) { t = clamp01(t); return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function easeOut(t) { t = clamp01(t); return 1 - (1-t)*(1-t); }
+  function easeIn(t) { t = clamp01(t); return t*t; }
+  function easeOutCubic(t) { t = clamp01(t); return 1 - Math.pow(1-t, 3); }
+  function easeInOutCubic(t) { t = clamp01(t); return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+  /* Elastic for dramatic moments */
+  function easeOutElastic(t) {
+    t = clamp01(t);
+    if (t === 0 || t === 1) return t;
+    return Math.pow(2, -10*t) * Math.sin((t - 0.075) * (2*Math.PI) / 0.3) + 1;
+  }
+
+  function rad(d) { return d * Math.PI / 180; }
+
+  /* Smooth interpolation between two pose objects */
+  function lerpPose(a, b, t) {
+    var result = {};
+    var keys = ['armL','armR','handL','handR','legL','legR','shinL','shinR','bodyLean','hipSway','headTilt','shoulderTwist'];
+    for (var i = 0; i < keys.length; i++) {
+      var k = keys[i];
+      var va = a[k] !== undefined ? a[k] : 0;
+      var vb = b[k] !== undefined ? b[k] : 0;
+      result[k] = lerp(va, vb, t);
+    }
+    return result;
+  }
+
+  /* ═══════════════════════════════════════
+     KEYFRAME ANIMATION ENGINE
+  ═══════════════════════════════════════ */
+
+  var EASE = {
+    'linear': function(t) { return t; },
+    'easeIn': easeIn,
+    'easeOut': easeOut,
+    'easeInOut': easeInOut,
+    'easeOutCubic': easeOutCubic,
+    'easeInOutCubic': easeInOutCubic,
+    'easeOutElastic': easeOutElastic
+  };
+
+  function animateKeyframes(seq, timeSeconds) {
+    var kfs = seq.keyframes;
+    var dur = seq.duration || 1;
+    var nt;
+    if (seq.loop) {
+      nt = (timeSeconds % dur) / dur;
+      if (nt < 0) nt += 1;
+    } else {
+      nt = clamp01(timeSeconds / dur);
+    }
+    var idxB = kfs.length - 1;
+    for (var i = 1; i < kfs.length; i++) {
+      if (kfs[i].t >= nt) { idxB = i; break; }
+    }
+    var idxA = (idxB > 0) ? idxB - 1 : 0;
+    if (idxA === idxB) return kfs[idxA].pose;
+    var segStart = kfs[idxA].t;
+    var segEnd = kfs[idxB].t;
+    var segLen = segEnd - segStart;
+    var localT = (segLen > 0) ? (nt - segStart) / segLen : 0;
+    var easeFn = EASE[kfs[idxB].ease] || EASE['easeInOut'];
+    return lerpPose(kfs[idxA].pose, kfs[idxB].pose, easeFn(localT));
+  }
+
+  function addMicroNoise(pose, seed, noiseScale) {
+    noiseScale = noiseScale || 0.15;
+    var s = seed || 0;
+    return {
+      armL:          pose.armL + sn(s, 0.3, 1.5 * noiseScale),
+      armR:          pose.armR + sn(s+5, 0.3, 1.5 * noiseScale),
+      handL:         pose.handL + sn(s+10, 0.4, 1.0 * noiseScale),
+      handR:         pose.handR + sn(s+15, 0.4, 1.0 * noiseScale),
+      legL:          pose.legL + sn(s+20, 0.15, 0.4 * noiseScale),
+      legR:          pose.legR + sn(s+25, 0.15, 0.4 * noiseScale),
+      shinL:         pose.shinL + sn(s+30, 0.2, 0.3 * noiseScale),
+      shinR:         pose.shinR + sn(s+35, 0.2, 0.3 * noiseScale),
+      bodyLean:      pose.bodyLean + sn(s+40, 0.2, 0.6 * noiseScale),
+      hipSway:       (pose.hipSway || 0) + sn(s+45, 0.15, 0.3 * noiseScale),
+      headTilt:      pose.headTilt + sn(s+50, 0.25, 1.0 * noiseScale),
+      shoulderTwist: (pose.shoulderTwist || 0) + sn(s+55, 0.2, 0.4 * noiseScale)
+    };
+  }
+
+  /* ─── Walk Cycle Keyframes ─── */
+  var WALK_NORMAL = {
+    loop: true, duration: 0.8,
+    keyframes: [
+      { t:0.0,  ease:'easeInOut', pose:{ armL:-40, armR:40, handL:12, handR:-12, legL:-25, legR:20, shinL:5, shinR:8, bodyLean:4, hipSway:-2, headTilt:0, shoulderTwist:4 }},
+      { t:0.15, ease:'easeOut',   pose:{ armL:-35, armR:35, handL:10, handR:-10, legL:-18, legR:12, shinL:8, shinR:5, bodyLean:5, hipSway:-3, headTilt:1, shoulderTwist:3 }},
+      { t:0.30, ease:'easeInOut', pose:{ armL:-15, armR:15, handL:6,  handR:-6,  legL:-8,  legR:-5, shinL:4, shinR:18, bodyLean:3, hipSway:0, headTilt:0, shoulderTwist:0 }},
+      { t:0.42, ease:'easeIn',    pose:{ armL:5,   armR:-5, handL:4,  handR:-4,  legL:2,   legR:-18, shinL:3, shinR:14, bodyLean:2, hipSway:1, headTilt:-0.5, shoulderTwist:-2 }},
+      { t:0.50, ease:'easeInOut', pose:{ armL:40,  armR:-40, handL:-12, handR:12, legL:20, legR:-25, shinL:8, shinR:5, bodyLean:4, hipSway:2, headTilt:0, shoulderTwist:-4 }},
+      { t:0.65, ease:'easeOut',   pose:{ armL:35,  armR:-35, handL:-10, handR:10, legL:12, legR:-18, shinL:5, shinR:8, bodyLean:5, hipSway:3, headTilt:-1, shoulderTwist:-3 }},
+      { t:0.80, ease:'easeInOut', pose:{ armL:15,  armR:-15, handL:-6, handR:6, legL:-5, legR:-8, shinL:18, shinR:4, bodyLean:3, hipSway:0, headTilt:0, shoulderTwist:0 }},
+      { t:0.92, ease:'easeIn',    pose:{ armL:-5,  armR:5, handL:-4, handR:4, legL:-18, legR:2, shinL:14, shinR:3, bodyLean:2, hipSway:-1, headTilt:0.5, shoulderTwist:2 }},
+      { t:1.0,  ease:'easeInOut', pose:{ armL:-40, armR:40, handL:12, handR:-12, legL:-25, legR:20, shinL:5, shinR:8, bodyLean:4, hipSway:-2, headTilt:0, shoulderTwist:4 }}
+    ]
+  };
+
+  var WALK_SAD = {
+    loop: true, duration: 1.4,
+    keyframes: [
+      /* Right foot contact — weight lands heavy */
+      { t:0.0,  ease:'easeInOut', pose:{ armL:-20, armR:16, handL:8, handR:-5, legL:-22, legR:18, shinL:3, shinR:8, bodyLean:9, hipSway:-3, headTilt:10, shoulderTwist:3 }},
+      /* Right foot down — sinking into step */
+      { t:0.10, ease:'easeOut',   pose:{ armL:-18, armR:14, handL:7, handR:-4, legL:-18, legR:10, shinL:5, shinR:4, bodyLean:10, hipSway:-4, headTilt:12, shoulderTwist:2 }},
+      /* Left leg passing — dragging */
+      { t:0.25, ease:'easeInOut', pose:{ armL:-8, armR:5, handL:4, handR:-3, legL:-6, legR:-4, shinL:3, shinR:18, bodyLean:8, hipSway:-1, headTilt:14, shoulderTwist:0 }},
+      /* Left leg reaching — hesitant */
+      { t:0.40, ease:'easeIn',    pose:{ armL:5, armR:-6, handL:2, handR:-2, legL:8, legR:-14, shinL:3, shinR:12, bodyLean:7, hipSway:1, headTilt:11, shoulderTwist:-1 }},
+      /* Left foot contact — mirror */
+      { t:0.50, ease:'easeInOut', pose:{ armL:16, armR:-20, handL:-5, handR:8, legL:18, legR:-22, shinL:8, shinR:3, bodyLean:9, hipSway:3, headTilt:10, shoulderTwist:-3 }},
+      /* Left foot down — sinking */
+      { t:0.60, ease:'easeOut',   pose:{ armL:14, armR:-18, handL:-4, handR:7, legL:10, legR:-18, shinL:4, shinR:5, bodyLean:10, hipSway:4, headTilt:12, shoulderTwist:-2 }},
+      /* Right leg passing — drag */
+      { t:0.75, ease:'easeInOut', pose:{ armL:5, armR:-8, handL:-3, handR:4, legL:-4, legR:-6, shinL:18, shinR:3, bodyLean:8, hipSway:1, headTilt:14, shoulderTwist:0 }},
+      /* Right leg reaching */
+      { t:0.90, ease:'easeIn',    pose:{ armL:-6, armR:5, handL:-2, handR:2, legL:-14, legR:8, shinL:12, shinR:3, bodyLean:7, hipSway:-1, headTilt:11, shoulderTwist:1 }},
+      /* Loop */
+      { t:1.0,  ease:'easeInOut', pose:{ armL:-20, armR:16, handL:8, handR:-5, legL:-22, legR:18, shinL:3, shinR:8, bodyLean:9, hipSway:-3, headTilt:10, shoulderTwist:3 }}
+    ]
+  };
+
+  function keyframeWalkPose(t, speed, sad) {
+    speed = speed || 1.0;
+    sad = clamp01(sad || 0);
+    var scaledTime = t * speed;
+    if (sad < 0.01) return animateKeyframes(WALK_NORMAL, scaledTime);
+    if (sad > 0.99) return animateKeyframes(WALK_SAD, scaledTime);
+    return lerpPose(animateKeyframes(WALK_NORMAL, scaledTime), animateKeyframes(WALK_SAD, scaledTime), sad);
+  }
+
+  /* ─── Scene Keyframe Data ─── */
+  var SCENE_KF = {};
+
+  /* Scene 0: Kid Carlos kick — playful, bouncy, child energy */
+  SCENE_KF.s0_carlos = { loop:true, duration:2.5, keyframes:[
+    /* Ready — bouncing on toes */
+    { t:0.0,  ease:'easeInOut',    pose:{ armL:-20, armR:22, handL:5, handR:-5, legL:-8, legR:10, shinL:5, shinR:5, bodyLean:2, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    /* Approach — little run-up step */
+    { t:0.15, ease:'easeIn',       pose:{ armL:-35, armR:40, handL:10, handR:-12, legL:15, legR:-10, shinL:8, shinR:10, bodyLean:6, hipSway:-2, headTilt:-4, shoulderTwist:-3 }},
+    /* Plant foot — kicking leg swings back */
+    { t:0.30, ease:'easeIn',       pose:{ armL:-30, armR:50, handL:12, handR:-18, legL:5, legR:30, shinL:3, shinR:-20, bodyLean:-3, hipSway:-3, headTilt:-5, shoulderTwist:-4 }},
+    /* KICK! — leg swings through */
+    { t:0.42, ease:'easeOutCubic', pose:{ armL:-55, armR:60, handL:18, handR:-22, legL:8, legR:-50, shinL:5, shinR:25, bodyLean:12, hipSway:2, headTilt:-2, shoulderTwist:5 }},
+    /* Follow-through — off balance, arms flung */
+    { t:0.55, ease:'easeOut',      pose:{ armL:-45, armR:45, handL:14, handR:-16, legL:10, legR:-35, shinL:4, shinR:15, bodyLean:8, hipSway:3, headTilt:-3, shoulderTwist:3 }},
+    /* Stumble recovery — kid wobble */
+    { t:0.72, ease:'easeInOut',    pose:{ armL:-30, armR:32, handL:8, handR:-10, legL:-5, legR:8, shinL:5, shinR:5, bodyLean:4, hipSway:-1, headTilt:-4, shoulderTwist:1 }},
+    /* Back to ready */
+    { t:1.0,  ease:'easeInOut',    pose:{ armL:-20, armR:22, handL:5, handR:-5, legL:-8, legR:10, shinL:5, shinR:5, bodyLean:2, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 1: Adult Carlos power kick — controlled, athletic */
+  SCENE_KF.s1_carlos = { loop:true, duration:3.0, keyframes:[
+    /* Ready — balanced stance, looking at ball */
+    { t:0.0,  ease:'easeInOut',    pose:{ armL:-18, armR:20, handL:5, handR:-5, legL:-8, legR:10, shinL:4, shinR:4, bodyLean:3, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    /* Approach — two steps */
+    { t:0.12, ease:'easeIn',       pose:{ armL:-35, armR:38, handL:10, handR:-12, legL:18, legR:-12, shinL:8, shinR:12, bodyLean:6, hipSway:-2, headTilt:-3, shoulderTwist:-3 }},
+    /* Plant — non-kicking foot plants, body loads up */
+    { t:0.25, ease:'easeIn',       pose:{ armL:-25, armR:50, handL:8, handR:-18, legL:5, legR:35, shinL:4, shinR:-22, bodyLean:-4, hipSway:-3, headTilt:-4, shoulderTwist:-5 }},
+    /* STRIKE — hip drives through, leg whips */
+    { t:0.38, ease:'easeOutCubic', pose:{ armL:-50, armR:55, handL:16, handR:-20, legL:8, legR:-55, shinL:5, shinR:28, bodyLean:14, hipSway:3, headTilt:-2, shoulderTwist:6 }},
+    /* Follow-through — body continues rotating */
+    { t:0.50, ease:'easeOut',      pose:{ armL:-40, armR:42, handL:12, handR:-15, legL:10, legR:-40, shinL:4, shinR:18, bodyLean:10, hipSway:4, headTilt:-2, shoulderTwist:4 }},
+    /* Balance recovery */
+    { t:0.68, ease:'easeInOut',    pose:{ armL:-25, armR:28, handL:8, handR:-8, legL:-3, legR:5, shinL:5, shinR:5, bodyLean:5, hipSway:1, headTilt:-3, shoulderTwist:1 }},
+    /* Settle — admiring the shot */
+    { t:1.0,  ease:'easeInOut',    pose:{ armL:-18, armR:20, handL:5, handR:-5, legL:-8, legR:10, shinL:4, shinR:4, bodyLean:3, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 1: Adult Javier celebrating — GOOOL! arms up, bouncing */
+  SCENE_KF.s1_javier = { loop:true, duration:2.5, keyframes:[
+    /* Arms raised, looking at Carlos */
+    { t:0.0,  ease:'easeInOut', pose:{ armL:-55, armR:-60, handL:-12, handR:12, legL:-6, legR:8, shinL:4, shinR:4, bodyLean:2, hipSway:0, headTilt:-5, shoulderTwist:0 }},
+    /* Fist pump up! */
+    { t:0.18, ease:'easeOut',   pose:{ armL:-70, armR:-75, handL:-18, handR:18, legL:-5, legR:5, shinL:6, shinR:6, bodyLean:-1, hipSway:0, headTilt:-8, shoulderTwist:2 }},
+    /* Bounce down */
+    { t:0.32, ease:'easeIn',    pose:{ armL:-50, armR:-55, handL:-10, handR:10, legL:-8, legR:10, shinL:8, shinR:8, bodyLean:4, hipSway:-2, headTilt:-4, shoulderTwist:0 }},
+    /* Walking step celebrate */
+    { t:0.50, ease:'easeInOut', pose:{ armL:-45, armR:-50, handL:-8, handR:8, legL:12, legR:-10, shinL:5, shinR:8, bodyLean:5, hipSway:3, headTilt:-3, shoulderTwist:-2 }},
+    /* Arms up again! */
+    { t:0.68, ease:'easeOut',   pose:{ armL:-65, armR:-70, handL:-16, handR:16, legL:-10, legR:12, shinL:6, shinR:5, bodyLean:3, hipSway:-2, headTilt:-7, shoulderTwist:1 }},
+    /* Settle */
+    { t:1.0,  ease:'easeInOut', pose:{ armL:-55, armR:-60, handL:-12, handR:12, legL:-6, legR:8, shinL:4, shinR:4, bodyLean:2, hipSway:0, headTilt:-5, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 2: Carlos talking */
+  SCENE_KF.s2_carlos = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:-15, armR:12, handL:8, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-2, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.15, ease:'easeOut',   pose:{ armL:-40, armR:12, handL:20, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-1, hipSway:0, headTilt:1, shoulderTwist:1 }},
+    { t:0.30, ease:'easeInOut', pose:{ armL:-55, armR:14, handL:25, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:2, shoulderTwist:2 }},
+    { t:0.45, ease:'easeOut',   pose:{ armL:-30, armR:12, handL:15, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-2, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:0.60, ease:'easeInOut', pose:{ armL:-15, armR:15, handL:8, handR:-5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-3, hipSway:0, headTilt:0, shoulderTwist:-1 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:-35, armR:-20, handL:18, handR:15, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:1, hipSway:0, headTilt:1.5, shoulderTwist:1 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:-15, armR:12, handL:8, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-2, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 2: Javier listening */
+  SCENE_KF.s2_javier = { loop:true, duration:3.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:-10, armR:12, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-1, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:-10, armR:12, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:3, shoulderTwist:0 }},
+    { t:0.40, ease:'easeInOut', pose:{ armL:-10, armR:12, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-1, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:0.55, ease:'easeOut',   pose:{ armL:-12, armR:14, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-2, hipSway:1, headTilt:1.5, shoulderTwist:0.5 }},
+    { t:0.75, ease:'easeInOut', pose:{ armL:-10, armR:12, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:4, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:-10, armR:12, handL:5, handR:5, legL:-6, legR:7, shinL:3, shinR:3, bodyLean:-1, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 3: Javier as Hercules */
+  SCENE_KF.s3_javier = { loop:true, duration:5.0, keyframes:[
+    { t:0.0,  ease:'easeInOut',   pose:{ armL:-70, armR:-65, handL:-15, handR:15, legL:-15, legR:15, shinL:2, shinR:2, bodyLean:0, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.20, ease:'easeOutCubic',pose:{ armL:-85, armR:-50, handL:-25, handR:10, legL:-15, legR:15, shinL:2, shinR:2, bodyLean:2, hipSway:-1, headTilt:-4, shoulderTwist:3 }},
+    { t:0.40, ease:'easeInOut',   pose:{ armL:-80, armR:-80, handL:-20, handR:20, legL:-18, legR:18, shinL:2, shinR:2, bodyLean:-1, hipSway:0, headTilt:-5, shoulderTwist:0 }},
+    { t:0.55, ease:'easeOut',     pose:{ armL:-60, armR:-85, handL:-10, handR:25, legL:-12, legR:12, shinL:2, shinR:2, bodyLean:1, hipSway:1, headTilt:-2, shoulderTwist:-3 }},
+    { t:0.75, ease:'easeInOut',   pose:{ armL:-55, armR:-55, handL:-12, handR:12, legL:-15, legR:15, shinL:3, shinR:3, bodyLean:3, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut',   pose:{ armL:-70, armR:-65, handL:-15, handR:15, legL:-15, legR:15, shinL:2, shinR:2, bodyLean:0, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 3: Chorus swaying */
+  SCENE_KF.s3_chorus = { loop:true, duration:3.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:-30, armR:30, handL:12, handR:-12, legL:-6, legR:6, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:-27, armR:33, handL:12, handR:-12, legL:-6, legR:6, shinL:3, shinR:3, bodyLean:1, hipSway:1, headTilt:1.5, shoulderTwist:0.5 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:-30, armR:30, handL:12, handR:-12, legL:-6, legR:6, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:-33, armR:27, handL:12, handR:-12, legL:-6, legR:6, shinL:3, shinR:3, bodyLean:-1, hipSway:-1, headTilt:-1.5, shoulderTwist:-0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:-30, armR:30, handL:12, handR:-12, legL:-6, legR:6, shinL:3, shinR:3, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 3: Carlos watching */
+  SCENE_KF.s3_carlosWatch = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:-5, armR:8, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-5, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:-3, armR:10, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-3, hipSway:0, headTilt:2, shoulderTwist:0.5 }},
+    { t:0.60, ease:'easeInOut', pose:{ armL:-8, armR:6, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-6, hipSway:-1, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:-5, armR:8, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-5, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 4: Player 1 — intense gamer */
+  SCENE_KF.s4_player1 = { loop:true, duration:2.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:22, armR:30, handL:15, handR:-8, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-6, hipSway:-1, headTilt:-4, shoulderTwist:1 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:35, handL:10, handR:-12, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:-1 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:26, armR:28, handL:14, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-7, hipSway:1, headTilt:-3, shoulderTwist:1 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 4: Player 2 — relaxed */
+  SCENE_KF.s4_player2 = { loop:true, duration:3.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.35, ease:'easeOut',   pose:{ armL:20, armR:27, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:2, shoulderTwist:0.5 }},
+    { t:0.65, ease:'easeInOut', pose:{ armL:24, armR:23, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 4: Player 3 — excitable with goal celebration */
+  SCENE_KF.s4_player3 = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut',    pose:{ armL:30, armR:25, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-6, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.35, ease:'easeOut',      pose:{ armL:28, armR:23, handL:10, handR:-10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:1 }},
+    { t:0.50, ease:'easeOutElastic', pose:{ armL:-60, armR:-55, handL:-15, handR:15, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:3, hipSway:0, headTilt:-5, shoulderTwist:0 }},
+    { t:0.70, ease:'easeInOut',    pose:{ armL:-40, armR:-35, handL:-10, handR:10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:0, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.85, ease:'easeInOut',    pose:{ armL:28, armR:23, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-5, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut',    pose:{ armL:30, armR:25, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-6, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 4: Player 4 — button masher */
+  SCENE_KF.s4_player4 = { loop:true, duration:2.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:24, armR:-40, handL:10, handR:18, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:28, armR:-36, handL:12, handR:16, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-3, shoulderTwist:1 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:22, armR:-44, handL:10, handR:20, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:-1 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:26, armR:-38, handL:11, handR:17, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:24, armR:-40, handL:10, handR:18, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 6: Carlos gaming */
+  SCENE_KF.s6_carlos = { loop:true, duration:2.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:25, armR:29, handL:16, handR:-12, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-8, hipSway:-1, headTilt:-3, shoulderTwist:1.5 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:33, handL:12, handR:-16, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-12, hipSway:1, headTilt:-1, shoulderTwist:-1 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:27, armR:30, handL:15, handR:-13, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-9, hipSway:0, headTilt:-2, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+  ]};
+
+  /* Scene 6: Javier gaming */
+  SCENE_KF.s6_javier = { loop:true, duration:3.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:22, armR:24, handL:14, handR:-10, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-12, hipSway:-1, headTilt:2, shoulderTwist:0.5 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:26, armR:28, handL:10, handR:-14, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-15, hipSway:1, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:23, armR:25, handL:13, handR:-11, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-13, hipSway:0, headTilt:1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  ]};
+
+  /* Wobble offset for hand-drawn line feel — varies with time */
+  function wobble(seed) {
+    return sn(seed, 2.5, 0.4) + sn(seed + 77, 4.1, 0.2);
+  }
+
+  /* ═══════════════════════════════════════
+     GOLDEN FIREFLY PARTICLES (enhanced)
+  ═══════════════════════════════════════ */
+  function drawFireflies(cx, W, H, count, alpha, seed) {
+    if (count < 1 || alpha <= 0) return;
+    cx.save();
+    for (var i = 0; i < count; i++) {
+      var s = (seed || 0) + i * 137.508;
+      /* Two-layer position for more organic drift */
+      var fx = W * (0.08 + 0.84 * ((Math.sin(s * 0.37) + 1) / 2))
+               + sn(s, 0.25, W * 0.04)
+               + sn(s + 200, 0.15, W * 0.02);
+      var fy = H * (0.12 + 0.76 * ((Math.cos(s * 0.53) + 1) / 2))
+               + sn(s + 50, 0.2, H * 0.04)
+               + sn(s + 300, 0.12, H * 0.02);
+      /* Pulse with variation per firefly */
+      var pulse = (Math.sin(gt * 0.6 + s * 0.5) + 1) / 2;
+      var pulse2 = (Math.sin(gt * 1.1 + s * 0.3) + 1) / 2;
+      var combinedPulse = pulse * 0.7 + pulse2 * 0.3;
+
+      /* Outer glow */
+      cx.globalAlpha = combinedPulse * alpha * 0.2;
+      cx.fillStyle = 'rgba(255,200,50,0.3)';
+      cx.beginPath();
+      cx.arc(fx, fy, 4 + pulse * 2, 0, Math.PI * 2);
+      cx.fill();
+
+      /* Core */
+      cx.globalAlpha = combinedPulse * alpha * 0.7;
+      cx.fillStyle = '#f0b000';
+      cx.shadowBlur = 8 + pulse * 4;
+      cx.shadowColor = 'rgba(240,176,0,0.6)';
+      cx.beginPath();
+      cx.arc(fx, fy, 1.2 + combinedPulse * 0.8, 0, Math.PI * 2);
+      cx.fill();
+    }
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     ASCENDING EMBERS (for coda)
+  ═══════════════════════════════════════ */
+  function spawnEmbers(W, H, count) {
+    for (var i = 0; i < count; i++) {
+      embers.push({
+        x: W * (0.3 + Math.random() * 0.4),
+        y: H * (0.5 + Math.random() * 0.3),
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -0.3 - Math.random() * 0.5,
+        life: 1.0,
+        decay: 0.002 + Math.random() * 0.003,
+        size: 1 + Math.random() * 1.5,
+        wobblePhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function updateAndDrawEmbers(cx, W, H) {
+    cx.save();
+    for (var i = embers.length - 1; i >= 0; i--) {
+      var e = embers[i];
+      e.x += e.vx + Math.sin(gt * 0.8 + e.wobblePhase) * 0.15;
+      e.y += e.vy;
+      e.life -= e.decay;
+      if (e.life <= 0 || e.y < -10) {
+        embers.splice(i, 1);
+        continue;
+      }
+      cx.globalAlpha = e.life * 0.6;
+      cx.fillStyle = '#f0b000';
+      cx.shadowBlur = 6;
+      cx.shadowColor = 'rgba(240,176,0,0.5)';
+      cx.beginPath();
+      cx.arc(e.x, e.y, e.size * e.life, 0, Math.PI * 2);
+      cx.fill();
+    }
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     BURST PARTICLES (for convergence peak)
+  ═══════════════════════════════════════ */
+  function spawnBurst(W, H, count) {
+    var cx0 = W * 0.5;
+    var cy0 = H * 0.5;
+    for (var i = 0; i < count; i++) {
+      var angle = Math.random() * Math.PI * 2;
+      var speed = 1 + Math.random() * 4;
+      burstParticles.push({
+        x: cx0, y: cy0,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        life: 1.0,
+        decay: 0.008 + Math.random() * 0.012,
+        size: 1.5 + Math.random() * 2.5
+      });
+    }
+  }
+
+  function updateAndDrawBurst(cx, W, H) {
+    cx.save();
+    for (var i = burstParticles.length - 1; i >= 0; i--) {
+      var p = burstParticles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.98;
+      p.vy *= 0.98;
+      p.life -= p.decay;
+      if (p.life <= 0) {
+        burstParticles.splice(i, 1);
+        continue;
+      }
+      cx.globalAlpha = p.life * 0.5;
+      cx.fillStyle = '#f0b000';
+      cx.shadowBlur = 4;
+      cx.shadowColor = 'rgba(240,176,0,0.4)';
+      cx.beginPath();
+      cx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+      cx.fill();
+    }
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     GROUND WITH RICHER TEXTURE
+  ═══════════════════════════════════════ */
+  function drawGround(cx, x1, x2, y, alpha) {
+    cx.save();
+    cx.strokeStyle = '#f0b000';
+    cx.globalAlpha = alpha || 0.15;
+
+    /* Main ground line with subtle wobble for hand-drawn feel */
+    cx.lineCap = 'round';
+    cx.lineWidth = 2.5;
+    cx.beginPath();
+    cx.moveTo(x1, y + wobble(0));
+    var segments = 30;
+    var step = (x2 - x1) / segments;
+    for (var i = 1; i <= segments; i++) {
+      cx.lineTo(x1 + step * i, y + wobble(i * 7) * 0.5);
+    }
+    cx.stroke();
+
+    /* Grass/texture tufts with variation */
+    cx.globalAlpha = (alpha || 0.15) * 0.6;
+    cx.lineWidth = 1.5;
+    var grassStep = (x2 - x1) / 18;
+    for (var j = x1 + grassStep * 0.5; j < x2; j += grassStep) {
+      var h = 2.5 + sn(j * 0.1, 0.4, 1.8);
+      var sway = sn(j * 0.05 + 100, 0.3, 1.0);
+      cx.beginPath();
+      cx.moveTo(j, y);
+      cx.quadraticCurveTo(j + sway, y - h * 0.6, j + sway * 1.5, y - h);
+      cx.stroke();
+      /* Second blade offset */
+      if (Math.sin(j * 0.73) > 0) {
+        cx.beginPath();
+        cx.moveTo(j + 2, y);
+        cx.quadraticCurveTo(j + 2 - sway * 0.5, y - h * 0.4, j + 2 - sway, y - h * 0.7);
+        cx.stroke();
+      }
+    }
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     FLOWING GOLDEN TRAIL (for departure)
+  ═══════════════════════════════════════ */
+  function drawGoldenTrail(cx, startX, endX, baseY, progress, alpha) {
+    if (progress < 0.02 || alpha <= 0) return;
+    cx.save();
+
+    /* Ribbon trail with sine wave undulation */
+    var ribbonPoints = 40;
+    var dx = (endX - startX) / ribbonPoints;
+
+    for (var layer = 0; layer < 3; layer++) {
+      cx.globalAlpha = alpha * (0.08 - layer * 0.02) * (1 - progress * 0.5);
+      cx.strokeStyle = '#f0b000';
+      cx.lineWidth = 2.5 - layer * 0.7;
+      cx.beginPath();
+      for (var i = 0; i <= ribbonPoints; i++) {
+        var x = startX + dx * i;
+        var localProgress = i / ribbonPoints;
+        var fadeIn = Math.min(1, localProgress * 3);
+        var fadeOut = Math.min(1, (1 - localProgress) * 4);
+        var amplitude = 4 + layer * 2;
+        var y = baseY + Math.sin(localProgress * Math.PI * 3 + gt * 0.5 + layer) * amplitude * fadeIn * fadeOut;
+        if (i === 0) cx.moveTo(x, y);
+        else cx.lineTo(x, y);
+      }
+      cx.stroke();
+    }
+
+    /* Sparse floating particles along the trail */
+    var particleCount = Math.floor(progress * 12);
+    for (var p = 0; p < particleCount; p++) {
+      var px = lerp(startX, endX, (p / particleCount) + sn(p * 50, 0.1, 0.05));
+      var py = baseY + sn(p * 30, 0.4, 6) + sn(p * 70, 0.2, 3);
+      var pAlpha = alpha * 0.15 * ((Math.sin(gt * 0.7 + p * 2.3) + 1) / 2);
+      cx.globalAlpha = pAlpha;
+      cx.fillStyle = '#f0b000';
+      cx.shadowBlur = 4;
+      cx.shadowColor = 'rgba(240,176,0,0.3)';
+      cx.beginPath();
+      cx.arc(px, py - 8 - sn(p * 20, 0.3, 4), 1.2, 0, Math.PI * 2);
+      cx.fill();
+    }
+
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     STICKMAN — IMPROVED PROPORTIONS,
+     HAND-DRAWN FEEL, SECONDARY MOTION
+  ═══════════════════════════════════════ */
+  function drawStickman(cx, x, y, scale, pose, color, alpha, seed) {
+    cx.save();
+    cx.globalAlpha = alpha || 1;
+    var baseColor = color || '#dde8e2';
+    var sd = seed || 0;
+    var s = (scale || 1) * aS;
+    var isGolden = (baseColor === '#f0b000');
+
+    /* Multi-layered breathing */
+    var br = (
+      Math.sin(gt * 1.1 + sd) * 0.5 +
+      Math.sin(gt * 1.7 + sd * 1.3) * 0.2 +
+      Math.sin(gt * 0.4 + sd * 2.1) * 0.3
+    ) * s;
+
+    /* ═══ ALAN BECKER PROPORTIONS ═══
+       Thick filled limbs, big solid head,
+       round caps for natural joints        */
+    var headR = 9 * s;
+    var neckLen = 3 * s;
+    var bodyLen = 22 * s;
+    var upArm = 13 * s, loArm = 11 * s;
+    var upLeg = 15 * s, loLeg = 14 * s;
+
+    /* THICK line widths — the key to the style */
+    var limbW = 5.5 * s;
+    var torsoW = 6.5 * s;
+    var armW = 5 * s;
+    var neckW = 4 * s;
+
+    /* Pose values */
+    var lean = pose.bodyLean || 0;
+    var hipSway = pose.hipSway || 0;
+    var headTilt = pose.headTilt || 0;
+    var shoulderTwist = pose.shoulderTwist || 0;
+
+    /* ═══ SKELETON (hip-anchored) ═══ */
+    var hipX = x + Math.sin(rad(hipSway)) * 2 * s + br * 0.2;
+    var hipY = y;
+
+    var spA = rad(lean);
+    var shX = hipX + Math.sin(spA) * bodyLen + br * 0.3;
+    var shY = hipY - Math.cos(spA) * bodyLen;
+
+    var nkX = shX + Math.sin(spA) * neckLen;
+    var nkY = shY - Math.cos(spA) * neckLen;
+
+    var hA = spA + rad(headTilt);
+    var hdX = nkX + Math.sin(hA) * headR * 0.35;
+    var hdY = nkY - Math.cos(hA) * headR * 0.35;
+
+    /* ═══ DRAWING STYLE ═══ */
+    cx.lineCap = 'round';
+    cx.lineJoin = 'round';
+    cx.strokeStyle = baseColor;
+    cx.fillStyle = baseColor;
+
+    if (isGolden) {
+      cx.shadowBlur = 12;
+      cx.shadowColor = 'rgba(240,176,0,0.35)';
+    }
+
+    /* Thick segment */
+    function seg(x1, y1, x2, y2, w) {
+      cx.lineWidth = w;
+      cx.beginPath(); cx.moveTo(x1, y1); cx.lineTo(x2, y2); cx.stroke();
+    }
+
+    /* Jointed limb → single continuous path, no joint dots */
+    function limb(ox, oy, ang1, len1, ang2off, len2, w) {
+      var jx = ox + Math.sin(rad(ang1)) * len1;
+      var jy = oy + Math.cos(rad(ang1)) * len1;
+      var a2 = ang1 + (ang2off || 0);
+      var ex = jx + Math.sin(rad(a2)) * len2;
+      var ey = jy + Math.cos(rad(a2)) * len2;
+      cx.lineWidth = w;
+      cx.beginPath();
+      cx.moveTo(ox, oy);
+      cx.lineTo(jx, jy);
+      cx.lineTo(ex, ey);
+      cx.stroke();
+      return { jx: jx, jy: jy, ex: ex, ey: ey };
+    }
+
+    /* ═══ DRAW ORDER: legs → torso → neck → head → arms ═══ */
+
+    /* ─── LEGS (behind everything) ─── */
+    var hipOff = 2.5 * s;
+
+    var lL = pose.legL || -8;
+    var sL = pose.shinL !== undefined ? pose.shinL : 5;
+    limb(hipX - hipOff, hipY, lL, upLeg, sL, loLeg, limbW);
+
+    var lR = pose.legR || 8;
+    var sR = pose.shinR !== undefined ? pose.shinR : 5;
+    limb(hipX + hipOff, hipY, lR, upLeg, sR, loLeg, limbW);
+
+    /* ─── TORSO ─── */
+    seg(hipX, hipY, shX, shY, torsoW);
+
+    /* ─── NECK ─── */
+    seg(shX, shY, nkX, nkY, neckW);
+
+    /* ─── HEAD (solid filled circle) ─── */
+    cx.beginPath();
+    cx.arc(hdX, hdY, headR, 0, Math.PI * 2);
+    cx.fill();
+
+    /* Golden glow pulse */
+    if (isGolden) {
+      var gp = (Math.sin(gt * 0.8 + sd * 0.7) + 1) / 2;
+      cx.save();
+      cx.globalAlpha = (alpha || 1) * 0.06 * gp;
+      cx.shadowBlur = 25;
+      cx.shadowColor = 'rgba(240,176,0,0.6)';
+      cx.beginPath();
+      cx.arc(hdX, hdY, headR * 2, 0, Math.PI * 2);
+      cx.fill();
+      cx.restore();
+    }
+
+    /* ─── ARMS (on top of everything) ─── */
+    var shOff = 2 * s;
+    var armY = shY + 1.5 * s;
+
+    var aL = pose.armL || -20;
+    var hL = pose.handL !== undefined ? pose.handL : (Math.abs(aL) > 45 ? 25 : 10);
+    limb(shX - shOff, armY, aL, upArm, hL, loArm, armW);
+
+    var aR = pose.armR || 20;
+    var hR = pose.handR !== undefined ? pose.handR : (Math.abs(aR) > 45 ? -25 : -10);
+    limb(shX + shOff, armY, aR, upArm, hR, loArm, armW);
+
+    cx.restore();
+    return { headX: hdX, headY: hdY, headR: headR, shoulderX: shX, shoulderY: shY, hipX: hipX, hipY: hipY };
+  }
+
+  /* ═══════════════════════════════════════
+     NATURAL WALK CYCLE
+     Phases: Contact → Down → Passing → Up
+     With hip drop, head bob, counter-rotation,
+     anticipation and follow-through
+  ═══════════════════════════════════════ */
+  function walkPose(t, speed, sad) {
+    speed = speed || 1.0;
+    sad = sad || 0; /* 0 = normal, 1 = very sad trudge */
+
+    var phase = t * 4.0 * speed;
+    var c = Math.sin(phase);
+    var c2 = Math.cos(phase);
+
+    /* Main stride sine */
+    var strideAmp = lerp(22, 14, sad);
+    var armSwingAmp = lerp(25, 12, sad);
+
+    /* Hip drop on weight-bearing side */
+    var hipDrop = Math.sin(phase * 2) * lerp(1.5, 0.8, sad);
+
+    /* Head bob — bounces down on each step contact */
+    var headBob = Math.abs(Math.sin(phase)) * lerp(1.5, 0.8, sad);
+
+    /* Counter-rotation: shoulders twist opposite to hips */
+    var shoulderCounter = c * lerp(3, 1.5, sad);
+
+    /* Leg phases with passing position and foot arc */
+    var legL = c * strideAmp;
+    var legR = -c * strideAmp;
+
+    /* Shin angle: higher lift when leg swings forward (passing/up phase) */
+    var shinL, shinR;
+    if (c > 0) {
+      /* Left leg forward: knee bends more during swing */
+      shinL = 3 + c * 12;
+      shinR = 3;
+    } else {
+      shinL = 3;
+      shinR = 3 - c * 12;
+    }
+
+    /* Arm swing with phase offset and follow-through */
+    var armPhase = phase + 0.15; /* slight delay = follow-through */
+    var armC = Math.sin(armPhase);
+
+    /* Sad walk: arms hang lower, less swing, shoulders forward */
+    var armLBase = lerp(-20, -10, sad);
+    var armRBase = lerp(20, 10, sad);
+
+    /* Body lean: slight forward lean when walking, more when sad */
+    var bodyLean = lerp(3, 6, sad) + c * lerp(1.5, 0.5, sad);
+
+    /* Head tilt: droops when sad */
+    var headTilt = lerp(0, 5, sad) + headBob * 0.3;
+
+    return {
+      armL: armLBase - armC * armSwingAmp,
+      armR: armRBase + armC * armSwingAmp,
+      handL: 8 - armC * 6,
+      handR: -8 + armC * 6,
+      legL: -8 + legL,
+      legR: 8 + legR,
+      shinL: shinL,
+      shinR: shinR,
+      bodyLean: bodyLean,
+      hipSway: hipDrop,
+      headTilt: headTilt,
+      shoulderTwist: shoulderCounter
+    };
+  }
+
+  /* Static idle pose with subtle life */
+  function idlePose(seed, tension) {
+    tension = tension || 0; /* 0 = relaxed, 1 = tense */
+    var s = seed || 0;
+    return {
+      armL: lerp(-15, -8, tension) + sn(s, 0.3, 2),
+      armR: lerp(15, 8, tension) + sn(s + 5, 0.3, 2),
+      handL: 6 + sn(s + 10, 0.4, 1.5),
+      handR: -6 + sn(s + 15, 0.4, 1.5),
+      legL: -6 + sn(s + 20, 0.15, 0.5),
+      legR: 6 + sn(s + 25, 0.15, 0.5),
+      shinL: 3,
+      shinR: 3,
+      bodyLean: sn(s + 30, 0.2, 0.8),
+      hipSway: sn(s + 35, 0.15, 0.3),
+      headTilt: sn(s + 40, 0.25, 1.5),
+      shoulderTwist: sn(s + 45, 0.2, 0.5)
+    };
+  }
+
+  /* ═══════════════════════════════════════
+     ATMOSPHERIC EFFECTS
+  ═══════════════════════════════════════ */
+
+  /* Depth fog / atmospheric perspective gradient */
+  function drawAtmosphere(cx, W, H, intensity) {
+    if (intensity <= 0) return;
+    cx.save();
+    var ag = cx.createRadialGradient(W*0.5, H*0.35, 0, W*0.5, H*0.5, W*0.9);
+    ag.addColorStop(0, 'rgba(60,25,80,' + (0.03 * intensity) + ')');
+    ag.addColorStop(0.5, 'rgba(30,15,50,' + (0.02 * intensity) + ')');
+    ag.addColorStop(1, 'rgba(0,0,0,0)');
+    cx.fillStyle = ag;
+    cx.fillRect(0, 0, W, H);
+    cx.restore();
+  }
+
+  /* Vignette effect */
+  function drawVignette(cx, W, H, intensity) {
+    if (intensity <= 0) return;
+    cx.save();
+    var vg = cx.createRadialGradient(W*0.5, H*0.5, W*0.25, W*0.5, H*0.5, W*0.75);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(1, 'rgba(0,0,0,' + (0.3 * intensity) + ')');
+    cx.fillStyle = vg;
+    cx.fillRect(0, 0, W, H);
+    cx.restore();
+  }
+
+  /* Stars / distant lights in background */
+  function drawStars(cx, W, H, count, alpha, seed) {
+    if (alpha <= 0) return;
+    cx.save();
+    for (var i = 0; i < count; i++) {
+      var s = (seed || 0) + i * 97.31;
+      var sx = W * ((Math.sin(s * 0.23 + 0.7) + 1) / 2);
+      var sy = H * 0.05 + H * 0.35 * ((Math.cos(s * 0.41 + 1.2) + 1) / 2);
+      var twinkle = (Math.sin(gt * 0.5 + s * 0.8) + 1) / 2;
+      cx.globalAlpha = alpha * twinkle * 0.5;
+      cx.fillStyle = '#dde8e2';
+      cx.beginPath();
+      cx.arc(sx, sy, 0.5 + twinkle * 0.3, 0, Math.PI * 2);
+      cx.fill();
+    }
+    cx.restore();
+  }
+
+  /* ─── Memory frame: dream-like rounded border ─── */
+  function drawMemoryFrame(cx, W, H, alpha) {
+    if (alpha <= 0) return;
+    cx.save();
+    /* Soft inner vignette — dark edges, clear center = "looking into a memory" */
+    var pad = Math.min(W, H) * 0.06;
+    var r = Math.min(W, H) * 0.04;
+    cx.globalAlpha = alpha * 0.65;
+    /* Dark border mask — everything outside the rounded rect is darkened */
+    cx.fillStyle = '#000';
+    cx.beginPath();
+    cx.rect(0, 0, W, H);
+    /* Cut out the rounded memory window */
+    cx.moveTo(pad + r, pad);
+    cx.arcTo(W - pad, pad, W - pad, H - pad, r);
+    cx.arcTo(W - pad, H - pad, pad, H - pad, r);
+    cx.arcTo(pad, H - pad, pad, pad, r);
+    cx.arcTo(pad, pad, W - pad, pad, r);
+    cx.closePath();
+    cx.fill('evenodd');
+    /* Golden glow on the border edge */
+    cx.globalAlpha = alpha * 0.25;
+    cx.strokeStyle = '#f0b000';
+    cx.lineWidth = 2;
+    cx.beginPath();
+    cx.moveTo(pad + r, pad);
+    cx.arcTo(W - pad, pad, W - pad, H - pad, r);
+    cx.arcTo(W - pad, H - pad, pad, H - pad, r);
+    cx.arcTo(pad, H - pad, pad, pad, r);
+    cx.arcTo(pad, pad, W - pad, pad, r);
+    cx.closePath();
+    cx.stroke();
+    /* Soft golden outer glow */
+    cx.globalAlpha = alpha * 0.08;
+    cx.lineWidth = 8;
+    cx.stroke();
+    cx.restore();
+  }
+
+  /* ─── Soccer ball with panel pattern ─── */
+  function drawSoccerBall(cx, x, y, radius, alpha, spin) {
+    cx.save();
+    cx.translate(x, y);
+    cx.rotate(spin || 0);
+    /* Main circle — filled */
+    cx.globalAlpha = alpha * 0.18;
+    cx.fillStyle = '#f0b000';
+    cx.beginPath(); cx.arc(0, 0, radius, 0, Math.PI * 2); cx.fill();
+    /* Outline */
+    cx.globalAlpha = alpha * 0.65;
+    cx.strokeStyle = '#f0b000';
+    cx.lineWidth = 1.5;
+    cx.beginPath(); cx.arc(0, 0, radius, 0, Math.PI * 2); cx.stroke();
+    /* Center pentagon */
+    cx.globalAlpha = alpha * 0.40;
+    cx.lineWidth = 1;
+    var pr = radius * 0.35;
+    cx.beginPath();
+    for (var i = 0; i < 5; i++) {
+      var a = (i / 5) * Math.PI * 2 - Math.PI / 2;
+      if (i === 0) cx.moveTo(Math.cos(a) * pr, Math.sin(a) * pr);
+      else cx.lineTo(Math.cos(a) * pr, Math.sin(a) * pr);
+    }
+    cx.closePath(); cx.stroke();
+    /* Radiating lines from pentagon vertices to edge */
+    cx.globalAlpha = alpha * 0.30;
+    for (var j = 0; j < 5; j++) {
+      var a2 = (j / 5) * Math.PI * 2 - Math.PI / 2;
+      cx.beginPath();
+      cx.moveTo(Math.cos(a2) * pr, Math.sin(a2) * pr);
+      cx.lineTo(Math.cos(a2) * radius * 0.88, Math.sin(a2) * radius * 0.88);
+      cx.stroke();
+    }
+    /* Outer panel edges — connect the outer endpoints */
+    cx.globalAlpha = alpha * 0.25;
+    for (var k = 0; k < 5; k++) {
+      var a3 = (k / 5) * Math.PI * 2 - Math.PI / 2;
+      var a4 = ((k + 1) / 5) * Math.PI * 2 - Math.PI / 2;
+      var mid = (a3 + a4) / 2;
+      cx.beginPath();
+      cx.moveTo(Math.cos(a3) * radius * 0.88, Math.sin(a3) * radius * 0.88);
+      cx.lineTo(Math.cos(mid) * radius * 0.75, Math.sin(mid) * radius * 0.75);
+      cx.lineTo(Math.cos(a4) * radius * 0.88, Math.sin(a4) * radius * 0.88);
+      cx.stroke();
+    }
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     7 MEMORY SCENES — ENRICHED
+  ═══════════════════════════════════════ */
+  var SCENES = [
+    { /* ─── Scene 0: Futbol ninos, La Merced ───
+         Joy of childhood — quick, playful energy */
+      draw: function(cx, W, H, t) {
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        /* Sky gradient hint */
+        cx.save();
+        var skyG = cx.createLinearGradient(0, H*0.1, 0, H*0.78);
+        skyG.addColorStop(0, 'rgba(240,176,0,0.025)');
+        skyG.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
+        cx.restore();
+
+        drawStars(cx, W, H, 8, 0.08, 50);
+        var gY = H*0.78;
+        drawGround(cx, W*0.03, W*0.97, gY, 0.30);
+
+        /* Goal posts — kid-sized, proportional */
+        cx.save();
+        cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        cx.globalAlpha = 0.55; cx.lineWidth = 3;
+        var goalTop = gY - 38*aS, goalL = W*0.80, goalR = W*0.88;
+        cx.beginPath();
+        cx.moveTo(goalL, gY); cx.lineTo(goalL, goalTop);
+        cx.lineTo(goalR, goalTop); cx.lineTo(goalR, gY);
+        cx.stroke();
+        /* Crossbar fill */
+        cx.globalAlpha = 0.10;
+        cx.fillRect(goalL, goalTop - 2, goalR - goalL, 5);
+        /* Net lines */
+        cx.globalAlpha = 0.15; cx.lineWidth = 1;
+        for (var i = 0; i < 5; i++) {
+          cx.beginPath();
+          cx.moveTo(goalL + i * (goalR - goalL) / 4, goalTop);
+          cx.lineTo(goalL + i * (goalR - goalL) / 4, gY);
+          cx.stroke();
+        }
+        for (var j = 0; j < 4; j++) {
+          cx.beginPath();
+          cx.moveTo(goalL, goalTop + j * (gY - goalTop) / 3);
+          cx.lineTo(goalR, goalTop + j * (gY - goalTop) / 3);
+          cx.stroke();
+        }
+
+        /* Soccer ball — bouncing with physics */
+        var ballBounce = Math.abs(Math.sin(t * 2.5)) * 12;
+        var ballX = W*0.55 + sn(10, 0.6, 6);
+        var ballY = gY - 8*aS - ballBounce;
+        cx.restore();
+        /* Ball shadow */
+        cx.save();
+        cx.fillStyle = '#f0b000';
+        cx.globalAlpha = 0.14;
+        cx.beginPath();
+        cx.ellipse(ballX, gY - 1, 6*aS, 1.5*aS, 0, 0, Math.PI * 2);
+        cx.fill();
+        cx.restore();
+        drawSoccerBall(cx, ballX, ballY, 5*aS, 0.70, t * 2);
+
+        /* Kid Carlos — kicking pose, keyframed */
+        var s0CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s0_carlos, t), 1, 0.12);
+        drawStickman(cx, W*0.42, gY - 29*0.78*aS, 0.78, s0CarlosPose, '#f0b000', 0.70, 1);
+
+        /* Kid Javier — running/chasing, playful */
+        var runPose = addMicroNoise(keyframeWalkPose(t, 1.5, 0), 2, 0.12);
+        runPose.bodyLean = 8;
+        runPose.headTilt = -2;
+        drawStickman(cx, W*0.60 + sn(5, 0.3, 3), gY - 29*0.72*aS, 0.72, runPose, '#f0b000', 0.70, 2);
+      }
+    },
+
+    { /* ─── Scene 1: Futbol adultos — they grew up ───
+         Same game but stronger, nostalgia layer */
+      draw: function(cx, W, H, t) {
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        /* Warm evening sky */
+        cx.save();
+        var skyG = cx.createLinearGradient(0, 0, 0, H*0.88);
+        skyG.addColorStop(0, 'rgba(240,150,50,0.03)');
+        skyG.addColorStop(0.5, 'rgba(200,100,40,0.02)');
+        skyG.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
+        cx.restore();
+
+        drawStars(cx, W, H, 6, 0.06, 150);
+        var gY1 = H*0.85;
+        drawGround(cx, W*0.03, W*0.97, gY1, 0.30);
+
+        /* Goal — adult-sized, proportional */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        cx.globalAlpha = 0.55; cx.lineWidth = 3.5;
+        var goalT1 = gY1 - 55*aS, goalL1 = W*0.79, goalR1 = W*0.88;
+        cx.beginPath();
+        cx.moveTo(goalL1, gY1); cx.lineTo(goalL1, goalT1);
+        cx.lineTo(goalR1, goalT1); cx.lineTo(goalR1, gY1);
+        cx.stroke();
+        /* Crossbar fill */
+        cx.globalAlpha = 0.10;
+        cx.fillRect(goalL1, goalT1 - 2, goalR1 - goalL1, 6);
+        /* Net */
+        cx.globalAlpha = 0.15; cx.lineWidth = 1.2;
+        for (var i = 0; i < 5; i++) {
+          cx.beginPath();
+          cx.moveTo(goalL1 + i * (goalR1 - goalL1) / 4, goalT1);
+          cx.lineTo(goalL1 + i * (goalR1 - goalL1) / 4, gY1);
+          cx.stroke();
+        }
+        for (var j = 0; j < 4; j++) {
+          cx.beginPath();
+          cx.moveTo(goalL1, goalT1 + j * (gY1 - goalT1) / 3);
+          cx.lineTo(goalR1, goalT1 + j * (gY1 - goalT1) / 3);
+          cx.stroke();
+        }
+
+        /* Soccer ball in air after kick */
+        var ballArc = Math.sin(t * 1.8) * 15;
+        var bx2 = W*0.60 + sn(11, 0.4, 5);
+        var by2 = gY1 - 12*aS - Math.abs(ballArc);
+        cx.restore();
+        /* Ball shadow on ground */
+        cx.save();
+        cx.fillStyle = '#f0b000';
+        cx.globalAlpha = 0.12;
+        cx.beginPath();
+        cx.ellipse(bx2, gY1 - 1, 7*aS, 1.8*aS, 0, 0, Math.PI * 2);
+        cx.fill();
+        cx.restore();
+        drawSoccerBall(cx, bx2, by2, 6*aS, 0.70, t * 3);
+
+        /* Adult Carlos — powerful kick, keyframed */
+        var s1CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s1_carlos, t), 3, 0.12);
+        drawStickman(cx, W*0.38, gY1 - 29*1.20*aS, 1.20, s1CarlosPose, '#f0b000', 0.67, 3);
+
+        /* Adult Javier — celebrating, keyframed */
+        var s1JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s1_javier, t), 4, 0.15);
+        drawStickman(cx, W*0.58, gY1 - 29*1.15*aS, 1.15, s1JavierPose, '#f0b000', 0.67, 4);
+      }
+    },
+
+    { /* ─── Scene 2: Pasillo UCAB ───
+         Intimacy, friendship, quiet conversation */
+      draw: function(cx, W, H, t) {
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        /* Simple corridor — intimate, characters are the focus */
+        var gY2 = H*0.80;
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+
+        /* Floor line */
+        cx.globalAlpha = 0.28; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(W*0.15, gY2); cx.lineTo(W*0.85, gY2); cx.stroke();
+
+        /* Subtle columns — corridor feel without overwhelming */
+        cx.globalAlpha = 0.20; cx.lineWidth = 3;
+        cx.beginPath(); cx.moveTo(W*0.17, gY2); cx.lineTo(W*0.17, H*0.32); cx.stroke();
+        cx.beginPath(); cx.moveTo(W*0.83, gY2); cx.lineTo(W*0.83, H*0.32); cx.stroke();
+
+        /* Ceiling line */
+        cx.globalAlpha = 0.16; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(W*0.17, H*0.32); cx.lineTo(W*0.83, H*0.32); cx.stroke();
+
+        /* Window — subtle light source */
+        cx.globalAlpha = 0.25; cx.lineWidth = 2;
+        cx.strokeRect(W*0.72, H*0.44, W*0.08, H*0.12);
+        cx.lineWidth = 1.2; cx.globalAlpha = 0.16;
+        cx.beginPath(); cx.moveTo(W*0.76, H*0.44); cx.lineTo(W*0.76, H*0.56); cx.stroke();
+        cx.beginPath(); cx.moveTo(W*0.72, H*0.50); cx.lineTo(W*0.80, H*0.50); cx.stroke();
+        cx.globalAlpha = 0.06;
+        cx.fillRect(W*0.72, H*0.44, W*0.08, H*0.12);
+
+        /* Warm overhead light */
+        cx.globalAlpha = 0.12;
+        cx.fillRect(W*0.42, H*0.34, W*0.16, H*0.012);
+        var lightG = cx.createRadialGradient(W*0.5, H*0.36, 0, W*0.5, H*0.60, W*0.22);
+        lightG.addColorStop(0, 'rgba(240,176,0,0.05)');
+        lightG.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = lightG; cx.globalAlpha = 1;
+        cx.fillRect(0, 0, W, H);
+
+        cx.restore();
+
+        /* Carlos — gesturing while talking, keyframed */
+        var s2CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s2_carlos, t), 5, 0.15);
+        drawStickman(cx, W*0.40, gY2 - 29*1.12*aS, 1.12, s2CarlosPose, '#f0b000', 0.70, 5);
+
+        /* Javier — listening, nodding, keyframed */
+        var s2JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s2_javier, t), 6, 0.12);
+        drawStickman(cx, W*0.58, gY2 - 29*1.12*aS, 1.12, s2JavierPose, '#f0b000', 0.70, 6);
+      }
+    },
+
+    { /* ─── Scene 3: Hercules teatro ───
+         Performance, creativity, theatrical energy */
+      draw: function(cx, W, H, t) {
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+
+        /* Stage floor */
+        cx.globalAlpha = 0.50; cx.lineWidth = 3.5;
+        cx.beginPath();
+        cx.moveTo(W*0.08, H*0.70);
+        cx.lineTo(W*0.92, H*0.70);
+        cx.stroke();
+        /* Stage front edge */
+        cx.lineWidth = 2.5;
+        cx.beginPath();
+        cx.moveTo(W*0.06, H*0.72);
+        cx.lineTo(W*0.94, H*0.72);
+        cx.stroke();
+        /* Stage floor fill */
+        cx.globalAlpha = 0.06;
+        cx.fillRect(W*0.08, H*0.70, W*0.84, H*0.02);
+
+        /* Curtains (left and right) */
+        cx.globalAlpha = 0.18;
+        /* Left curtain with drape curves */
+        cx.beginPath();
+        cx.moveTo(W*0.04, H*0.10);
+        cx.quadraticCurveTo(W*0.08, H*0.30, W*0.06, H*0.50);
+        cx.quadraticCurveTo(W*0.10, H*0.60, W*0.08, H*0.72);
+        cx.lineTo(W*0.04, H*0.72);
+        cx.closePath(); cx.fill();
+        /* Left curtain border */
+        cx.globalAlpha = 0.30; cx.lineWidth = 2;
+        cx.beginPath();
+        cx.moveTo(W*0.04, H*0.10);
+        cx.quadraticCurveTo(W*0.08, H*0.30, W*0.06, H*0.50);
+        cx.quadraticCurveTo(W*0.10, H*0.60, W*0.08, H*0.72);
+        cx.stroke();
+        /* Right curtain */
+        cx.globalAlpha = 0.18;
+        cx.beginPath();
+        cx.moveTo(W*0.96, H*0.10);
+        cx.quadraticCurveTo(W*0.92, H*0.30, W*0.94, H*0.50);
+        cx.quadraticCurveTo(W*0.90, H*0.60, W*0.92, H*0.72);
+        cx.lineTo(W*0.96, H*0.72);
+        cx.closePath(); cx.fill();
+        /* Right curtain border */
+        cx.globalAlpha = 0.30; cx.lineWidth = 2;
+        cx.beginPath();
+        cx.moveTo(W*0.96, H*0.10);
+        cx.quadraticCurveTo(W*0.92, H*0.30, W*0.94, H*0.50);
+        cx.quadraticCurveTo(W*0.90, H*0.60, W*0.92, H*0.72);
+        cx.stroke();
+
+        /* Proscenium arch */
+        cx.globalAlpha = 0.35; cx.lineWidth = 3;
+        cx.beginPath();
+        cx.moveTo(W*0.04, H*0.72);
+        cx.lineTo(W*0.04, H*0.10);
+        cx.quadraticCurveTo(W*0.5, H*0.03, W*0.96, H*0.10);
+        cx.lineTo(W*0.96, H*0.72);
+        cx.stroke();
+
+        /* Spotlight from above */
+        var spotG = cx.createRadialGradient(W*0.55, H*0.12, 0, W*0.55, H*0.55, W*0.25);
+        spotG.addColorStop(0, 'rgba(240,176,0,0.08)');
+        spotG.addColorStop(0.7, 'rgba(240,176,0,0.03)');
+        spotG.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = spotG; cx.globalAlpha = 1; cx.fillRect(0, 0, W, H);
+
+        /* Stage footlights */
+        cx.globalAlpha = 0.28;
+        for (var fl = 0; fl < 7; fl++) {
+          var flx = W * (0.15 + fl * 0.10);
+          var flPulse = (Math.sin(gt * 0.3 + fl * 1.5) + 1) / 2;
+          cx.beginPath();
+          cx.arc(flx, H*0.71, 3 + flPulse * 1.5, 0, Math.PI * 2);
+          cx.fillStyle = '#f0b000';
+          cx.fill();
+        }
+        cx.restore();
+
+        /* Audience members (small, sitting) — filled heads */
+        var audienceY = H*0.82;
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round';
+        cx.globalAlpha = 0.25; cx.lineWidth = 2;
+        for (var au = 0; au < 5; au++) {
+          var ax = W*(0.20 + au * 0.12);
+          /* Filled head */
+          cx.globalAlpha = 0.15;
+          cx.beginPath(); cx.arc(ax, audienceY - 5, 3.5, 0, Math.PI*2); cx.fill();
+          cx.globalAlpha = 0.25;
+          cx.beginPath(); cx.arc(ax, audienceY - 5, 3.5, 0, Math.PI*2); cx.stroke();
+          /* Body */
+          cx.beginPath(); cx.moveTo(ax, audienceY - 1); cx.lineTo(ax, audienceY + 5); cx.stroke();
+        }
+        cx.restore();
+
+        /* Performers on stage — Hercules scene */
+        /* Chorus — swaying, keyframed */
+        var stageY = H*0.72;
+        var s3ChorusPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_chorus, t), 7, 0.10);
+        drawStickman(cx, W*0.25, stageY - 29*0.78*aS, 0.78, s3ChorusPose, '#f0b000', 0.53, 7);
+
+        /* Javier as Hercules — dramatic, keyframed */
+        var s3JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_javier, t), 9, 0.15);
+        drawStickman(cx, W*0.52, stageY - 29*1.10*aS, 1.10, s3JavierPose, '#f0b000', 0.73, 9);
+
+        /* Carlos watching from side-stage, keyframed */
+        var s3CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_carlosWatch, t), 10, 0.12);
+        drawStickman(cx, W*0.78, stageY - 29*0.82*aS, 0.82, s3CarlosPose, '#f0b000', 0.60, 10);
+      }
+    },
+
+    { /* ─── Scene 4: FIFA en casa de Anthonny ───
+         Camaraderie, competition, laughter */
+      draw: function(cx, W, H, t) {
+        var u = 63 * aS; /* unit = stickman height at scale 1 */
+        var midX = W * 0.5, gY4 = H * 0.78;
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+
+        /* TV — about 1.5x stickman height tall, 16:9 ratio */
+        var tvH4 = u * 1.2, tvW4 = tvH4 * 1.6;
+        var tvX = midX - tvW4/2, tvY = gY4 - u*3.5;
+        cx.globalAlpha = 0.45; cx.lineWidth = 2.5;
+        cx.strokeRect(tvX, tvY, tvW4, tvH4);
+        cx.globalAlpha = 0.04;
+        cx.fillRect(tvX, tvY, tvW4, tvH4);
+        /* Screen glow */
+        var tvG = cx.createRadialGradient(midX, tvY + tvH4*0.5, 0, midX, tvY + tvH4*0.5, tvW4);
+        tvG.addColorStop(0, 'rgba(240,176,0,0.04)');
+        tvG.addColorStop(1, 'rgba(0,0,0,0)');
+        cx.fillStyle = tvG; cx.globalAlpha = 0.5;
+        cx.fillRect(0, 0, W, H);
+        /* Screen content */
+        cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.globalAlpha = 0.15; cx.lineWidth = 1;
+        cx.beginPath(); cx.moveTo(tvX + 4, tvY + tvH4*0.5); cx.lineTo(tvX + tvW4 - 4, tvY + tvH4*0.5); cx.stroke();
+        cx.beginPath(); cx.arc(midX, tvY + tvH4*0.5, tvH4*0.15, 0, Math.PI*2); cx.stroke();
+        /* TV stand */
+        cx.globalAlpha = 0.35; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(midX, tvY + tvH4); cx.lineTo(midX, tvY + tvH4 + 10*aS); cx.stroke();
+        cx.beginPath(); cx.moveTo(midX - 12*aS, tvY + tvH4 + 10*aS); cx.lineTo(midX + 12*aS, tvY + tvH4 + 10*aS); cx.stroke();
+
+        /* Floor */
+        cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
+        cx.beginPath(); cx.moveTo(W*0.12, gY4); cx.lineTo(W*0.88, gY4); cx.stroke();
+
+        /* Couch — sized for 4 stickmen */
+        var couchW = u * 4.5, couchH = u * 0.5;
+        var couchX = midX - couchW/2;
+        var seatY4 = gY4 - u * 0.8;
+        cx.globalAlpha = 0.30; cx.lineWidth = 2;
+        /* Seat */
+        cx.beginPath(); cx.moveTo(couchX, seatY4); cx.lineTo(couchX + couchW, seatY4);
+        cx.lineTo(couchX + couchW, seatY4 + 3); cx.lineTo(couchX, seatY4 + 3); cx.closePath(); cx.stroke();
+        cx.globalAlpha = 0.04; cx.fill();
+        /* Back */
+        cx.globalAlpha = 0.25; cx.lineWidth = 1.5;
+        var backY4 = seatY4 - couchH;
+        cx.beginPath(); cx.moveTo(couchX - 2, backY4); cx.lineTo(couchX - 2, seatY4); cx.stroke();
+        cx.beginPath(); cx.moveTo(couchX + couchW + 2, backY4); cx.lineTo(couchX + couchW + 2, seatY4); cx.stroke();
+        cx.globalAlpha = 0.03;
+        cx.fillRect(couchX, backY4, couchW, couchH);
+        cx.restore();
+
+        /* 4 friends on the couch — keyframed */
+        var spacing = couchW / 5;
+        var s4P1 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player1, t), 11, 0.15);
+        drawStickman(cx, couchX + spacing, seatY4 - 29*0.85*aS, 0.85, s4P1, '#f0b000', 0.65, 11);
+
+        var s4P2 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player2, t), 12, 0.10);
+        drawStickman(cx, couchX + spacing*2, seatY4 - 29*0.85*aS, 0.85, s4P2, '#f0b000', 0.60, 12);
+
+        var s4P3 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player3, t), 13, 0.15);
+        drawStickman(cx, couchX + spacing*3, seatY4 - 29*0.85*aS, 0.85, s4P3, '#f0b000', 0.65, 13);
+
+        var s4P4 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player4, t), 14, 0.12);
+        drawStickman(cx, couchX + spacing*4, seatY4 - 29*0.85*aS, 0.85, s4P4, '#f0b000', 0.63, 14);
+      }
+    },
+
+    { /* ─── Scene 5: Optra camino a la UCAB ───
+         Journey, music, freedom, the road */
+      draw: function(cx, W, H, t) {
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+
+        /* Road */
+        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.moveTo(W*0.10, H*0.78); cx.lineTo(W*0.90, H*0.78); cx.stroke();
+        /* Road edge bottom */
+        cx.globalAlpha = 0.20; cx.lineWidth = 1.5;
+        cx.beginPath(); cx.moveTo(W*0.10, H*0.81); cx.lineTo(W*0.90, H*0.81); cx.stroke();
+        /* Road dashes — moving */
+        cx.globalAlpha = 0.35; cx.lineWidth = 2;
+        cx.setLineDash([W*0.03, W*0.03]);
+        var dashOffset = -(t * 25) % (W * 0.06);
+        cx.beginPath(); cx.moveTo(W*0.10 + dashOffset, H*0.75); cx.lineTo(W*0.90, H*0.75); cx.stroke();
+        cx.setLineDash([]);
+
+        /* Mountains in background — layered depth */
+        cx.globalAlpha = 0.15; cx.lineWidth = 2;
+        cx.beginPath();
+        cx.moveTo(W*0.0, H*0.50);
+        cx.lineTo(W*0.12, H*0.32); cx.lineTo(W*0.25, H*0.42);
+        cx.lineTo(W*0.38, H*0.28); cx.lineTo(W*0.50, H*0.38);
+        cx.lineTo(W*0.62, H*0.25); cx.lineTo(W*0.75, H*0.35);
+        cx.lineTo(W*0.88, H*0.30); cx.lineTo(W*1.0, H*0.45);
+        cx.stroke();
+        /* Mountain fill */
+        cx.globalAlpha = 0.04;
+        cx.lineTo(W*1.0, H*0.78); cx.lineTo(W*0.0, H*0.78); cx.closePath(); cx.fill();
+        /* Closer range */
+        cx.globalAlpha = 0.12; cx.lineWidth = 1.5;
+        cx.beginPath();
+        cx.moveTo(W*0.0, H*0.55);
+        cx.lineTo(W*0.18, H*0.40); cx.lineTo(W*0.32, H*0.48);
+        cx.lineTo(W*0.48, H*0.36); cx.lineTo(W*0.65, H*0.44);
+        cx.lineTo(W*0.80, H*0.38); cx.lineTo(W*1.0, H*0.50);
+        cx.stroke();
+
+        /* Car — Optra with road bounce */
+        var bounce = sn(40, 2.0, 1.2);
+        var carY = H*0.62 + bounce;
+
+        /* Car body fill */
+        cx.globalAlpha = 0.10;
+        cx.beginPath();
+        cx.moveTo(W*0.28, carY + H*0.08);
+        cx.lineTo(W*0.72, carY + H*0.08);
+        cx.quadraticCurveTo(W*0.74, carY + H*0.08, W*0.74, carY + H*0.06);
+        cx.lineTo(W*0.74, carY);
+        cx.quadraticCurveTo(W*0.74, carY - H*0.02, W*0.72, carY - H*0.02);
+        cx.lineTo(W*0.28, carY - H*0.02);
+        cx.quadraticCurveTo(W*0.26, carY - H*0.02, W*0.26, carY);
+        cx.lineTo(W*0.26, carY + H*0.06);
+        cx.quadraticCurveTo(W*0.26, carY + H*0.08, W*0.28, carY + H*0.08);
+        cx.fill();
+        /* Car body stroke */
+        cx.globalAlpha = 0.65; cx.lineWidth = 4;
+        cx.beginPath();
+        cx.moveTo(W*0.28, carY + H*0.08);
+        cx.lineTo(W*0.72, carY + H*0.08);
+        cx.quadraticCurveTo(W*0.74, carY + H*0.08, W*0.74, carY + H*0.06);
+        cx.lineTo(W*0.74, carY);
+        cx.quadraticCurveTo(W*0.74, carY - H*0.02, W*0.72, carY - H*0.02);
+        cx.lineTo(W*0.28, carY - H*0.02);
+        cx.quadraticCurveTo(W*0.26, carY - H*0.02, W*0.26, carY);
+        cx.lineTo(W*0.26, carY + H*0.06);
+        cx.quadraticCurveTo(W*0.26, carY + H*0.08, W*0.28, carY + H*0.08);
+        cx.stroke();
+
+        /* Windshield / cabin */
+        cx.globalAlpha = 0.55; cx.lineWidth = 3;
+        cx.beginPath();
+        cx.moveTo(W*0.36, carY - H*0.02);
+        cx.lineTo(W*0.40, carY - H*0.12);
+        cx.lineTo(W*0.62, carY - H*0.12);
+        cx.lineTo(W*0.66, carY - H*0.02);
+        cx.stroke();
+        /* Windshield fill (glass) */
+        cx.globalAlpha = 0.06;
+        cx.fill();
+        /* Window division */
+        cx.globalAlpha = 0.40; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(W*0.51, carY - H*0.12); cx.lineTo(W*0.51, carY - H*0.02); cx.stroke();
+
+        /* Wheels with rotation */
+        cx.globalAlpha = 0.65; cx.lineWidth = 3;
+        /* Wheel fill */
+        cx.globalAlpha = 0.15;
+        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 8, 0, Math.PI*2); cx.fill();
+        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 8, 0, Math.PI*2); cx.fill();
+        /* Wheel stroke */
+        cx.globalAlpha = 0.60;
+        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 8, 0, Math.PI*2); cx.stroke();
+        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 8, 0, Math.PI*2); cx.stroke();
+        /* Wheel spokes rotating */
+        cx.lineWidth = 1.5; cx.globalAlpha = 0.30;
+        var wheelAngle = t * 4;
+        for (var sp = 0; sp < 4; sp++) {
+          var wa = wheelAngle + sp * Math.PI/2;
+          cx.beginPath(); cx.moveTo(W*0.36, carY + H*0.10); cx.lineTo(W*0.36 + Math.cos(wa)*5.5, carY + H*0.10 + Math.sin(wa)*5.5); cx.stroke();
+          cx.beginPath(); cx.moveTo(W*0.64, carY + H*0.10); cx.lineTo(W*0.64 + Math.cos(wa)*5.5, carY + H*0.10 + Math.sin(wa)*5.5); cx.stroke();
+        }
+        /* Hubcap centers */
+        cx.globalAlpha = 0.40;
+        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 2, 0, Math.PI*2); cx.fill();
+        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 2, 0, Math.PI*2); cx.fill();
+
+        /* Headlights */
+        cx.globalAlpha = 0.30;
+        cx.beginPath(); cx.arc(W*0.74, carY + H*0.02, 3.5, 0, Math.PI*2); cx.fill();
+        cx.beginPath(); cx.arc(W*0.26, carY + H*0.02, 3.5, 0, Math.PI*2); cx.fill();
+        /* Headlight glow */
+        cx.globalAlpha = 0.08;
+        cx.beginPath(); cx.arc(W*0.74, carY + H*0.02, 8, 0, Math.PI*2); cx.fill();
+
+        /* Side mirrors */
+        cx.globalAlpha = 0.40; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(W*0.26, carY); cx.lineTo(W*0.23, carY - H*0.015); cx.lineTo(W*0.22, carY); cx.stroke();
+        cx.beginPath(); cx.moveTo(W*0.74, carY); cx.lineTo(W*0.77, carY - H*0.015); cx.lineTo(W*0.78, carY); cx.stroke();
+
+        /* Door handle */
+        cx.globalAlpha = 0.25; cx.lineWidth = 1.5;
+        cx.beginPath(); cx.moveTo(W*0.44, carY + H*0.02); cx.lineTo(W*0.48, carY + H*0.02); cx.stroke();
+
+        cx.restore();
+
+        /* Music notes floating — larger, livelier */
+        cx.save();
+        cx.font = 'bold ' + Math.round(30*(W/900)) + 'px serif'; cx.fillStyle = '#f0b000';
+        var notes = ['\u266A', '\u266B', '\u2669', '\u266A', '\u266B'];
+        for (var n = 0; n < notes.length; n++) {
+          var notePhase = t * 0.5 + n * 0.9;
+          var noteLife = (Math.sin(notePhase) + 1) / 2;
+          var nx = W*0.34 + n*W*0.07 + sn(n*10 + 60, 0.5, 7);
+          var ny = carY - H*0.16 - n*H*0.03 + sn(n*10 + 70, 0.4, 5) - noteLife * 12;
+          cx.save();
+          cx.translate(nx, ny);
+          cx.rotate(sn(n*10 + 90, 0.15, 2) * 0.25);
+          cx.globalAlpha = Math.max(0, 0.28 + sn(n*10 + 80, 0.4, 0.10)) * noteLife;
+          cx.fillText(notes[n], 0, 0);
+          cx.restore();
+        }
+        cx.restore();
+
+        /* Stickman passengers inside car — clear heads + upper bodies */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+        /* Driver (Carlos) */
+        var headBob1 = sn(50, 0.8, 1);
+        var dHx = W*0.44, dHy = carY - H*0.09 + headBob1;
+        cx.globalAlpha = 0.45;
+        cx.beginPath(); cx.arc(dHx, dHy, 7, 0, Math.PI*2); cx.fill();
+        cx.globalAlpha = 0.60; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.arc(dHx, dHy, 7, 0, Math.PI*2); cx.stroke();
+        /* Driver neck + shoulders */
+        cx.globalAlpha = 0.45; cx.lineWidth = 3;
+        cx.beginPath(); cx.moveTo(dHx, dHy + 7); cx.lineTo(dHx, dHy + 14); cx.stroke();
+        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.moveTo(dHx - 8, dHy + 16); cx.lineTo(dHx + 8, dHy + 16); cx.stroke();
+        /* Hands on wheel hint */
+        cx.globalAlpha = 0.30; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(dHx + 7, dHy + 16); cx.lineTo(dHx + 11, dHy + 24); cx.stroke();
+        cx.beginPath(); cx.moveTo(dHx - 7, dHy + 16); cx.lineTo(dHx - 4, dHy + 24); cx.stroke();
+        /* Passenger (Javier) */
+        var headBob2 = sn(51, 0.9, 1.2);
+        var pHx = W*0.57, pHy = carY - H*0.09 + headBob2;
+        cx.globalAlpha = 0.45;
+        cx.beginPath(); cx.arc(pHx, pHy, 7, 0, Math.PI*2); cx.fill();
+        cx.globalAlpha = 0.60; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.arc(pHx, pHy, 7, 0, Math.PI*2); cx.stroke();
+        /* Passenger neck + shoulders */
+        cx.globalAlpha = 0.45; cx.lineWidth = 3;
+        cx.beginPath(); cx.moveTo(pHx, pHy + 7); cx.lineTo(pHx, pHy + 14); cx.stroke();
+        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
+        cx.beginPath(); cx.moveTo(pHx - 8, pHy + 16); cx.lineTo(pHx + 8, pHy + 16); cx.stroke();
+        /* Passenger arm resting */
+        cx.globalAlpha = 0.30; cx.lineWidth = 2;
+        cx.beginPath(); cx.moveTo(pHx + 7, pHy + 16); cx.lineTo(pHx + 13, pHy + 12); cx.stroke();
+        cx.restore();
+
+      }
+    },
+
+    { /* ─── Scene 6: Fortnite split screen ───
+         Modern connection, gaming together, focused intensity */
+      draw: function(cx, W, H, t) {
+        var u = 63 * aS; /* stickman height unit */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        cx.lineCap = 'round'; cx.lineJoin = 'round';
+
+        /* Dividing line */
+        cx.globalAlpha = 0.30; cx.lineWidth = 1.5; cx.setLineDash([4, 4]);
+        cx.beginPath(); cx.moveTo(W*0.5, H*0.20); cx.lineTo(W*0.5, H*0.85); cx.stroke();
+        cx.setLineDash([]);
+
+        /* ─── Helper: draw one gaming setup ─── */
+        function drawSetup(centerX, gY6) {
+          var monW = u * 1.3, monH = u * 0.8;
+          var deskW = u * 2.0, deskY = gY6 - u * 0.8;
+          /* Desk */
+          cx.globalAlpha = 0.35; cx.lineWidth = 2;
+          cx.beginPath(); cx.moveTo(centerX - deskW/2, deskY); cx.lineTo(centerX + deskW/2, deskY); cx.stroke();
+          cx.lineWidth = 1.5;
+          cx.beginPath(); cx.moveTo(centerX - deskW/2 + 4, deskY); cx.lineTo(centerX - deskW/2 + 4, gY6); cx.stroke();
+          cx.beginPath(); cx.moveTo(centerX + deskW/2 - 4, deskY); cx.lineTo(centerX + deskW/2 - 4, gY6); cx.stroke();
+          /* Monitor */
+          cx.globalAlpha = 0.45; cx.lineWidth = 2.5;
+          cx.strokeRect(centerX - monW/2, deskY - monH - 8*aS, monW, monH);
+          cx.globalAlpha = 0.04;
+          cx.fillRect(centerX - monW/2, deskY - monH - 8*aS, monW, monH);
+          /* Monitor stand */
+          cx.globalAlpha = 0.35; cx.lineWidth = 1.5;
+          cx.beginPath(); cx.moveTo(centerX, deskY - 8*aS); cx.lineTo(centerX, deskY - 2); cx.stroke();
+          cx.beginPath(); cx.moveTo(centerX - 8*aS, deskY - 2); cx.lineTo(centerX + 8*aS, deskY - 2); cx.stroke();
+          /* Keyboard */
+          cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
+          cx.strokeRect(centerX - 15*aS, deskY - 5*aS, 30*aS, 4*aS);
+          /* Mouse */
+          cx.globalAlpha = 0.22;
+          cx.beginPath(); cx.ellipse(centerX + 22*aS, deskY - 3*aS, 3*aS, 2*aS, 0, 0, Math.PI*2); cx.stroke();
+          /* Screen glow */
+          var sg = cx.createRadialGradient(centerX, deskY - monH/2 - 8*aS, 0, centerX, deskY - monH/2 - 8*aS, u*1.5);
+          sg.addColorStop(0, 'rgba(240,176,0,0.04)');
+          sg.addColorStop(1, 'rgba(0,0,0,0)');
+          cx.fillStyle = sg; cx.globalAlpha = 0.5;
+          cx.fillRect(centerX - u*2, deskY - monH - u, u*4, monH + u*2);
+          cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
+        }
+
+        var gY6 = H * 0.78;
+        drawSetup(W * 0.25, gY6);
+        drawSetup(W * 0.75, gY6);
+
+        /* Floor lines */
+        cx.globalAlpha = 0.20; cx.lineWidth = 1.5;
+        cx.beginPath(); cx.moveTo(W*0.05, gY6); cx.lineTo(W*0.45, gY6); cx.stroke();
+        cx.beginPath(); cx.moveTo(W*0.55, gY6); cx.lineTo(W*0.95, gY6); cx.stroke();
+        cx.restore();
+
+        /* Stickmen at desks */
+        var hipY6 = gY6 - 29 * aS;
+        var s6CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_carlos, t), 15, 0.12);
+        var cInfo = drawStickman(cx, W*0.25, hipY6, 1.0, s6CarlosPose, '#f0b000', 0.67, 15);
+
+        var s6JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_javier, t), 16, 0.12);
+        var jInfo = drawStickman(cx, W*0.75, hipY6, 1.0, s6JavierPose, '#f0b000', 0.67, 16);
+
+        /* Headsets */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.lineCap = 'round';
+        cx.globalAlpha = 0.40; cx.lineWidth = 2;
+        cx.beginPath(); cx.arc(cInfo.headX, cInfo.headY - 2, cInfo.headR + 2, Math.PI*1.2, Math.PI*1.8); cx.stroke();
+        cx.beginPath(); cx.arc(jInfo.headX, jInfo.headY - 2, jInfo.headR + 2, Math.PI*1.2, Math.PI*1.8); cx.stroke();
+        cx.restore();
+
+        /* Voice chat line */
+        cx.save(); cx.strokeStyle = '#f0b000'; cx.lineCap = 'round';
+        cx.globalAlpha = 0.08 + sn(50, 0.6, 0.03); cx.lineWidth = 1;
+        cx.setLineDash([3, 5]);
+        cx.beginPath();
+        cx.moveTo(cInfo.headX + cInfo.headR + 5, cInfo.headY);
+        cx.quadraticCurveTo(W*0.5, H*0.30, jInfo.headX - jInfo.headR - 5, jInfo.headY);
+        cx.stroke();
+        cx.setLineDash([]); cx.restore();
+      }
+    }
+  ];
+
+  /* ═══════════════════════════════════════
+     TIMELINE
+  ═══════════════════════════════════════ */
+  var T = {
+    ACT1_START: 0, ACT1_WALK: 4, ACT1_GONE: 24, ACT1_HEAD: 28,
+    MEM1_IN: 45, MEM1_OUT: 55,
+    MEM2_IN: 58, MEM2_OUT: 68,
+    MEM3_IN: 72, MEM3_OUT: 82,
+    MEM4_IN: 85, MEM4_OUT: 93,
+    MEM5_IN: 95, MEM5_OUT: 103,
+    MEM6_IN: 105, MEM6_OUT: 112,
+    MEM7_IN: 114, MEM7_OUT: 120,
+    CODA_START: 122, CODA_CARLOS: 162,
+    CODA_TEXT1: 126, CODA_TEXT2: 135, CODA_TEXT3: 144,
+    END: 200
+  };
+
+  var sceneTimings = [
+    {scene:0, inTime:T.MEM1_IN, outTime:T.MEM1_OUT, done:false},
+    {scene:1, inTime:T.MEM2_IN, outTime:T.MEM2_OUT, done:false},
+    {scene:2, inTime:T.MEM3_IN, outTime:T.MEM3_OUT, done:false},
+    {scene:3, inTime:T.MEM4_IN, outTime:T.MEM4_OUT, done:false},
+    {scene:4, inTime:T.MEM5_IN, outTime:T.MEM5_OUT, done:false},
+    {scene:5, inTime:T.MEM6_IN, outTime:T.MEM6_OUT, done:false},
+    {scene:6, inTime:T.MEM7_IN, outTime:T.MEM7_OUT, done:false}
+  ];
+
+  /* Track if convergence burst has fired */
+  var burstFired = false;
+  /* Track if embers have been spawned this coda cycle */
+  var embersSpawning = false;
+  /* Responsive anatomy scale — stickmen scale with viewport */
+  var aS = 1;
+
+  /* ═══════════════════════════════════════
+     MAIN ANIMATION LOOP
+  ═══════════════════════════════════════ */
+  function animate() {
+    animId = requestAnimationFrame(animate);
+    var t = audio ? audio.currentTime : 0;
+    dt = t - prevTime;
+    prevTime = t;
+    gt = t;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(1,6,8,0.95)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    var W = canvas.width / dpr;
+    var H = canvas.height / dpr;
+    aS = Math.max(0.7, Math.min(1.5, Math.min(W, H) / 700));
+    ctx.save();
+    ctx.scale(dpr, dpr);
+
+    /* ─── Global atmospheric effects during memories ─── */
+    if (t > T.MEM1_IN && t < T.CODA_START) {
+      var memIntensity = 1.0;
+      if (t < T.MEM1_IN + 3) memIntensity = (t - T.MEM1_IN) / 3;
+      if (t > T.MEM7_OUT - 2) memIntensity = Math.max(0, (T.CODA_START - t) / (T.CODA_START - T.MEM7_OUT + 2));
+      drawAtmosphere(ctx, W, H, memIntensity);
+      drawVignette(ctx, W, H, memIntensity * 0.4);
+    }
+
+    /* ═══════════════════════════════════
+       ACT 1 — LA PARTIDA (The Departure)
+       Devastating emotional sequence
+    ═══════════════════════════════════ */
+    if (t >= T.ACT1_START && t < T.MEM1_IN) {
+      /* Background stars — the vastness of the world */
+      drawStars(ctx, W, H, 15, 0.03, 1000);
+      drawVignette(ctx, W, H, 0.3);
+
+      /* Ground — fades as Javier leaves, symbolizing loss of foundation */
+      var groundFade = 1.0;
+      if (t > T.ACT1_GONE) groundFade = Math.max(0, 1 - (t - T.ACT1_GONE) / 6);
+      var gYact = H*0.78;
+      drawGround(ctx, W*0.10, W*0.90, gYact, 0.06 * groundFade);
+
+      var cX = W*0.45, cY = gYact - 29*aS;
+      var carlosPose;
+
+      /* ─── Phase 1: Standing together (0 to ACT1_WALK) ─── */
+      if (t < T.ACT1_WALK) {
+        /* They stand close, comfortable */
+        var togetherBreath = sn(50, 0.3, 1);
+        carlosPose = {
+          armL: -15 + togetherBreath,
+          armR: 25 + sn(51, 0.25, 1.5),  /* arm towards Javier, casual */
+          handL: 6,
+          handR: -8,
+          legL: -6 + sn(52, 0.1, 0.3),
+          legR: 7,
+          shinL: 3, shinR: 3,
+          bodyLean: sn(53, 0.15, 0.5),
+          headTilt: 2 + sn(54, 0.2, 1), /* looking towards Javier */
+          shoulderTwist: sn(55, 0.1, 0.3)
+        };
+        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+
+        /* Javier standing close — idle, alive */
+        var javierIdle = idlePose(60, 0);
+        javierIdle.headTilt = -2 + sn(61, 0.2, 1); /* looking at Carlos */
+        drawStickman(ctx, W*0.55, cY, 1.0, javierIdle, '#dde8e2', 1, 51);
+
+      /* ─── Phase 2: The moment of parting (ACT1_WALK to ACT1_WALK+3) ─── */
+      } else if (t < T.ACT1_WALK + 3) {
+        var partP = easeInOut((t - T.ACT1_WALK) / 3);
+
+        /* Carlos watches — arm reaches out slightly then freezes */
+        carlosPose = {
+          armL: lerp(-15, -12, partP),
+          armR: lerp(25, 40, partP),    /* reaching toward Javier */
+          handL: 6,
+          handR: lerp(-8, -15, partP),
+          legL: -6, legR: 7,
+          shinL: 3, shinR: 3,
+          bodyLean: lerp(0, 3, partP),  /* leans forward slightly */
+          headTilt: lerp(2, 4, partP),  /* head follows Javier */
+          shoulderTwist: lerp(0, 2, partP)
+        };
+        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+
+        /* Javier — starts to turn away, takes first step */
+        var turnProgress = easeIn(partP);
+        var javierTurnPose = {
+          armL: lerp(-18, -12, turnProgress),
+          armR: lerp(18, 10, turnProgress),
+          handL: 5, handR: -5,
+          legL: lerp(-6, -10, turnProgress),
+          legR: lerp(7, 12, turnProgress),
+          shinL: 3, shinR: 3,
+          bodyLean: lerp(0, 3, turnProgress),
+          headTilt: lerp(-2, -5, turnProgress), /* looks back momentarily */
+          shoulderTwist: lerp(0, -3, turnProgress)
+        };
+        var jStartX = lerp(W*0.55, W*0.58, turnProgress);
+        drawStickman(ctx, jStartX, cY, 1.0, javierTurnPose, '#dde8e2', 1, 51);
+
+      /* ─── Phase 3: Javier walks away (ACT1_WALK+3 to ACT1_GONE) ─── */
+      } else if (t < T.ACT1_GONE) {
+        var walkDuration = T.ACT1_GONE - T.ACT1_WALK - 3;
+        var walkP = easeInOut((t - T.ACT1_WALK - 3) / walkDuration);
+
+        /* Carlos — arm slowly drops, body slumps, helpless */
+        var dropP = easeInOutCubic(Math.min(1, walkP * 2)); /* arm drops in first half */
+        var slumpP = easeOut(walkP);
+        carlosPose = {
+          armL: lerp(-12, -8, slumpP),
+          armR: lerp(40, 10, dropP),    /* arm drops sadly */
+          handL: 6,
+          handR: lerp(-15, -5, dropP),
+          legL: -6, legR: 7,
+          shinL: 3, shinR: 3,
+          bodyLean: lerp(3, -2, slumpP),  /* slumps back */
+          headTilt: lerp(4, 8, slumpP),   /* head droops */
+          shoulderTwist: lerp(2, 0, slumpP)
+        };
+        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+
+        /* Javier walking away — sad walk, straight line (no shrinking) */
+        var jX = W*0.58 + walkP * W*0.32;
+        var jScale = 1.0;
+        var jAlpha = walkP < 0.7 ? 1.0 : Math.max(0, 1.0 - (walkP - 0.7) / 0.3);
+        var sadWalkPose = addMicroNoise(keyframeWalkPose(t, 1.0, lerp(0.2, 1.0, walkP)), 51, 0.15);
+
+        drawStickman(ctx, jX, cY, jScale, sadWalkPose, '#dde8e2', jAlpha, 51);
+
+        /* ─── The Look Back ─── */
+        /* At 40% of walk, Javier pauses and looks back briefly */
+        if (walkP > 0.35 && walkP < 0.50) {
+          var lookBackP = (walkP - 0.35) / 0.15;
+          var lookIntensity = Math.sin(lookBackP * Math.PI); /* peaks at center */
+          /* Override head tilt for the look-back */
+          ctx.save();
+          /* Draw a brief connection line between them */
+          ctx.strokeStyle = '#f0b000';
+          ctx.globalAlpha = lookIntensity * 0.04;
+          ctx.lineWidth = 0.5;
+          ctx.setLineDash([2, 6]);
+          ctx.beginPath();
+          ctx.moveTo(jX, cY - 30 * jScale);
+          ctx.lineTo(cX, cY - 30);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.restore();
+        }
+
+      /* ─── Phase 4: Carlos alone (ACT1_GONE to MEM1_IN) ─── */
+      } else {
+        var aloneP = easeOut(Math.min(1, (t - T.ACT1_GONE) / 4));
+
+        /* Carlos alone — the emptiness */
+        carlosPose = {
+          armL: lerp(-8, -6, aloneP) + sn(70, 0.2, 0.5),
+          armR: lerp(10, 6, aloneP) + sn(71, 0.2, 0.5),
+          handL: 5, handR: -5,
+          legL: -6, legR: 7,
+          shinL: 3, shinR: 3,
+          bodyLean: lerp(-2, -5, aloneP),   /* sinking posture */
+          headTilt: lerp(8, 12, aloneP),     /* head drops more */
+          shoulderTwist: 0
+        };
+        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+
+        /* The space feels vast — extra vignette */
+        drawVignette(ctx, W, H, 0.2 + aloneP * 0.3);
+      }
+    }
+
+    /* ═══════════════════════════════════
+       ACT 2 & 3 — FLASHBACK MEMORIES
+       Each scene fades in/out with atmosphere
+    ═══════════════════════════════════ */
+    sceneTimings.forEach(function(st) {
+      if (t >= st.inTime && t < st.outTime) {
+        var fadeInDur = 0.8;
+        var fadeOutDur = 0.8;
+        var fi = Math.min(1, (t - st.inTime) / fadeInDur);
+        var fo = Math.min(1, (st.outTime - t) / fadeOutDur);
+        var a = easeInOut(Math.min(fi, fo));
+
+        ctx.save();
+        ctx.globalAlpha = a;
+        SCENES[st.scene].draw(ctx, W, H, t);
+        ctx.restore();
+
+        /* Memory frame — rounded border with golden glow */
+        drawMemoryFrame(ctx, W, H, a);
+
+        if (t >= st.outTime - 0.3 && !st.done) {
+          st.done = true;
+          residues.push({sceneIndex: st.scene, alpha: 0.1});
+        }
+      }
+    });
+
+    /* Brief transition to coda — gentle fade to black after last memory */
+    if (t >= T.MEM7_OUT && t < T.CODA_START) {
+      drawVignette(ctx, W, H, 0.5);
+    }
+
+    /* ═══════════════════════════════════
+       ACT 5 — THE CODA
+       Carlos appears slowly, golden, vulnerable.
+       Embers drift upward. Text reveals with weight.
+    ═══════════════════════════════════ */
+    if (t >= T.CODA_START) {
+
+      /* ─── Carlos appears ─── */
+      if (t >= T.CODA_CARLOS) {
+        var codaP = easeOutCubic(Math.min(1, (t - T.CODA_CARLOS) / 4));
+
+        /* Gentle golden aura beneath/around him */
+        ctx.save();
+        var cAuraG = ctx.createRadialGradient(W*0.5, H*0.58, 0, W*0.5, H*0.58, W*0.22);
+        cAuraG.addColorStop(0, 'rgba(240,176,0,' + (0.06 * codaP) + ')');
+        cAuraG.addColorStop(0.5, 'rgba(240,176,0,' + (0.03 * codaP) + ')');
+        cAuraG.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = cAuraG;
+        ctx.fillRect(0, 0, W, H);
+        ctx.restore();
+
+        /* Embers drift upward gently */
+        if (codaP > 0.5 && t > T.CODA_CARLOS + 3) {
+          if (Math.random() < 0.08) {
+            spawnEmbers(W, H, 1);
+          }
+        }
+        updateAndDrawEmbers(ctx, W, H);
+
+        /* ─── Carlos: open, vulnerable, facing viewer ─── */
+        /* Arms slightly out — welcoming, open posture */
+        /* Subtle breathing, alive but still */
+        var codaBreath = sn(100, 0.5, 1.5);
+        var codaBreath2 = sn(101, 0.8, 0.5);
+        var openness = easeOut(Math.min(1, (t - T.CODA_CARLOS - 2) / 3));
+
+        var codaPose = {
+          armL: lerp(-12, -30, openness) + codaBreath,
+          armR: lerp(12, 30, openness) - codaBreath,
+          handL: lerp(6, 15, openness) + codaBreath2,
+          handR: lerp(-6, -15, openness) - codaBreath2,
+          legL: -8 + sn(102, 0.1, 0.3),
+          legR: 8 + sn(103, 0.1, 0.3),
+          shinL: 3,
+          shinR: 3,
+          bodyLean: codaBreath * 0.3,
+          headTilt: sn(104, 0.15, 1),
+          shoulderTwist: sn(105, 0.1, 0.3)
+        };
+
+        var codaGY = H*0.72;
+        drawStickman(ctx, W*0.5, codaGY - 29*1.1*aS, 1.1, codaPose, '#f0b000', codaP, 100);
+
+        /* Ground line — faint, golden */
+        if (codaP > 0.3) {
+          ctx.save();
+          ctx.strokeStyle = '#f0b000';
+          ctx.globalAlpha = (codaP - 0.3) * 0.06;
+          ctx.lineWidth = 0.8;
+          ctx.beginPath();
+          var gndY = codaGY;
+          ctx.moveTo(W*0.35, gndY);
+          ctx.lineTo(W*0.65, gndY);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+
+      /* ─── Text reveals — each appears with weight ─── */
+      if (textEl) {
+        if (t >= T.CODA_TEXT3) {
+          textEl.innerHTML = 'Todo eso fuiste. Todo eso eres.<br>Y por eso estoy aqu\u00ed.';
+          textEl.classList.add('visible');
+        } else if (t >= T.CODA_TEXT2) {
+          textEl.textContent = 'Todo eso fuiste. Todo eso eres.';
+          textEl.classList.add('visible');
+        } else if (t >= T.CODA_TEXT1) {
+          textEl.textContent = 'Todo eso fuiste.';
+          textEl.classList.add('visible');
+        }
+      }
+    }
+
+    ctx.restore();
+  }
+
+  /* ═══════════════════════════════════════
+     PLAY BUTTON HANDLER
+  ═══════════════════════════════════════ */
+  playBtn.addEventListener('click', function() {
+    playBtn.style.display = 'none';
+    var hint = playBtn.parentElement.querySelector('.adagio-hint');
+    if (hint) hint.style.display = 'none';
+    resizeCanvas();
+
+    /* Reset state for fresh playback */
+    residues = [];
+    embers = [];
+    burstParticles = [];
+    burstFired = false;
+    embersSpawning = false;
+    sceneTimings.forEach(function(st) { st.done = false; });
+
+    var vinylAudio = document.getElementById('vinyl-audio');
+    if (vinylAudio) { try { vinylAudio.pause(); } catch(e) {} }
+    var tessAudio = document.getElementById('tesseract-audio');
+    if (tessAudio) { try { tessAudio.pause(); } catch(e) {} }
+
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 0;
+      audio.play().then(function() {
+        var fi = setInterval(function() {
+          if (audio.volume < 0.95) { audio.volume = Math.min(1, audio.volume + 0.03); }
+          else { audio.volume = 1; clearInterval(fi); }
+        }, 80);
+      }).catch(function() {});
+    }
+
+    prevTime = 0;
+    animate();
+  });
+
+  /* ═══════════════════════════════════════
+     PREFERS-REDUCED-MOTION: STATIC CODA
+  ═══════════════════════════════════════ */
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    gt = 0;
+    ctx.save(); ctx.scale(dpr, dpr);
+    var W = canvas.width / dpr, H = canvas.height / dpr;
+    ctx.fillStyle = 'rgba(1,6,8,0.95)'; ctx.fillRect(0, 0, W, H);
+    drawStickman(ctx, W*0.5, H*0.55, 1.1,
+      {armL:-28, armR:28, handL:14, handR:-14, legL:-8, legR:8, shinL:3, shinR:3, bodyLean:0, headTilt:0, shoulderTwist:0},
+      '#f0b000', 0.80, 100);
+    ctx.restore();
+    if (textEl) {
+      textEl.innerHTML = 'Todo eso fuiste. Todo eso eres.<br>Y por eso estoy aqu\u00ed.';
+      textEl.classList.add('visible');
+    }
+  }
 })();
 
 </script>
