@@ -5665,21 +5665,22 @@ if (kWrap) {
     { t:1.0,  ease:'easeInOut', pose:{ armL:-5, armR:8, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-5, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 1 — intense gamer */
-  SCENE_KF.s4_player1 = { loop:true, duration:2.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }},
-    { t:0.30, ease:'easeOut',   pose:{ armL:22, armR:30, handL:15, handR:-8, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-6, hipSway:-1, headTilt:-4, shoulderTwist:1 }},
-    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:35, handL:10, handR:-12, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:-1 }},
-    { t:0.80, ease:'easeOut',   pose:{ armL:26, armR:28, handL:14, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-7, hipSway:1, headTilt:-3, shoulderTwist:1 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  /* Scene 4: Player 1 — focused, leaning in, controller in hands */
+  SCENE_KF.s4_player1 = { loop:true, duration:3.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:20, armR:25, handL:10, handR:-8, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:18, armR:23, handL:12, handR:-6, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-4, hipSway:-0.5, headTilt:-3, shoulderTwist:0.5 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:22, armR:27, handL:8, handR:-10, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-6, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:19, armR:24, handL:11, handR:-7, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0.5, headTilt:-2, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:20, armR:25, handL:10, handR:-8, legL:22, legR:26, shinL:-8, shinR:-6, bodyLean:-5, hipSway:0, headTilt:-2, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 2 — relaxed */
-  SCENE_KF.s4_player2 = { loop:true, duration:3.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.35, ease:'easeOut',   pose:{ armL:20, armR:27, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:2, shoulderTwist:0.5 }},
-    { t:0.65, ease:'easeInOut', pose:{ armL:24, armR:23, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 4: Player 2 — relaxed, leaned back a bit */
+  SCENE_KF.s4_player2 = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:18, armR:22, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:16, armR:24, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-7, hipSway:0, headTilt:1.5, shoulderTwist:0.3 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:20, armR:20, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-9, hipSway:0, headTilt:-0.5, shoulderTwist:-0.3 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:17, armR:23, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0.5, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:18, armR:22, handL:8, handR:-6, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
   /* Scene 4: Player 3 — excitable, reacts to game moments */
@@ -6742,69 +6743,78 @@ if (kWrap) {
     { /* ─── Scene 4: FIFA en casa de Anthonny ───
          Camaraderie, competition, laughter */
       draw: function(cx, W, H, t) {
-        var u = 63 * aS; /* unit = stickman height at scale 1 */
-        var midX = W * 0.5, gY4 = H * 0.78;
+        var pScale = 1.05; /* player stickman scale */
+        var pH = 63 * pScale * aS; /* player height in px */
+        var midX = W * 0.5, gY4 = H * 0.72;
         cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
         cx.lineCap = 'round'; cx.lineJoin = 'round';
 
-        /* TV — about 1.5x stickman height tall, 16:9 ratio */
-        var tvH4 = u * 1.2, tvW4 = tvH4 * 1.6;
-        var tvX = midX - tvW4/2, tvY = gY4 - u*3.5;
+        /* TV — proportional to players, not oversized */
+        var tvH4 = pH * 0.9, tvW4 = tvH4 * 1.6;
+        var tvX = midX - tvW4/2, tvY = gY4 - pH*2.6;
         cx.globalAlpha = 0.45; cx.lineWidth = 2.5;
         cx.strokeRect(tvX, tvY, tvW4, tvH4);
         cx.globalAlpha = 0.04;
         cx.fillRect(tvX, tvY, tvW4, tvH4);
         /* Screen glow */
-        var tvG = cx.createRadialGradient(midX, tvY + tvH4*0.5, 0, midX, tvY + tvH4*0.5, tvW4);
-        tvG.addColorStop(0, 'rgba(240,176,0,0.04)');
+        var tvG = cx.createRadialGradient(midX, tvY + tvH4*0.5, 0, midX, tvY + tvH4*0.5, tvW4*0.8);
+        tvG.addColorStop(0, 'rgba(240,176,0,0.05)');
         tvG.addColorStop(1, 'rgba(0,0,0,0)');
         cx.fillStyle = tvG; cx.globalAlpha = 0.5;
         cx.fillRect(0, 0, W, H);
-        /* Screen content */
+        /* Screen content — FIFA pitch lines */
         cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
         cx.globalAlpha = 0.15; cx.lineWidth = 1;
         cx.beginPath(); cx.moveTo(tvX + 4, tvY + tvH4*0.5); cx.lineTo(tvX + tvW4 - 4, tvY + tvH4*0.5); cx.stroke();
         cx.beginPath(); cx.arc(midX, tvY + tvH4*0.5, tvH4*0.15, 0, Math.PI*2); cx.stroke();
+        /* Flicker effect */
+        var flicker = 0.03 + Math.sin(t * 3.7) * 0.01 + Math.sin(t * 7.1) * 0.005;
+        cx.globalAlpha = flicker;
+        cx.fillRect(tvX + 2, tvY + 2, tvW4 - 4, tvH4 - 4);
         /* TV stand */
         cx.globalAlpha = 0.35; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(midX, tvY + tvH4); cx.lineTo(midX, tvY + tvH4 + 10*aS); cx.stroke();
-        cx.beginPath(); cx.moveTo(midX - 12*aS, tvY + tvH4 + 10*aS); cx.lineTo(midX + 12*aS, tvY + tvH4 + 10*aS); cx.stroke();
+        cx.beginPath(); cx.moveTo(midX, tvY + tvH4); cx.lineTo(midX, tvY + tvH4 + 8*aS); cx.stroke();
+        cx.beginPath(); cx.moveTo(midX - 10*aS, tvY + tvH4 + 8*aS); cx.lineTo(midX + 10*aS, tvY + tvH4 + 8*aS); cx.stroke();
 
         /* Floor */
         cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(W*0.12, gY4); cx.lineTo(W*0.88, gY4); cx.stroke();
+        cx.beginPath(); cx.moveTo(W*0.10, gY4); cx.lineTo(W*0.90, gY4); cx.stroke();
 
-        /* Couch — sized for 4 stickmen */
-        var couchW = u * 4.5, couchH = u * 0.5;
+        /* Couch — proportional to 4 players */
+        var couchW = pH * 4.2, couchH = pH * 0.4;
         var couchX = midX - couchW/2;
-        var seatY4 = gY4 - u * 0.8;
-        cx.globalAlpha = 0.30; cx.lineWidth = 2;
-        /* Seat */
-        cx.beginPath(); cx.moveTo(couchX, seatY4); cx.lineTo(couchX + couchW, seatY4);
-        cx.lineTo(couchX + couchW, seatY4 + 3); cx.lineTo(couchX, seatY4 + 3); cx.closePath(); cx.stroke();
-        cx.globalAlpha = 0.04; cx.fill();
-        /* Back */
-        cx.globalAlpha = 0.25; cx.lineWidth = 1.5;
-        var backY4 = seatY4 - couchH;
-        cx.beginPath(); cx.moveTo(couchX - 2, backY4); cx.lineTo(couchX - 2, seatY4); cx.stroke();
-        cx.beginPath(); cx.moveTo(couchX + couchW + 2, backY4); cx.lineTo(couchX + couchW + 2, seatY4); cx.stroke();
+        var seatY4 = gY4 - pH * 0.45;
+        cx.globalAlpha = 0.28; cx.lineWidth = 2;
+        /* Seat cushion */
+        cx.beginPath();
+        cx.moveTo(couchX, seatY4); cx.lineTo(couchX + couchW, seatY4);
+        cx.lineTo(couchX + couchW, seatY4 + 4); cx.lineTo(couchX, seatY4 + 4);
+        cx.closePath(); cx.stroke();
+        cx.globalAlpha = 0.03; cx.fill();
+        /* Armrests */
+        cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
+        cx.beginPath(); cx.moveTo(couchX - 3, seatY4 - couchH); cx.lineTo(couchX - 3, seatY4 + 4); cx.stroke();
+        cx.beginPath(); cx.moveTo(couchX + couchW + 3, seatY4 - couchH); cx.lineTo(couchX + couchW + 3, seatY4 + 4); cx.stroke();
+        /* Back cushion */
         cx.globalAlpha = 0.03;
-        cx.fillRect(couchX, backY4, couchW, couchH);
+        cx.fillRect(couchX, seatY4 - couchH, couchW, couchH);
         cx.restore();
 
-        /* 4 friends on the couch — keyframed */
+        /* 4 friends on the couch — bigger, with life */
         var spacing = couchW / 5;
+        var hipY4 = seatY4 - 29 * pScale * aS;
+
         var s4P1 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player1, t), 11, 0.06);
-        drawStickman(cx, couchX + spacing, seatY4 - 29*0.85*aS, 0.85, s4P1, '#f0b000', 0.65, 11);
+        drawStickman(cx, couchX + spacing, hipY4, pScale, s4P1, '#f0b000', 0.75, 11);
 
         var s4P2 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player2, t), 12, 0.06);
-        drawStickman(cx, couchX + spacing*2, seatY4 - 29*0.85*aS, 0.85, s4P2, '#f0b000', 0.60, 12);
+        drawStickman(cx, couchX + spacing*2, hipY4, pScale, s4P2, '#f0b000', 0.70, 12);
 
         var s4P3 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player3, t), 13, 0.06);
-        drawStickman(cx, couchX + spacing*3, seatY4 - 29*0.85*aS, 0.85, s4P3, '#f0b000', 0.65, 13);
+        drawStickman(cx, couchX + spacing*3, hipY4, pScale, s4P3, '#f0b000', 0.75, 13);
 
         var s4P4 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player4, t), 14, 0.06);
-        drawStickman(cx, couchX + spacing*4, seatY4 - 29*0.85*aS, 0.85, s4P4, '#f0b000', 0.63, 14);
+        drawStickman(cx, couchX + spacing*4, hipY4, pScale, s4P4, '#f0b000', 0.73, 14);
       }
     },
 
@@ -7160,97 +7170,135 @@ if (kWrap) {
 
       /* ─── Phase 1: Standing together (0 to ACT1_WALK) ─── */
       if (t < T.ACT1_WALK) {
-        /* They stand close, comfortable */
-        var togetherBreath = sn(50, 0.3, 1);
+        /* They stand close — alive, breathing, comfortable presence */
+        var phaseT = t / T.ACT1_WALK;
+        /* Carlos: weight shifts between feet, arms move with thought */
+        var cBreath1 = Math.sin(t * 1.1) * 0.8;
+        var cBreath2 = Math.sin(t * 0.7 + 1.2) * 0.5;
+        var cWeightShift = Math.sin(t * 0.4) * 1.5;
         carlosPose = {
-          armL: -15 + togetherBreath,
-          armR: 25 + sn(51, 0.25, 1.5),  /* arm towards Javier, casual */
-          handL: 6,
-          handR: -8,
-          legL: -6 + sn(52, 0.1, 0.3),
-          legR: 7,
-          shinL: 3, shinR: 3,
-          bodyLean: sn(53, 0.15, 0.5),
-          headTilt: 2 + sn(54, 0.2, 1), /* looking towards Javier */
-          shoulderTwist: sn(55, 0.1, 0.3)
+          armL: -15 + cBreath1 + Math.sin(t * 0.3) * 2,
+          armR: 22 + cBreath2 + Math.sin(t * 0.5 + 0.8) * 3,
+          handL: 6 + Math.sin(t * 0.6) * 1.5,
+          handR: -7 + Math.sin(t * 0.4) * 1,
+          legL: -7 + cWeightShift * 0.3,
+          legR: 8 - cWeightShift * 0.3,
+          shinL: 3 + Math.abs(cWeightShift) * 0.2,
+          shinR: 3 + Math.abs(cWeightShift) * 0.2,
+          bodyLean: cWeightShift * 0.6 + cBreath1 * 0.3,
+          hipSway: cWeightShift * 0.8,
+          headTilt: 2 + Math.sin(t * 0.35 + 0.5) * 1.5,
+          shoulderTwist: Math.sin(t * 0.25) * 0.8
         };
         drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
 
-        /* Javier standing close — idle, alive */
-        var javierIdle = idlePose(60, 0);
-        javierIdle.headTilt = -2 + sn(61, 0.2, 1); /* looking at Carlos */
-        drawStickman(ctx, W*0.55, cY, 1.0, javierIdle, '#dde8e2', 1, 51);
+        /* Javier: mirrored weight shifts, slightly different rhythm */
+        var jBreath1 = Math.sin(t * 1.0 + 2.0) * 0.7;
+        var jBreath2 = Math.sin(t * 0.65 + 0.7) * 0.5;
+        var jWeightShift = Math.sin(t * 0.45 + 1.5) * 1.5;
+        var javierIdlePose = {
+          armL: -18 + jBreath1 + Math.sin(t * 0.35 + 1) * 2,
+          armR: 20 + jBreath2 + Math.sin(t * 0.55 + 2) * 2.5,
+          handL: 5 + Math.sin(t * 0.5 + 1) * 1,
+          handR: -6 + Math.sin(t * 0.45 + 1.5) * 1,
+          legL: -6 + jWeightShift * 0.3,
+          legR: 7 - jWeightShift * 0.3,
+          shinL: 3, shinR: 3,
+          bodyLean: jWeightShift * 0.5 + jBreath1 * 0.3,
+          hipSway: jWeightShift * 0.7,
+          headTilt: -2 + Math.sin(t * 0.3 + 1.8) * 1.5,
+          shoulderTwist: Math.sin(t * 0.28 + 1) * 0.7
+        };
+        drawStickman(ctx, W*0.55, cY, 1.0, javierIdlePose, '#dde8e2', 1, 51);
 
       /* ─── Phase 2: The moment of parting (ACT1_WALK to ACT1_WALK+3) ─── */
       } else if (t < T.ACT1_WALK + 3) {
         var partT = (t - T.ACT1_WALK) / 3;
-        var partP = easeInOut(partT);
 
-        /* Carlos — breath catches, arm reaches out with weight */
-        var reachP = easeOutCubic(Math.min(1, partT * 1.5)); /* arm reaches fast, then slows */
-        var frozenP = easeIn(Math.max(0, partT - 0.6) / 0.4); /* body freezes late */
-        var breath = sn(56, 0.4, 0.8) * (1 - frozenP);
+        /* Carlos — disbelief → reaches out → freezes */
+        var shockP = easeOutCubic(Math.min(1, partT * 2.5)); /* fast initial shock */
+        var reachP = easeOutCubic(clamp01((partT - 0.2) / 0.5)); /* arm extends with weight */
+        var frozenP = easeIn(clamp01((partT - 0.7) / 0.3)); /* body freezes at end */
+        var cBreath = Math.sin(t * 1.3) * 0.6 * (1 - frozenP);
+        var cWeight = Math.sin(t * 0.5) * 0.8 * (1 - frozenP);
         carlosPose = {
-          armL: lerp(-15, -10, partP) + breath,
-          armR: lerp(25, 42, reachP),    /* reaches toward Javier with weight */
-          handL: 6,
-          handR: lerp(-8, -18, reachP),
-          legL: -6 + sn(57, 0.1, 0.2), legR: 7,
+          armL: lerp(-15, -8, shockP) + cBreath,
+          armR: lerp(22, 48, reachP),
+          handL: lerp(6, 4, shockP),
+          handR: lerp(-7, -20, reachP),
+          legL: lerp(-7, -5, shockP) + cWeight * 0.2,
+          legR: lerp(8, 10, reachP),
           shinL: 3, shinR: 3,
-          bodyLean: lerp(0, 4, reachP) - frozenP * 1,  /* leans forward then catches */
-          headTilt: lerp(2, 5, partP) + sn(58, 0.15, 0.3),  /* head follows Javier smoothly */
-          shoulderTwist: lerp(0, 3, reachP)
+          bodyLean: lerp(0, 5, reachP) * (1 - frozenP * 0.3) + cBreath * 0.2,
+          hipSway: cWeight * 0.5,
+          headTilt: lerp(2, 6, easeInOut(partT)) + Math.sin(t * 0.8) * 0.3 * (1 - frozenP),
+          shoulderTwist: lerp(0, 4, reachP)
         };
-        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+        /* Carlos takes a small step forward when reaching */
+        var carlosStep = lerp(0, W*0.02, reachP);
+        drawStickman(ctx, cX + carlosStep, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
 
-        /* Javier — turns away with hesitation, shifting weight */
-        var turnP = easeInOutCubic(partT);
-        var javierBreath = sn(62, 0.3, 0.6);
+        /* Javier — hesitates, turns, takes first heavy steps */
+        var hesitateP = easeInOut(clamp01(partT * 3)); /* quick hesitation at start */
+        var turnP = easeInOutCubic(clamp01((partT - 0.15) / 0.85));
+        var jBreath = Math.sin(t * 1.1 + 2) * 0.5;
         var javierTurnPose = {
-          armL: lerp(-18, -12, turnP) + javierBreath * 0.5,
-          armR: lerp(18, 10, turnP) - javierBreath * 0.3,
-          handL: 5, handR: -5,
-          legL: lerp(-6, -12, turnP),
-          legR: lerp(7, 14, turnP),
-          shinL: 3, shinR: lerp(3, 5, turnP),
-          bodyLean: lerp(0, 4, turnP),
-          headTilt: lerp(-2, -6, turnP) + sn(63, 0.2, 0.5), /* hesitant look */
-          shoulderTwist: lerp(0, -4, turnP)
+          armL: lerp(-18, -10, turnP) + jBreath * 0.4,
+          armR: lerp(20, 8, turnP) - jBreath * 0.3,
+          handL: lerp(5, 3, turnP),
+          handR: lerp(-6, -3, turnP),
+          legL: lerp(-6, -14, turnP),
+          legR: lerp(7, 16, turnP),
+          shinL: lerp(3, 4, turnP),
+          shinR: lerp(3, 6, turnP),
+          bodyLean: lerp(0, 5, turnP),
+          hipSway: lerp(0, -2, turnP),
+          headTilt: lerp(-2, -7, turnP) + Math.sin(t * 0.6 + 3) * (1 - turnP) * 2, /* looks back early */
+          shoulderTwist: lerp(0, -5, turnP)
         };
-        var jStartX = lerp(W*0.55, W*0.59, easeInOut(turnP));
+        var jStartX = lerp(W*0.55, W*0.60, easeInOutCubic(turnP));
         drawStickman(ctx, jStartX, cY, 1.0, javierTurnPose, '#dde8e2', 1, 51);
 
       /* ─── Phase 3: Javier walks away (ACT1_WALK+3 to ACT1_GONE) ─── */
       } else if (t < T.ACT1_GONE) {
         var walkDuration = T.ACT1_GONE - T.ACT1_WALK - 3;
         var walkT = (t - T.ACT1_WALK - 3) / walkDuration;
-        var walkP = easeInOut(walkT);
+        var walkElapsed = t - T.ACT1_WALK - 3;
 
-        /* Carlos — arm drops with gravity, body slumps progressively */
-        var dropP = easeOutCubic(Math.min(1, walkT * 1.8)); /* arm falls with weight */
-        var slumpP = easeInOutCubic(walkT); /* gradual emotional collapse */
-        var carlosBreath = sn(70, 0.25, 0.6) * (1 - slumpP * 0.7);
+        /* Linear position — matches walk speed so no sliding */
+        var jX = W*0.60 + walkT * W*0.30;
+        var jAlpha = walkT < 0.7 ? 1.0 : Math.max(0, 1.0 - (walkT - 0.7) / 0.3);
+
+        /* Sadness ramps with distance — walk slows down as sadness grows */
+        var sadness = easeInOut(clamp01(walkT * 1.2));
+        /* Walk speed slows as sadness increases: 1.1 → 0.65 */
+        var walkSpeed = lerp(1.1, 0.65, sadness);
+        var sadWalkPose = keyframeWalkPose(walkElapsed, walkSpeed, sadness);
+
+        drawStickman(ctx, jX, cY, 1.0, sadWalkPose, '#dde8e2', jAlpha, 51);
+
+        /* Carlos — progressive emotional collapse with LIFE */
+        var dropP = easeOutCubic(clamp01(walkT * 2.0)); /* arm drops in first half */
+        var slumpP = easeInOutCubic(walkT);
+        var cAlive = (1 - slumpP * 0.8); /* life fades as he slumps */
+        var cBreath3 = Math.sin(t * 0.9) * 0.5 * cAlive;
+        var cWeight3 = Math.sin(t * 0.35) * 1.0 * cAlive;
+        /* Subtle sway — standing still but body is heavy */
+        var heavyShift = Math.sin(t * 0.2 + 0.5) * lerp(1, 2.5, slumpP);
         carlosPose = {
-          armL: lerp(-10, -7, slumpP) + carlosBreath,
-          armR: lerp(42, 8, dropP) + carlosBreath * 0.5,  /* arm falls with gravity */
-          handL: 6,
-          handR: lerp(-18, -4, dropP),
-          legL: -6 + sn(72, 0.08, 0.15), legR: 7 + sn(73, 0.08, 0.15),
+          armL: lerp(-8, -5, slumpP) + cBreath3 + heavyShift * 0.3,
+          armR: lerp(48, 6, dropP) + cBreath3 * 0.5,
+          handL: lerp(4, 3, slumpP),
+          handR: lerp(-20, -3, dropP),
+          legL: -5 + cWeight3 * 0.2,
+          legR: 10 - cWeight3 * 0.2,
           shinL: 3, shinR: 3,
-          bodyLean: lerp(4, -3, slumpP) + carlosBreath * 0.3,  /* forward lean to slump back */
-          headTilt: lerp(5, 10, slumpP) + sn(74, 0.12, 0.4),   /* head drops gradually */
-          shoulderTwist: lerp(3, 0, slumpP)
+          bodyLean: lerp(5, -4, slumpP) + heavyShift * 0.4,
+          hipSway: heavyShift * 0.6,
+          headTilt: lerp(6, 12, slumpP) + Math.sin(t * 0.15) * lerp(0.5, 1.5, slumpP),
+          shoulderTwist: lerp(4, 0, slumpP) + heavyShift * 0.2
         };
         drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
-
-        /* Javier walking away — sadness builds gradually */
-        var jX = W*0.59 + walkP * W*0.31;
-        var jScale = 1.0;
-        var jAlpha = walkP < 0.7 ? 1.0 : Math.max(0, 1.0 - (walkP - 0.7) / 0.3);
-        var sadness = easeInOut(lerp(0.15, 1.0, walkT)); /* sadness builds smoothly */
-        var sadWalkPose = addMicroNoise(keyframeWalkPose(t, 0.9, sadness), 51, 0.08);
-
-        drawStickman(ctx, jX, cY, jScale, sadWalkPose, '#dde8e2', jAlpha, 51);
 
         /* ─── The Look Back ─── */
         /* At 40% of walk, Javier pauses and looks back briefly */
