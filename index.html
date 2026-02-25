@@ -2917,11 +2917,77 @@
       text-transform: uppercase;
       color: rgba(195,215,205,0.35);
     }
+    .adagio-stop {
+      margin-top: 1.5rem;
+      background: none;
+      border: 1px solid rgba(240,176,0,0.4);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.7rem 2rem;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-height: 44px;
+      display: none;
+    }
+    .adagio-stop:hover {
+      border-color: rgba(240,176,0,0.8);
+      box-shadow: 0 0 20px rgba(240,176,0,0.2);
+    }
+    .adagio-scenes {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      max-width: 900px;
+      margin: 1.5rem auto 0;
+    }
+    .adagio-scene-btn {
+      background: none;
+      border: 1px solid rgba(240,176,0,0.2);
+      color: rgba(195,215,205,0.6);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 0.8rem;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .adagio-scene-btn:hover {
+      border-color: rgba(240,176,0,0.6);
+      color: var(--gold);
+    }
+    .adagio-scene-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      box-shadow: 0 0 12px rgba(240,176,0,0.15);
+    }
+    .adagio-scene-btn .scene-name {
+      display: block;
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .adagio-scene-btn .scene-desc {
+      display: block;
+      font-size: 0.6rem;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
 
     @media (max-width: 600px) {
       .adagio-section { padding: 3rem 1rem 2rem; }
       .adagio-stage { aspect-ratio: 4 / 3; }
       .adagio-text { font-size: clamp(0.95rem, 3vw, 1.8rem); width: 90%; bottom: 10%; }
+      .adagio-scenes { gap: 0.4rem; }
+      .adagio-scene-btn { padding: 0.35rem 0.6rem; font-size: 0.6rem; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -3330,8 +3396,48 @@
   </div>
 
   <button class="adagio-play" id="adagio-play" aria-label="Reproducir escena">Reproducir</button>
+  <button class="adagio-stop" id="adagio-stop" aria-label="Detener reproducción">Detener</button>
   <span class="adagio-hint">🔊 activa el sonido</span>
   <audio id="adagio-audio" src="adagio.mp3" preload="auto"></audio>
+
+  <div class="adagio-scenes" id="adagio-scenes">
+    <button class="adagio-scene-btn" data-time="0">
+      <span class="scene-name">Intro</span>
+      <span class="scene-desc">La despedida</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="45">
+      <span class="scene-name">Escena 1</span>
+      <span class="scene-desc">Fútbol de niños</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="58">
+      <span class="scene-name">Escena 2</span>
+      <span class="scene-desc">Fútbol de adultos</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="72">
+      <span class="scene-name">Escena 3</span>
+      <span class="scene-desc">Pasillo UCAB</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="85">
+      <span class="scene-name">Escena 4</span>
+      <span class="scene-desc">Teatro: Hércules</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="95">
+      <span class="scene-name">Escena 5</span>
+      <span class="scene-desc">FIFA en casa</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="105">
+      <span class="scene-name">Escena 6</span>
+      <span class="scene-desc">El Optra</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="114">
+      <span class="scene-name">Escena 7</span>
+      <span class="scene-desc">Fortnite</span>
+    </button>
+    <button class="adagio-scene-btn" data-time="122">
+      <span class="scene-name">Final</span>
+      <span class="scene-desc">Todo eso fuiste</span>
+    </button>
+  </div>
 </div>
 
 <div class="divider"><div class="dl"></div><div class="gem"></div><div class="dl"></div></div>
@@ -5264,11 +5370,14 @@ if (kWrap) {
   var ctx = canvas ? canvas.getContext('2d') : null;
   var audio = document.getElementById('adagio-audio');
   var playBtn = document.getElementById('adagio-play');
+  var stopBtn = document.getElementById('adagio-stop');
   var textEl = document.getElementById('adagio-text');
+  var sceneBtns = document.querySelectorAll('.adagio-scene-btn');
   if (!canvas || !ctx || !playBtn) return;
 
   var dpr = window.devicePixelRatio || 1;
   var animId = null;
+  var isPlaying = false;
   var residues = [];
   var gt = 0;
   var prevTime = 0;
@@ -6232,9 +6341,9 @@ if (kWrap) {
           cx.stroke();
         }
 
-        /* Soccer ball — bouncing with physics */
+        /* Soccer ball — bouncing with physics, travels from Carlos toward goal */
         var ballBounce = Math.abs(Math.sin(t * 2.5)) * 12;
-        var ballX = W*0.55 + sn(10, 0.6, 6);
+        var ballX = W*0.72 + sn(10, 0.6, 6);
         var ballY = gY - 8*aS - ballBounce;
         cx.restore();
         /* Ball shadow */
@@ -6303,9 +6412,9 @@ if (kWrap) {
           cx.stroke();
         }
 
-        /* Soccer ball in air after kick */
+        /* Soccer ball in air after kick — heading toward goal */
         var ballArc = Math.sin(t * 1.8) * 15;
-        var bx2 = W*0.60 + sn(11, 0.4, 5);
+        var bx2 = W*0.72 + sn(11, 0.4, 5);
         var by2 = gY1 - 12*aS - Math.abs(ballArc);
         cx.restore();
         /* Ball shadow on ground */
@@ -6845,7 +6954,7 @@ if (kWrap) {
     MEM5_IN: 95, MEM5_OUT: 103,
     MEM6_IN: 105, MEM6_OUT: 112,
     MEM7_IN: 114, MEM7_OUT: 120,
-    CODA_START: 122, CODA_CARLOS: 162,
+    CODA_START: 122, CODA_CARLOS: 144,
     CODA_TEXT1: 126, CODA_TEXT2: 135, CODA_TEXT3: 144,
     END: 200
   };
@@ -7158,13 +7267,16 @@ if (kWrap) {
     }
 
     ctx.restore();
+    updateActiveScene(t);
   }
 
   /* ═══════════════════════════════════════
-     PLAY BUTTON HANDLER
+     PLAYBACK CONTROLS
   ═══════════════════════════════════════ */
-  playBtn.addEventListener('click', function() {
+
+  function startPlayback(startTime) {
     playBtn.style.display = 'none';
+    if (stopBtn) stopBtn.style.display = '';
     var hint = playBtn.parentElement.querySelector('.adagio-hint');
     if (hint) hint.style.display = 'none';
     resizeCanvas();
@@ -7183,7 +7295,7 @@ if (kWrap) {
     if (tessAudio) { try { tessAudio.pause(); } catch(e) {} }
 
     if (audio) {
-      audio.currentTime = 0;
+      audio.currentTime = startTime || 0;
       audio.volume = 0;
       audio.play().then(function() {
         var fi = setInterval(function() {
@@ -7193,8 +7305,67 @@ if (kWrap) {
       }).catch(function() {});
     }
 
-    prevTime = 0;
+    prevTime = startTime || 0;
+    isPlaying = true;
+    if (animId) cancelAnimationFrame(animId);
     animate();
+  }
+
+  function stopPlayback() {
+    if (animId) { cancelAnimationFrame(animId); animId = null; }
+    if (audio) { try { audio.pause(); } catch(e) {} }
+    isPlaying = false;
+    playBtn.style.display = '';
+    if (stopBtn) stopBtn.style.display = 'none';
+    if (textEl) { textEl.classList.remove('visible'); textEl.textContent = ''; }
+    sceneBtns.forEach(function(btn) { btn.classList.remove('active'); });
+  }
+
+  function updateActiveScene(t) {
+    var sceneRanges = [
+      {start:0, end:45},
+      {start:45, end:55},
+      {start:58, end:68},
+      {start:72, end:82},
+      {start:85, end:93},
+      {start:95, end:103},
+      {start:105, end:112},
+      {start:114, end:120},
+      {start:122, end:200}
+    ];
+    sceneBtns.forEach(function(btn, i) {
+      var r = sceneRanges[i];
+      if (r && t >= r.start && t < r.end) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  playBtn.addEventListener('click', function() {
+    startPlayback(0);
+  });
+
+  if (stopBtn) {
+    stopBtn.addEventListener('click', function() {
+      stopPlayback();
+    });
+  }
+
+  sceneBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var time = parseFloat(btn.getAttribute('data-time')) || 0;
+      if (isPlaying) {
+        /* Jump to scene time while playing */
+        if (audio) audio.currentTime = time;
+        prevTime = time;
+        sceneTimings.forEach(function(st) { st.done = false; });
+        if (textEl) { textEl.classList.remove('visible'); textEl.textContent = ''; }
+      } else {
+        startPlayback(time);
+      }
+    });
   });
 
   /* ═══════════════════════════════════════
