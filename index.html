@@ -7302,18 +7302,16 @@ if (kWrap) {
 
         /* ─── The Look Back ─── */
         /* At 40% of walk, Javier pauses and looks back briefly */
-        if (walkP > 0.35 && walkP < 0.50) {
-          var lookBackP = (walkP - 0.35) / 0.15;
+        if (walkT > 0.35 && walkT < 0.50) {
+          var lookBackP = (walkT - 0.35) / 0.15;
           var lookIntensity = Math.sin(lookBackP * Math.PI); /* peaks at center */
-          /* Override head tilt for the look-back */
           ctx.save();
-          /* Draw a brief connection line between them */
           ctx.strokeStyle = '#f0b000';
           ctx.globalAlpha = lookIntensity * 0.04;
           ctx.lineWidth = 0.5;
           ctx.setLineDash([2, 6]);
           ctx.beginPath();
-          ctx.moveTo(jX, cY - 30 * jScale);
+          ctx.moveTo(jX, cY - 30);
           ctx.lineTo(cX, cY - 30);
           ctx.stroke();
           ctx.setLineDash([]);
