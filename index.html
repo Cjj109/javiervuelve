@@ -2873,19 +2873,34 @@
     }
     .adagio-text {
       position: absolute;
-      bottom: 15%;
+      bottom: 12%;
       left: 50%; transform: translateX(-50%);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: clamp(1.1rem, 3vw, 1.8rem);
-      color: var(--gold);
-      text-shadow: 0 0 20px rgba(240,176,0,0.3);
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(1.1rem, 3vw, 2rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      line-height: 1.5;
+      color: #fff;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.6), 0 0 80px rgba(0,0,0,0.3);
       opacity: 0;
-      transition: opacity 1s ease;
+      transform: translateX(-50%) translateY(20px);
+      filter: blur(8px);
       text-align: center;
-      width: 80%;
+      width: 85%;
       pointer-events: none;
     }
-    .adagio-text.visible { opacity: 1; }
+    @keyframes textReveal {
+      0% { opacity: 0; transform: translateX(-50%) translateY(20px); filter: blur(8px); }
+      100% { opacity: 1; transform: translateX(-50%) translateY(0); filter: blur(0); }
+    }
+    .adagio-text.phrase1,
+    .adagio-text.phrase2,
+    .adagio-text.phrase3 {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      filter: blur(0);
+      animation: textReveal 2.5s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+    }
     .adagio-play {
       margin-top: 1.5rem;
       background: none;
@@ -2959,11 +2974,9 @@
       text-align: center;
       line-height: 1.4;
     }
-    @media (hover: hover) {
-      .adagio-scene-btn:hover {
-        border-color: rgba(240,176,0,0.6);
-        color: var(--gold);
-      }
+    .adagio-scene-btn:hover {
+      border-color: rgba(240,176,0,0.6);
+      color: var(--gold);
     }
     .adagio-scene-btn.active {
       border-color: var(--gold);
@@ -3407,35 +3420,35 @@
       <span class="scene-name">Intro</span>
       <span class="scene-desc">La despedida</span>
     </button>
-    <button class="adagio-scene-btn" data-time="45">
+    <button class="adagio-scene-btn" data-time="38">
       <span class="scene-name">Escena 1</span>
-      <span class="scene-desc">Fútbol de niños</span>
+      <span class="scene-desc">Futbol de ninos</span>
     </button>
-    <button class="adagio-scene-btn" data-time="58">
+    <button class="adagio-scene-btn" data-time="45">
       <span class="scene-name">Escena 2</span>
-      <span class="scene-desc">Fútbol de adultos</span>
+      <span class="scene-desc">Futbol de adultos</span>
     </button>
-    <button class="adagio-scene-btn" data-time="72">
+    <button class="adagio-scene-btn" data-time="52">
       <span class="scene-name">Escena 3</span>
       <span class="scene-desc">Pasillo UCAB</span>
     </button>
-    <button class="adagio-scene-btn" data-time="85">
+    <button class="adagio-scene-btn" data-time="59">
       <span class="scene-name">Escena 4</span>
-      <span class="scene-desc">Teatro: Hércules</span>
+      <span class="scene-desc">Teatro: Hercules</span>
     </button>
-    <button class="adagio-scene-btn" data-time="95">
+    <button class="adagio-scene-btn" data-time="66">
       <span class="scene-name">Escena 5</span>
       <span class="scene-desc">FIFA en casa</span>
     </button>
-    <button class="adagio-scene-btn" data-time="105">
+    <button class="adagio-scene-btn" data-time="73">
       <span class="scene-name">Escena 6</span>
       <span class="scene-desc">El Optra</span>
     </button>
-    <button class="adagio-scene-btn" data-time="114">
+    <button class="adagio-scene-btn" data-time="80">
       <span class="scene-name">Escena 7</span>
       <span class="scene-desc">Fortnite</span>
     </button>
-    <button class="adagio-scene-btn" data-time="122">
+    <button class="adagio-scene-btn" data-time="90">
       <span class="scene-name">Final</span>
       <span class="scene-desc">Todo eso fuiste</span>
     </button>
@@ -5401,6 +5414,46 @@ if (kWrap) {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   /* ═══════════════════════════════════════
+     IMAGE PRELOADING — scene images
+  ═══════════════════════════════════════ */
+  var sceneImages = {};
+  function preloadImg(key, src) {
+    var img = new Image();
+    img.src = src;
+    sceneImages[key] = img;
+  }
+  /* Act 1: Despedida */
+  preloadImg('act1_call', 'tomas/toma1.png');
+  preloadImg('act1_walk', 'tomas/toma2.png');
+  preloadImg('act1_alone', 'tomas/toma3.png');
+  preloadImg('act1_recuerdos', 'tomas/recuerdods.png');
+  /* Memories */
+  preloadImg('futbol_ninos', 'tomas/futbotninos.png');
+  preloadImg('futbol_adultos', 'tomas/futboladultos.png');
+  preloadImg('ucab', 'tomas/ucab.png');
+  preloadImg('optra', 'tomas/optra.png');
+  preloadImg('teatro', 'tomas/teatro.png');
+  preloadImg('fifa', 'tomas/fifa.png');
+  preloadImg('fornite', 'tomas/fornite.png');
+  /* Coda / Final */
+  preloadImg('coda_sin', 'tomas/sinlagrimas.png');
+  preloadImg('coda_con', 'tomas/conlagrimas.png');
+  preloadImg('coda_charco_persona', 'tomas/llorandocharco.png');
+
+  /* Draw image covering canvas (object-fit: cover) */
+  function drawImageCover(cx, img, W, H, alpha) {
+    if (!img || !img.complete || !img.naturalWidth) return;
+    cx.save();
+    cx.globalAlpha = alpha;
+    var iw = img.naturalWidth, ih = img.naturalHeight;
+    var scale = Math.max(W / iw, H / ih);
+    var sw = W / scale, sh = H / scale;
+    var sx = (iw - sw) / 2, sy = (ih - sh) / 2;
+    cx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+    cx.restore();
+  }
+
+  /* ═══════════════════════════════════════
      UTILITIES
   ═══════════════════════════════════════ */
 
@@ -5506,50 +5559,41 @@ if (kWrap) {
 
   /* ─── Walk Cycle Keyframes ─── */
   var WALK_NORMAL = {
-    loop: true, duration: 1.0,
+    loop: true, duration: 0.8,
     keyframes: [
-      /* Right heel strike — arm swing opposes legs naturally */
-      { t:0.0,   ease:'easeInOut', pose:{ armL:-35, armR:35, handL:10, handR:-10, legL:-22, legR:18, shinL:4, shinR:7, bodyLean:3, hipSway:-2, headTilt:0, shoulderTwist:3 }},
-      /* Right foot flat — weight transfers smoothly */
-      { t:0.10,  ease:'easeOut',   pose:{ armL:-28, armR:28, handL:8, handR:-8, legL:-16, legR:10, shinL:6, shinR:4, bodyLean:4, hipSway:-2.5, headTilt:0.5, shoulderTwist:2 }},
-      /* Mid-stance right — single leg support, subtle hip drop */
-      { t:0.22,  ease:'easeInOut', pose:{ armL:-12, armR:12, handL:5, handR:-5, legL:-6, legR:-2, shinL:3, shinR:15, bodyLean:3, hipSway:-1, headTilt:0, shoulderTwist:0 }},
-      /* Right push-off — propelling forward */
-      { t:0.35,  ease:'easeIn',    pose:{ armL:5, armR:-5, handL:3, handR:-3, legL:3, legR:-15, shinL:3, shinR:12, bodyLean:2, hipSway:0.5, headTilt:-0.3, shoulderTwist:-1.5 }},
-      /* Left heel strike — mirror of first frame */
-      { t:0.50,  ease:'easeInOut', pose:{ armL:35, armR:-35, handL:-10, handR:10, legL:18, legR:-22, shinL:7, shinR:4, bodyLean:3, hipSway:2, headTilt:0, shoulderTwist:-3 }},
-      /* Left foot flat */
-      { t:0.60,  ease:'easeOut',   pose:{ armL:28, armR:-28, handL:-8, handR:8, legL:10, legR:-16, shinL:4, shinR:6, bodyLean:4, hipSway:2.5, headTilt:-0.5, shoulderTwist:-2 }},
-      /* Mid-stance left */
-      { t:0.72,  ease:'easeInOut', pose:{ armL:12, armR:-12, handL:-5, handR:5, legL:-2, legR:-6, shinL:15, shinR:3, bodyLean:3, hipSway:1, headTilt:0, shoulderTwist:0 }},
-      /* Left push-off */
-      { t:0.85,  ease:'easeIn',    pose:{ armL:-5, armR:5, handL:-3, handR:3, legL:-15, legR:3, shinL:12, shinR:3, bodyLean:2, hipSway:-0.5, headTilt:0.3, shoulderTwist:1.5 }},
-      /* Loop back to right heel strike */
-      { t:1.0,   ease:'easeInOut', pose:{ armL:-35, armR:35, handL:10, handR:-10, legL:-22, legR:18, shinL:4, shinR:7, bodyLean:3, hipSway:-2, headTilt:0, shoulderTwist:3 }}
+      { t:0.0,  ease:'easeInOut', pose:{ armL:-40, armR:40, handL:12, handR:-12, legL:-25, legR:20, shinL:5, shinR:8, bodyLean:4, hipSway:-2, headTilt:0, shoulderTwist:4 }},
+      { t:0.15, ease:'easeOut',   pose:{ armL:-35, armR:35, handL:10, handR:-10, legL:-18, legR:12, shinL:8, shinR:5, bodyLean:5, hipSway:-3, headTilt:1, shoulderTwist:3 }},
+      { t:0.30, ease:'easeInOut', pose:{ armL:-15, armR:15, handL:6,  handR:-6,  legL:-8,  legR:-5, shinL:4, shinR:18, bodyLean:3, hipSway:0, headTilt:0, shoulderTwist:0 }},
+      { t:0.42, ease:'easeIn',    pose:{ armL:5,   armR:-5, handL:4,  handR:-4,  legL:2,   legR:-18, shinL:3, shinR:14, bodyLean:2, hipSway:1, headTilt:-0.5, shoulderTwist:-2 }},
+      { t:0.50, ease:'easeInOut', pose:{ armL:40,  armR:-40, handL:-12, handR:12, legL:20, legR:-25, shinL:8, shinR:5, bodyLean:4, hipSway:2, headTilt:0, shoulderTwist:-4 }},
+      { t:0.65, ease:'easeOut',   pose:{ armL:35,  armR:-35, handL:-10, handR:10, legL:12, legR:-18, shinL:5, shinR:8, bodyLean:5, hipSway:3, headTilt:-1, shoulderTwist:-3 }},
+      { t:0.80, ease:'easeInOut', pose:{ armL:15,  armR:-15, handL:-6, handR:6, legL:-5, legR:-8, shinL:18, shinR:4, bodyLean:3, hipSway:0, headTilt:0, shoulderTwist:0 }},
+      { t:0.92, ease:'easeIn',    pose:{ armL:-5,  armR:5, handL:-4, handR:4, legL:-18, legR:2, shinL:14, shinR:3, bodyLean:2, hipSway:-1, headTilt:0.5, shoulderTwist:2 }},
+      { t:1.0,  ease:'easeInOut', pose:{ armL:-40, armR:40, handL:12, handR:-12, legL:-25, legR:20, shinL:5, shinR:8, bodyLean:4, hipSway:-2, headTilt:0, shoulderTwist:4 }}
     ]
   };
 
   var WALK_SAD = {
-    loop: true, duration: 1.6,
+    loop: true, duration: 1.4,
     keyframes: [
-      /* Right heel — heavy, reluctant landing */
-      { t:0.0,   ease:'easeInOut', pose:{ armL:-16, armR:12, handL:6, handR:-4, legL:-18, legR:15, shinL:3, shinR:6, bodyLean:8, hipSway:-2, headTilt:10, shoulderTwist:2 }},
-      /* Right foot absorbs — sinking feeling */
-      { t:0.12,  ease:'easeOut',   pose:{ armL:-14, armR:10, handL:5, handR:-3, legL:-14, legR:8, shinL:4, shinR:3, bodyLean:9, hipSway:-3, headTilt:12, shoulderTwist:1.5 }},
-      /* Mid-stance — body heavy, arms limp */
-      { t:0.28,  ease:'easeInOut', pose:{ armL:-6, armR:4, handL:3, handR:-2, legL:-5, legR:-3, shinL:3, shinR:14, bodyLean:7, hipSway:-1, headTilt:13, shoulderTwist:0 }},
-      /* Push-off — reluctant, no energy */
-      { t:0.40,  ease:'easeIn',    pose:{ armL:4, armR:-5, handL:2, handR:-2, legL:6, legR:-12, shinL:3, shinR:10, bodyLean:6, hipSway:0.5, headTilt:11, shoulderTwist:-0.8 }},
-      /* Left heel — mirror, equally heavy */
-      { t:0.50,  ease:'easeInOut', pose:{ armL:12, armR:-16, handL:-4, handR:6, legL:15, legR:-18, shinL:6, shinR:3, bodyLean:8, hipSway:2, headTilt:10, shoulderTwist:-2 }},
-      /* Left absorbs */
-      { t:0.62,  ease:'easeOut',   pose:{ armL:10, armR:-14, handL:-3, handR:5, legL:8, legR:-14, shinL:3, shinR:4, bodyLean:9, hipSway:3, headTilt:12, shoulderTwist:-1.5 }},
-      /* Mid-stance left */
-      { t:0.78,  ease:'easeInOut', pose:{ armL:4, armR:-6, handL:-2, handR:3, legL:-3, legR:-5, shinL:14, shinR:3, bodyLean:7, hipSway:1, headTilt:13, shoulderTwist:0 }},
-      /* Left push-off */
-      { t:0.90,  ease:'easeIn',    pose:{ armL:-5, armR:4, handL:-2, handR:2, legL:-12, legR:6, shinL:10, shinR:3, bodyLean:6, hipSway:-0.5, headTilt:11, shoulderTwist:0.8 }},
+      /* Right foot contact — weight lands heavy */
+      { t:0.0,  ease:'easeInOut', pose:{ armL:-20, armR:16, handL:8, handR:-5, legL:-22, legR:18, shinL:3, shinR:8, bodyLean:9, hipSway:-3, headTilt:10, shoulderTwist:3 }},
+      /* Right foot down — sinking into step */
+      { t:0.10, ease:'easeOut',   pose:{ armL:-18, armR:14, handL:7, handR:-4, legL:-18, legR:10, shinL:5, shinR:4, bodyLean:10, hipSway:-4, headTilt:12, shoulderTwist:2 }},
+      /* Left leg passing — dragging */
+      { t:0.25, ease:'easeInOut', pose:{ armL:-8, armR:5, handL:4, handR:-3, legL:-6, legR:-4, shinL:3, shinR:18, bodyLean:8, hipSway:-1, headTilt:14, shoulderTwist:0 }},
+      /* Left leg reaching — hesitant */
+      { t:0.40, ease:'easeIn',    pose:{ armL:5, armR:-6, handL:2, handR:-2, legL:8, legR:-14, shinL:3, shinR:12, bodyLean:7, hipSway:1, headTilt:11, shoulderTwist:-1 }},
+      /* Left foot contact — mirror */
+      { t:0.50, ease:'easeInOut', pose:{ armL:16, armR:-20, handL:-5, handR:8, legL:18, legR:-22, shinL:8, shinR:3, bodyLean:9, hipSway:3, headTilt:10, shoulderTwist:-3 }},
+      /* Left foot down — sinking */
+      { t:0.60, ease:'easeOut',   pose:{ armL:14, armR:-18, handL:-4, handR:7, legL:10, legR:-18, shinL:4, shinR:5, bodyLean:10, hipSway:4, headTilt:12, shoulderTwist:-2 }},
+      /* Right leg passing — drag */
+      { t:0.75, ease:'easeInOut', pose:{ armL:5, armR:-8, handL:-3, handR:4, legL:-4, legR:-6, shinL:18, shinR:3, bodyLean:8, hipSway:1, headTilt:14, shoulderTwist:0 }},
+      /* Right leg reaching */
+      { t:0.90, ease:'easeIn',    pose:{ armL:-6, armR:5, handL:-2, handR:2, legL:-14, legR:8, shinL:12, shinR:3, bodyLean:7, hipSway:-1, headTilt:11, shoulderTwist:1 }},
       /* Loop */
-      { t:1.0,   ease:'easeInOut', pose:{ armL:-16, armR:12, handL:6, handR:-4, legL:-18, legR:15, shinL:3, shinR:6, bodyLean:8, hipSway:-2, headTilt:10, shoulderTwist:2 }}
+      { t:1.0,  ease:'easeInOut', pose:{ armL:-20, armR:16, handL:8, handR:-5, legL:-22, legR:18, shinL:3, shinR:8, bodyLean:9, hipSway:-3, headTilt:10, shoulderTwist:3 }}
     ]
   };
 
@@ -5665,103 +5709,58 @@ if (kWrap) {
     { t:1.0,  ease:'easeInOut', pose:{ armL:-5, armR:8, handL:5, handR:-5, legL:-7, legR:7, shinL:3, shinR:3, bodyLean:-5, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 1 — focused, leaning in, controller in hands */
-  /* ═══ SEATED POSE GUIDE ═══
-     legL/R ~75 = thighs go forward (horizontal)
-     shinL/R ~-70 = shins hang down from knee
-     bodyLean ~-10 = torso leans back into seat
-     arms forward ~40-50 = holding controller/keyboard */
-
-  /* Scene 4: Player 1 (Carlos) — intense, leaned forward, mashing buttons */
-  SCENE_KF.s4_player1 = { loop:true, duration:3.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:42, armR:45, handL:18, handR:-15, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }},
-    { t:0.20, ease:'easeOut',   pose:{ armL:38, armR:48, handL:22, handR:-12, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-4, hipSway:-1, headTilt:-5, shoulderTwist:2 }},
-    { t:0.50, ease:'easeInOut', pose:{ armL:45, armR:42, handL:15, handR:-20, legL:76, legR:77, shinL:-70, shinR:-70, bodyLean:-7, hipSway:1, headTilt:-2, shoulderTwist:-1.5 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:40, armR:46, handL:20, handR:-14, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-5, hipSway:0.5, headTilt:-4, shoulderTwist:1 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:42, armR:45, handL:18, handR:-15, legL:75, legR:78, shinL:-68, shinR:-72, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  /* Scene 4: Player 1 — intense gamer */
+  SCENE_KF.s4_player1 = { loop:true, duration:2.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:22, armR:30, handL:15, handR:-8, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-6, hipSway:-1, headTilt:-4, shoulderTwist:1 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:35, handL:10, handR:-12, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:-1 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:26, armR:28, handL:14, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-7, hipSway:1, headTilt:-3, shoulderTwist:1 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:33, handL:12, handR:-10, legL:25, legR:30, shinL:-10, shinR:-8, bodyLean:-8, hipSway:0, headTilt:-3, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 2 — relaxed, leaned back into couch, legs spread */
-  SCENE_KF.s4_player2 = { loop:true, duration:4.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:38, armR:40, handL:15, handR:-12, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.30, ease:'easeOut',   pose:{ armL:35, armR:43, handL:18, handR:-10, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-12, hipSway:0, headTilt:2, shoulderTwist:1 }},
-    { t:0.60, ease:'easeInOut', pose:{ armL:40, armR:38, handL:13, handR:-15, legL:82, legR:83, shinL:-74, shinR:-76, bodyLean:-15, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
-    { t:0.85, ease:'easeOut',   pose:{ armL:37, armR:41, handL:16, handR:-13, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-13, hipSway:0, headTilt:1, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:38, armR:40, handL:15, handR:-12, legL:80, legR:85, shinL:-72, shinR:-78, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 4: Player 2 — relaxed */
+  SCENE_KF.s4_player2 = { loop:true, duration:3.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.35, ease:'easeOut',   pose:{ armL:20, armR:27, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:2, shoulderTwist:0.5 }},
+    { t:0.65, ease:'easeInOut', pose:{ armL:24, armR:23, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:22, armR:25, handL:10, handR:-8, legL:35, legR:40, shinL:-18, shinR:-15, bodyLean:-16, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 3 — excitable, celebrates a goal mid-game */
-  SCENE_KF.s4_player3 = { loop:true, duration:5.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:40, armR:43, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:0 }},
-    { t:0.20, ease:'easeInOut', pose:{ armL:38, armR:41, handL:18, handR:-16, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-8, hipSway:-1, headTilt:-2, shoulderTwist:1 }},
-    { t:0.38, ease:'easeOut',   pose:{ armL:44, armR:46, handL:14, handR:-12, legL:77, legR:79, shinL:-71, shinR:-73, bodyLean:-6, hipSway:0, headTilt:-3, shoulderTwist:0 }},
-    { t:0.48, ease:'easeOutCubic', pose:{ armL:-40, armR:-35, handL:-15, handR:12, legL:72, legR:74, shinL:-64, shinR:-66, bodyLean:2, hipSway:0, headTilt:-6, shoulderTwist:0 }},
-    { t:0.60, ease:'easeInOut', pose:{ armL:-25, armR:-20, handL:-8, handR:8, legL:74, legR:76, shinL:-66, shinR:-68, bodyLean:-2, hipSway:0, headTilt:-4, shoulderTwist:0 }},
-    { t:0.75, ease:'easeInOut', pose:{ armL:36, armR:40, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:40, armR:43, handL:16, handR:-14, legL:76, legR:80, shinL:-70, shinR:-74, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:0 }}
+  /* Scene 4: Player 3 — excitable with goal celebration */
+  SCENE_KF.s4_player3 = { loop:true, duration:4.0, keyframes:[
+    { t:0.0,  ease:'easeInOut',    pose:{ armL:30, armR:25, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-6, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.35, ease:'easeOut',      pose:{ armL:28, armR:23, handL:10, handR:-10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-8, hipSway:0, headTilt:-2, shoulderTwist:1 }},
+    { t:0.50, ease:'easeOutElastic', pose:{ armL:-60, armR:-55, handL:-15, handR:15, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:3, hipSway:0, headTilt:-5, shoulderTwist:0 }},
+    { t:0.70, ease:'easeInOut',    pose:{ armL:-40, armR:-35, handL:-10, handR:10, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:0, hipSway:0, headTilt:-3, shoulderTwist:0 }},
+    { t:0.85, ease:'easeInOut',    pose:{ armL:28, armR:23, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-5, hipSway:0, headTilt:-1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut',    pose:{ armL:30, armR:25, handL:8, handR:-8, legL:28, legR:32, shinL:-12, shinR:-10, bodyLean:-6, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
-  /* Scene 4: Player 4 — focused gamer, slight body sway with game tension */
-  SCENE_KF.s4_player4 = { loop:true, duration:4.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:43, armR:46, handL:17, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-11, hipSway:0, headTilt:-2, shoulderTwist:0 }},
-    { t:0.25, ease:'easeOut',   pose:{ armL:40, armR:44, handL:20, handR:-13, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-9, hipSway:-1.5, headTilt:-4, shoulderTwist:2 }},
-    { t:0.55, ease:'easeInOut', pose:{ armL:46, armR:48, handL:14, handR:-18, legL:79, legR:81, shinL:-73, shinR:-75, bodyLean:-12, hipSway:1, headTilt:-1, shoulderTwist:-1.5 }},
-    { t:0.80, ease:'easeOut',   pose:{ armL:42, armR:45, handL:18, handR:-15, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-10, hipSway:0, headTilt:-3, shoulderTwist:0.5 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:43, armR:46, handL:17, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-11, hipSway:0, headTilt:-2, shoulderTwist:0 }}
+  /* Scene 4: Player 4 — button masher */
+  SCENE_KF.s4_player4 = { loop:true, duration:2.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:24, armR:-40, handL:10, handR:18, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:28, armR:-36, handL:12, handR:16, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-3, shoulderTwist:1 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:22, armR:-44, handL:10, handR:20, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-1, shoulderTwist:-1 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:26, armR:-38, handL:11, handR:17, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:24, armR:-40, handL:10, handR:18, legL:33, legR:38, shinL:-15, shinR:-12, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }}
   ]};
 
-  /* Scene 6: Carlos gaming at PC — hunched forward, intense, keyboard warrior */
-  SCENE_KF.s6_carlos = { loop:true, duration:2.8, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:50, armR:55, handL:20, handR:-18, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-4, hipSway:0, headTilt:-3, shoulderTwist:0 }},
-    { t:0.25, ease:'easeOut',   pose:{ armL:46, armR:58, handL:24, handR:-15, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-2, hipSway:-1.5, headTilt:-5, shoulderTwist:3 }},
-    { t:0.50, ease:'easeInOut', pose:{ armL:53, armR:52, handL:18, handR:-22, legL:79, legR:81, shinL:-73, shinR:-75, bodyLean:-5, hipSway:1, headTilt:-2, shoulderTwist:-2 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:48, armR:56, handL:22, handR:-16, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-3, hipSway:0, headTilt:-4, shoulderTwist:1.5 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:50, armR:55, handL:20, handR:-18, legL:78, legR:82, shinL:-72, shinR:-76, bodyLean:-4, hipSway:0, headTilt:-3, shoulderTwist:0 }}
+  /* Scene 6: Carlos gaming */
+  SCENE_KF.s6_carlos = { loop:true, duration:2.5, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }},
+    { t:0.30, ease:'easeOut',   pose:{ armL:25, armR:29, handL:16, handR:-12, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-8, hipSway:-1, headTilt:-3, shoulderTwist:1.5 }},
+    { t:0.55, ease:'easeInOut', pose:{ armL:30, armR:33, handL:12, handR:-16, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-12, hipSway:1, headTilt:-1, shoulderTwist:-1 }},
+    { t:0.80, ease:'easeOut',   pose:{ armL:27, armR:30, handL:15, handR:-13, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-9, hipSway:0, headTilt:-2, shoulderTwist:0.5 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:28, armR:31, handL:14, handR:-14, legL:28, legR:33, shinL:-10, shinR:-8, bodyLean:-10, hipSway:0, headTilt:-2, shoulderTwist:0 }}
   ]};
 
-  /* Scene 6: Javier gaming at PC — more relaxed, leaned back in chair */
-  SCENE_KF.s6_javier = { loop:true, duration:3.2, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:48, armR:50, handL:18, handR:-16, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-12, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.25, ease:'easeOut',   pose:{ armL:44, armR:53, handL:22, handR:-13, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-10, hipSway:-1, headTilt:2, shoulderTwist:1.5 }},
-    { t:0.50, ease:'easeInOut', pose:{ armL:50, armR:48, handL:16, handR:-20, legL:83, legR:85, shinL:-78, shinR:-78, bodyLean:-13, hipSway:1, headTilt:-1, shoulderTwist:-1 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:46, armR:51, handL:20, handR:-15, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-11, hipSway:0, headTilt:1, shoulderTwist:0.5 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:48, armR:50, handL:18, handR:-16, legL:82, legR:86, shinL:-76, shinR:-80, bodyLean:-12, hipSway:0, headTilt:0, shoulderTwist:0 }}
-  ]};
-
-  /* Mirror a pose horizontally — flips kick direction */
-  function mirrorPose(p) {
-    return {
-      armL: -p.armR, armR: -p.armL,
-      handL: -p.handR, handR: -p.handL,
-      legL: -p.legR, legR: -p.legL,
-      shinL: p.shinR, shinR: p.shinL,
-      bodyLean: -p.bodyLean,
-      hipSway: -(p.hipSway || 0),
-      headTilt: -p.headTilt,
-      shoulderTwist: -(p.shoulderTwist || 0)
-    };
-  }
-
-  /* Goalkeeper — ready stance, shifting weight, occasional dive */
-  SCENE_KF.goalkeeper_kid = { loop:true, duration:3.0, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:-45, armR:45, handL:15, handR:-15, legL:-18, legR:18, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.15, ease:'easeOut',   pose:{ armL:-50, armR:40, handL:18, handR:-12, legL:-20, legR:15, shinL:6, shinR:4, bodyLean:-3, hipSway:-2, headTilt:-2, shoulderTwist:-1 }},
-    { t:0.30, ease:'easeInOut', pose:{ armL:-45, armR:45, handL:15, handR:-15, legL:-18, legR:18, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.45, ease:'easeOut',   pose:{ armL:-40, armR:50, handL:12, handR:-18, legL:-15, legR:20, shinL:4, shinR:6, bodyLean:3, hipSway:2, headTilt:2, shoulderTwist:1 }},
-    { t:0.60, ease:'easeInOut', pose:{ armL:-45, armR:45, handL:15, handR:-15, legL:-18, legR:18, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.75, ease:'easeOut',   pose:{ armL:-55, armR:35, handL:20, handR:-10, legL:-22, legR:14, shinL:7, shinR:3, bodyLean:-5, hipSway:-3, headTilt:-3, shoulderTwist:-2 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:-45, armR:45, handL:15, handR:-15, legL:-18, legR:18, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }}
-  ]};
-
-  SCENE_KF.goalkeeper_adult = { loop:true, duration:3.5, keyframes:[
-    { t:0.0,  ease:'easeInOut', pose:{ armL:-50, armR:50, handL:18, handR:-18, legL:-20, legR:20, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.12, ease:'easeOut',   pose:{ armL:-55, armR:45, handL:20, handR:-15, legL:-22, legR:17, shinL:6, shinR:4, bodyLean:-4, hipSway:-3, headTilt:-2, shoulderTwist:-2 }},
-    { t:0.28, ease:'easeInOut', pose:{ armL:-50, armR:50, handL:18, handR:-18, legL:-20, legR:20, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.42, ease:'easeOut',   pose:{ armL:-45, armR:55, handL:15, handR:-20, legL:-17, legR:22, shinL:4, shinR:6, bodyLean:4, hipSway:3, headTilt:2, shoulderTwist:2 }},
-    { t:0.58, ease:'easeInOut', pose:{ armL:-50, armR:50, handL:18, handR:-18, legL:-20, legR:20, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }},
-    { t:0.72, ease:'easeOutCubic', pose:{ armL:-65, armR:30, handL:25, handR:-8, legL:-25, legR:12, shinL:8, shinR:3, bodyLean:-8, hipSway:-5, headTilt:-4, shoulderTwist:-3 }},
-    { t:0.85, ease:'easeInOut', pose:{ armL:-52, armR:48, handL:18, handR:-16, legL:-20, legR:18, shinL:5, shinR:5, bodyLean:-2, hipSway:-1, headTilt:-1, shoulderTwist:0 }},
-    { t:1.0,  ease:'easeInOut', pose:{ armL:-50, armR:50, handL:18, handR:-18, legL:-20, legR:20, shinL:5, shinR:5, bodyLean:0, hipSway:0, headTilt:0, shoulderTwist:0 }}
+  /* Scene 6: Javier gaming */
+  SCENE_KF.s6_javier = { loop:true, duration:3.0, keyframes:[
+    { t:0.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }},
+    { t:0.25, ease:'easeOut',   pose:{ armL:22, armR:24, handL:14, handR:-10, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-12, hipSway:-1, headTilt:2, shoulderTwist:0.5 }},
+    { t:0.50, ease:'easeInOut', pose:{ armL:26, armR:28, handL:10, handR:-14, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-15, hipSway:1, headTilt:-1, shoulderTwist:-0.5 }},
+    { t:0.75, ease:'easeOut',   pose:{ armL:23, armR:25, handL:13, handR:-11, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-13, hipSway:0, headTilt:1, shoulderTwist:0 }},
+    { t:1.0,  ease:'easeInOut', pose:{ armL:24, armR:26, handL:12, handR:-12, legL:32, legR:36, shinL:-14, shinR:-12, bodyLean:-14, hipSway:0, headTilt:0, shoulderTwist:0 }}
   ]};
 
   /* Wobble offset for hand-drawn line feel — varies with time */
@@ -6265,10 +6264,10 @@ if (kWrap) {
   function drawMemoryFrame(cx, W, H, alpha) {
     if (alpha <= 0) return;
     cx.save();
-    /* Soft inner vignette — dark edges, clear center = "looking into a memory" */
-    var pad = Math.min(W, H) * 0.06;
-    var r = Math.min(W, H) * 0.04;
-    cx.globalAlpha = alpha * 0.65;
+    /* Soft inner vignette — thin border, doesn't cut content */
+    var pad = Math.min(W, H) * 0.02;
+    var r = Math.min(W, H) * 0.02;
+    cx.globalAlpha = alpha * 0.45;
     /* Dark border mask — everything outside the rounded rect is darkened */
     cx.fillStyle = '#000';
     cx.beginPath();
@@ -6353,781 +6352,45 @@ if (kWrap) {
      7 MEMORY SCENES — ENRICHED
   ═══════════════════════════════════════ */
   var SCENES = [
-    { /* ─── Scene 0: Futbol ninos, La Merced ───
-         Joy of childhood — quick, playful energy */
+    { /* ─── Scene 0: Futbol ninos, La Merced ─── */
       draw: function(cx, W, H, t) {
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Sky gradient — warm afternoon feel */
-        cx.save();
-        var skyG = cx.createLinearGradient(0, H*0.05, 0, H*0.65);
-        skyG.addColorStop(0, 'rgba(240,176,0,0.04)');
-        skyG.addColorStop(0.6, 'rgba(200,120,30,0.02)');
-        skyG.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
-        cx.restore();
-
-        drawStars(cx, W, H, 8, 0.08, 50);
-        var gY = H*0.65;
-        drawGround(cx, W*0.03, W*0.97, gY, 0.30);
-
-        /* Goal posts — kid-sized */
-        cx.save();
-        cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        cx.globalAlpha = 0.55; cx.lineWidth = 3;
-        var goalTop = gY - 52*aS, goalL = W*0.78, goalR = W*0.90;
-        cx.beginPath();
-        cx.moveTo(goalL, gY); cx.lineTo(goalL, goalTop);
-        cx.lineTo(goalR, goalTop); cx.lineTo(goalR, gY);
-        cx.stroke();
-        cx.globalAlpha = 0.10;
-        cx.fillRect(goalL, goalTop - 2, goalR - goalL, 5);
-        cx.globalAlpha = 0.15; cx.lineWidth = 1;
-        for (var i = 0; i < 5; i++) {
-          cx.beginPath();
-          cx.moveTo(goalL + i * (goalR - goalL) / 4, goalTop);
-          cx.lineTo(goalL + i * (goalR - goalL) / 4, gY);
-          cx.stroke();
-        }
-        for (var j = 0; j < 4; j++) {
-          cx.beginPath();
-          cx.moveTo(goalL, goalTop + j * (gY - goalTop) / 3);
-          cx.lineTo(goalR, goalTop + j * (gY - goalTop) / 3);
-          cx.stroke();
-        }
-        cx.restore();
-
-        /* Ball arc — cycles from Carlos's foot toward goal and back */
-        var kickCycle = (t % 2.5) / 2.5;
-        var ballProgress = kickCycle < 0.42 ? 0 : Math.min(1, (kickCycle - 0.42) / 0.45);
-        var ballEased = ballProgress * ballProgress * (3 - 2 * ballProgress);
-        var ballStartX = W*0.35, ballEndX = W*0.82;
-        var ballX = ballStartX + (ballEndX - ballStartX) * ballEased;
-        var ballArcHeight = Math.sin(ballEased * Math.PI) * H*0.22;
-        var ballY = gY - 8*aS - ballArcHeight;
-        /* Ball shadow */
-        cx.save();
-        cx.fillStyle = '#f0b000';
-        cx.globalAlpha = 0.14 * (1 - ballArcHeight / (H*0.25));
-        cx.beginPath();
-        cx.ellipse(ballX, gY - 1, 6*aS, 1.5*aS, 0, 0, Math.PI * 2);
-        cx.fill();
-        cx.restore();
-        if (ballProgress > 0) {
-          drawSoccerBall(cx, ballX, ballY, 6*aS, 0.75, t * 4);
-          /* Motion trail */
-          cx.save();
-          cx.strokeStyle = '#f0b000';
-          cx.lineWidth = 1;
-          cx.globalAlpha = 0.12;
-          cx.setLineDash([3, 4]);
-          cx.beginPath();
-          for (var bt = 0; bt < ballEased; bt += 0.05) {
-            var bpx = ballStartX + (ballEndX - ballStartX) * bt;
-            var bpy = gY - 8*aS - Math.sin(bt * Math.PI) * H*0.22;
-            if (bt === 0) cx.moveTo(bpx, bpy); else cx.lineTo(bpx, bpy);
-          }
-          cx.stroke();
-          cx.setLineDash([]);
-          cx.restore();
-        } else {
-          /* Ball at Carlos's feet before kick */
-          drawSoccerBall(cx, W*0.35, gY - 8*aS, 6*aS, 0.60, t * 2);
-        }
-
-        /* Dust puff on kick */
-        if (kickCycle > 0.40 && kickCycle < 0.55) {
-          var dustAlpha = 1 - (kickCycle - 0.40) / 0.15;
-          cx.save();
-          cx.fillStyle = '#f0b000';
-          for (var d = 0; d < 5; d++) {
-            var dx = W*0.36 + sn(60+d, 3, 6) * (kickCycle - 0.40) * 40;
-            var dy = gY - 4 + sn(65+d, 2, 4);
-            cx.globalAlpha = dustAlpha * 0.15;
-            cx.beginPath();
-            cx.arc(dx, dy, 2 + sn(70+d, 1, 1), 0, Math.PI * 2);
-            cx.fill();
-          }
-          cx.restore();
-        }
-
-        /* Kid Carlos — kicking toward goal (mirrored so kick goes right) */
-        var s0CarlosPose = mirrorPose(addMicroNoise(animateKeyframes(SCENE_KF.s0_carlos, t), 1, 0.12));
-        drawStickman(cx, W*0.32, gY - 29*1.0*aS, 1.0, s0CarlosPose, '#f0b000', 0.80, 1);
-
-        /* Kid Javier — goalkeeper, ready in front of goal */
-        var gkPose0 = addMicroNoise(animateKeyframes(SCENE_KF.goalkeeper_kid, t), 2, 0.10);
-        drawStickman(cx, W*0.80, gY - 29*0.90*aS, 0.90, gkPose0, '#f0b000', 0.75, 2);
+        drawImageCover(cx, sceneImages['futbol_ninos'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 1: Futbol adultos — they grew up ───
-         Same game but stronger, nostalgia layer */
+    { /* ─── Scene 1: Futbol adultos ─── */
       draw: function(cx, W, H, t) {
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Warm evening sky — deeper sunset */
-        cx.save();
-        var skyG = cx.createLinearGradient(0, 0, 0, H*0.65);
-        skyG.addColorStop(0, 'rgba(240,150,50,0.05)');
-        skyG.addColorStop(0.4, 'rgba(220,120,30,0.03)');
-        skyG.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = skyG; cx.fillRect(0, 0, W, H);
-        cx.restore();
-
-        drawStars(cx, W, H, 10, 0.08, 150);
-        var gY1 = H*0.68;
-        drawGround(cx, W*0.03, W*0.97, gY1, 0.30);
-
-        /* Goal — adult-sized, bigger */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        cx.globalAlpha = 0.55; cx.lineWidth = 3.5;
-        var goalT1 = gY1 - 65*aS, goalL1 = W*0.76, goalR1 = W*0.90;
-        cx.beginPath();
-        cx.moveTo(goalL1, gY1); cx.lineTo(goalL1, goalT1);
-        cx.lineTo(goalR1, goalT1); cx.lineTo(goalR1, gY1);
-        cx.stroke();
-        cx.globalAlpha = 0.10;
-        cx.fillRect(goalL1, goalT1 - 2, goalR1 - goalL1, 6);
-        cx.globalAlpha = 0.15; cx.lineWidth = 1.2;
-        for (var i = 0; i < 6; i++) {
-          cx.beginPath();
-          cx.moveTo(goalL1 + i * (goalR1 - goalL1) / 5, goalT1);
-          cx.lineTo(goalL1 + i * (goalR1 - goalL1) / 5, gY1);
-          cx.stroke();
-        }
-        for (var j = 0; j < 4; j++) {
-          cx.beginPath();
-          cx.moveTo(goalL1, goalT1 + j * (gY1 - goalT1) / 3);
-          cx.lineTo(goalR1, goalT1 + j * (gY1 - goalT1) / 3);
-          cx.stroke();
-        }
-        cx.restore();
-
-        /* Ball arc — powerful shot cycling */
-        var kickCycle1 = (t % 3.0) / 3.0;
-        var ballProgress1 = kickCycle1 < 0.38 ? 0 : Math.min(1, (kickCycle1 - 0.38) / 0.35);
-        var ballEased1 = ballProgress1 * ballProgress1 * (3 - 2 * ballProgress1);
-        var bs1X = W*0.32, be1X = W*0.84;
-        var bx2 = bs1X + (be1X - bs1X) * ballEased1;
-        var ballArc1 = Math.sin(ballEased1 * Math.PI) * H*0.28;
-        var by2 = gY1 - 10*aS - ballArc1;
-        /* Ball shadow */
-        cx.save();
-        cx.fillStyle = '#f0b000';
-        cx.globalAlpha = 0.12 * (1 - ballArc1 / (H*0.30));
-        cx.beginPath();
-        cx.ellipse(bx2, gY1 - 1, 7*aS, 1.8*aS, 0, 0, Math.PI * 2);
-        cx.fill();
-        cx.restore();
-        if (ballProgress1 > 0) {
-          drawSoccerBall(cx, bx2, by2, 7*aS, 0.80, t * 5);
-          /* Speed lines behind ball */
-          cx.save();
-          cx.strokeStyle = '#f0b000';
-          cx.lineWidth = 1.2;
-          cx.globalAlpha = 0.10 * (1 - ballEased1);
-          for (var sl = 0; sl < 3; sl++) {
-            var slOff = (sl - 1) * 5;
-            cx.beginPath();
-            cx.moveTo(bx2 - 15 - sl * 8, by2 + slOff);
-            cx.lineTo(bx2 - 5, by2 + slOff * 0.5);
-            cx.stroke();
-          }
-          cx.restore();
-          /* Motion trail */
-          cx.save();
-          cx.strokeStyle = '#f0b000';
-          cx.lineWidth = 1.2;
-          cx.globalAlpha = 0.10;
-          cx.setLineDash([4, 5]);
-          cx.beginPath();
-          for (var bt1 = 0; bt1 < ballEased1; bt1 += 0.04) {
-            var bpx1 = bs1X + (be1X - bs1X) * bt1;
-            var bpy1 = gY1 - 10*aS - Math.sin(bt1 * Math.PI) * H*0.28;
-            if (bt1 === 0) cx.moveTo(bpx1, bpy1); else cx.lineTo(bpx1, bpy1);
-          }
-          cx.stroke();
-          cx.setLineDash([]);
-          cx.restore();
-        } else {
-          drawSoccerBall(cx, W*0.32, gY1 - 10*aS, 7*aS, 0.60, t * 2);
-        }
-
-        /* Dust cloud on strike */
-        if (kickCycle1 > 0.36 && kickCycle1 < 0.52) {
-          var dustA1 = 1 - (kickCycle1 - 0.36) / 0.16;
-          cx.save();
-          cx.fillStyle = '#f0b000';
-          for (var d1 = 0; d1 < 7; d1++) {
-            var dx1 = W*0.33 + sn(80+d1, 4, 8) * (kickCycle1 - 0.36) * 50;
-            var dy1 = gY1 - 5 + sn(85+d1, 3, 5);
-            cx.globalAlpha = dustA1 * 0.18;
-            cx.beginPath();
-            cx.arc(dx1, dy1, 2.5 + sn(90+d1, 1, 1.5), 0, Math.PI * 2);
-            cx.fill();
-          }
-          cx.restore();
-        }
-
-        /* Adult Carlos — powerful kick toward goal (mirrored) */
-        var s1CarlosPose = mirrorPose(addMicroNoise(animateKeyframes(SCENE_KF.s1_carlos, t), 3, 0.12));
-        drawStickman(cx, W*0.28, gY1 - 29*1.35*aS, 1.35, s1CarlosPose, '#f0b000', 0.80, 3);
-
-        /* Adult Javier — goalkeeper, defending */
-        var gkPose1 = addMicroNoise(animateKeyframes(SCENE_KF.goalkeeper_adult, t), 4, 0.10);
-        drawStickman(cx, W*0.78, gY1 - 29*1.30*aS, 1.30, gkPose1, '#f0b000', 0.80, 4);
+        drawImageCover(cx, sceneImages['futbol_adultos'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 2: Pasillo UCAB ───
-         Intimacy, friendship, quiet conversation */
+    { /* ─── Scene 2: Pasillo UCAB ─── */
       draw: function(cx, W, H, t) {
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Simple corridor — intimate, characters are the focus */
-        var gY2 = H*0.80;
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-
-        /* Floor line */
-        cx.globalAlpha = 0.28; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(W*0.15, gY2); cx.lineTo(W*0.85, gY2); cx.stroke();
-
-        /* Subtle columns — corridor feel without overwhelming */
-        cx.globalAlpha = 0.20; cx.lineWidth = 3;
-        cx.beginPath(); cx.moveTo(W*0.17, gY2); cx.lineTo(W*0.17, H*0.32); cx.stroke();
-        cx.beginPath(); cx.moveTo(W*0.83, gY2); cx.lineTo(W*0.83, H*0.32); cx.stroke();
-
-        /* Ceiling line */
-        cx.globalAlpha = 0.16; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(W*0.17, H*0.32); cx.lineTo(W*0.83, H*0.32); cx.stroke();
-
-        /* Window — subtle light source */
-        cx.globalAlpha = 0.25; cx.lineWidth = 2;
-        cx.strokeRect(W*0.72, H*0.44, W*0.08, H*0.12);
-        cx.lineWidth = 1.2; cx.globalAlpha = 0.16;
-        cx.beginPath(); cx.moveTo(W*0.76, H*0.44); cx.lineTo(W*0.76, H*0.56); cx.stroke();
-        cx.beginPath(); cx.moveTo(W*0.72, H*0.50); cx.lineTo(W*0.80, H*0.50); cx.stroke();
-        cx.globalAlpha = 0.06;
-        cx.fillRect(W*0.72, H*0.44, W*0.08, H*0.12);
-
-        /* Warm overhead light */
-        cx.globalAlpha = 0.12;
-        cx.fillRect(W*0.42, H*0.34, W*0.16, H*0.012);
-        var lightG = cx.createRadialGradient(W*0.5, H*0.36, 0, W*0.5, H*0.60, W*0.22);
-        lightG.addColorStop(0, 'rgba(240,176,0,0.05)');
-        lightG.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = lightG; cx.globalAlpha = 1;
-        cx.fillRect(0, 0, W, H);
-
-        cx.restore();
-
-        /* Carlos — gesturing while talking, keyframed */
-        var s2CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s2_carlos, t), 5, 0.15);
-        drawStickman(cx, W*0.40, gY2 - 29*1.12*aS, 1.12, s2CarlosPose, '#f0b000', 0.70, 5);
-
-        /* Javier — listening, nodding, keyframed */
-        var s2JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s2_javier, t), 6, 0.12);
-        drawStickman(cx, W*0.58, gY2 - 29*1.12*aS, 1.12, s2JavierPose, '#f0b000', 0.70, 6);
+        drawImageCover(cx, sceneImages['ucab'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 3: Hercules teatro ───
-         Performance, creativity, theatrical energy */
+    { /* ─── Scene 3: Hercules teatro ─── */
       draw: function(cx, W, H, t) {
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-
-        /* Stage floor */
-        cx.globalAlpha = 0.50; cx.lineWidth = 3.5;
-        cx.beginPath();
-        cx.moveTo(W*0.08, H*0.70);
-        cx.lineTo(W*0.92, H*0.70);
-        cx.stroke();
-        /* Stage front edge */
-        cx.lineWidth = 2.5;
-        cx.beginPath();
-        cx.moveTo(W*0.06, H*0.72);
-        cx.lineTo(W*0.94, H*0.72);
-        cx.stroke();
-        /* Stage floor fill */
-        cx.globalAlpha = 0.06;
-        cx.fillRect(W*0.08, H*0.70, W*0.84, H*0.02);
-
-        /* Curtains (left and right) */
-        cx.globalAlpha = 0.18;
-        /* Left curtain with drape curves */
-        cx.beginPath();
-        cx.moveTo(W*0.04, H*0.10);
-        cx.quadraticCurveTo(W*0.08, H*0.30, W*0.06, H*0.50);
-        cx.quadraticCurveTo(W*0.10, H*0.60, W*0.08, H*0.72);
-        cx.lineTo(W*0.04, H*0.72);
-        cx.closePath(); cx.fill();
-        /* Left curtain border */
-        cx.globalAlpha = 0.30; cx.lineWidth = 2;
-        cx.beginPath();
-        cx.moveTo(W*0.04, H*0.10);
-        cx.quadraticCurveTo(W*0.08, H*0.30, W*0.06, H*0.50);
-        cx.quadraticCurveTo(W*0.10, H*0.60, W*0.08, H*0.72);
-        cx.stroke();
-        /* Right curtain */
-        cx.globalAlpha = 0.18;
-        cx.beginPath();
-        cx.moveTo(W*0.96, H*0.10);
-        cx.quadraticCurveTo(W*0.92, H*0.30, W*0.94, H*0.50);
-        cx.quadraticCurveTo(W*0.90, H*0.60, W*0.92, H*0.72);
-        cx.lineTo(W*0.96, H*0.72);
-        cx.closePath(); cx.fill();
-        /* Right curtain border */
-        cx.globalAlpha = 0.30; cx.lineWidth = 2;
-        cx.beginPath();
-        cx.moveTo(W*0.96, H*0.10);
-        cx.quadraticCurveTo(W*0.92, H*0.30, W*0.94, H*0.50);
-        cx.quadraticCurveTo(W*0.90, H*0.60, W*0.92, H*0.72);
-        cx.stroke();
-
-        /* Proscenium arch */
-        cx.globalAlpha = 0.35; cx.lineWidth = 3;
-        cx.beginPath();
-        cx.moveTo(W*0.04, H*0.72);
-        cx.lineTo(W*0.04, H*0.10);
-        cx.quadraticCurveTo(W*0.5, H*0.03, W*0.96, H*0.10);
-        cx.lineTo(W*0.96, H*0.72);
-        cx.stroke();
-
-        /* Spotlight from above */
-        var spotG = cx.createRadialGradient(W*0.55, H*0.12, 0, W*0.55, H*0.55, W*0.25);
-        spotG.addColorStop(0, 'rgba(240,176,0,0.08)');
-        spotG.addColorStop(0.7, 'rgba(240,176,0,0.03)');
-        spotG.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = spotG; cx.globalAlpha = 1; cx.fillRect(0, 0, W, H);
-
-        /* Stage footlights */
-        cx.globalAlpha = 0.28;
-        for (var fl = 0; fl < 7; fl++) {
-          var flx = W * (0.15 + fl * 0.10);
-          var flPulse = (Math.sin(gt * 0.3 + fl * 1.5) + 1) / 2;
-          cx.beginPath();
-          cx.arc(flx, H*0.71, 3 + flPulse * 1.5, 0, Math.PI * 2);
-          cx.fillStyle = '#f0b000';
-          cx.fill();
-        }
-        cx.restore();
-
-        /* Audience members (small, sitting) — filled heads */
-        var audienceY = H*0.82;
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round';
-        cx.globalAlpha = 0.25; cx.lineWidth = 2;
-        for (var au = 0; au < 5; au++) {
-          var ax = W*(0.20 + au * 0.12);
-          /* Filled head */
-          cx.globalAlpha = 0.15;
-          cx.beginPath(); cx.arc(ax, audienceY - 5, 3.5, 0, Math.PI*2); cx.fill();
-          cx.globalAlpha = 0.25;
-          cx.beginPath(); cx.arc(ax, audienceY - 5, 3.5, 0, Math.PI*2); cx.stroke();
-          /* Body */
-          cx.beginPath(); cx.moveTo(ax, audienceY - 1); cx.lineTo(ax, audienceY + 5); cx.stroke();
-        }
-        cx.restore();
-
-        /* Performers on stage — Hercules scene */
-        /* Chorus — swaying, keyframed */
-        var stageY = H*0.72;
-        var s3ChorusPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_chorus, t), 7, 0.10);
-        drawStickman(cx, W*0.25, stageY - 29*0.78*aS, 0.78, s3ChorusPose, '#f0b000', 0.53, 7);
-
-        /* Javier as Hercules — dramatic, keyframed */
-        var s3JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_javier, t), 9, 0.15);
-        drawStickman(cx, W*0.52, stageY - 29*1.10*aS, 1.10, s3JavierPose, '#f0b000', 0.73, 9);
-
-        /* Carlos watching from side-stage, keyframed */
-        var s3CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s3_carlosWatch, t), 10, 0.12);
-        drawStickman(cx, W*0.78, stageY - 29*0.82*aS, 0.82, s3CarlosPose, '#f0b000', 0.60, 10);
+        drawImageCover(cx, sceneImages['teatro'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 4: FIFA en casa de Anthonny ───
-         Camaraderie, competition, laughter */
+    { /* ─── Scene 4: FIFA en casa de Anthonny ─── */
       draw: function(cx, W, H, t) {
-        var pScale = 1.05; /* player stickman scale */
-        var pH = 63 * pScale * aS; /* player height in px */
-        var midX = W * 0.5, gY4 = H * 0.72;
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-
-        /* TV — proportional to players, not oversized */
-        var tvH4 = pH * 0.9, tvW4 = tvH4 * 1.6;
-        var tvX = midX - tvW4/2, tvY = gY4 - pH*2.6;
-        cx.globalAlpha = 0.45; cx.lineWidth = 2.5;
-        cx.strokeRect(tvX, tvY, tvW4, tvH4);
-        cx.globalAlpha = 0.04;
-        cx.fillRect(tvX, tvY, tvW4, tvH4);
-        /* Screen glow */
-        var tvG = cx.createRadialGradient(midX, tvY + tvH4*0.5, 0, midX, tvY + tvH4*0.5, tvW4*0.8);
-        tvG.addColorStop(0, 'rgba(240,176,0,0.05)');
-        tvG.addColorStop(1, 'rgba(0,0,0,0)');
-        cx.fillStyle = tvG; cx.globalAlpha = 0.5;
-        cx.fillRect(0, 0, W, H);
-        /* Screen content — FIFA pitch lines */
-        cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.globalAlpha = 0.15; cx.lineWidth = 1;
-        cx.beginPath(); cx.moveTo(tvX + 4, tvY + tvH4*0.5); cx.lineTo(tvX + tvW4 - 4, tvY + tvH4*0.5); cx.stroke();
-        cx.beginPath(); cx.arc(midX, tvY + tvH4*0.5, tvH4*0.15, 0, Math.PI*2); cx.stroke();
-        /* Flicker effect */
-        var flicker = 0.03 + Math.sin(t * 3.7) * 0.01 + Math.sin(t * 7.1) * 0.005;
-        cx.globalAlpha = flicker;
-        cx.fillRect(tvX + 2, tvY + 2, tvW4 - 4, tvH4 - 4);
-        /* TV stand */
-        cx.globalAlpha = 0.35; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(midX, tvY + tvH4); cx.lineTo(midX, tvY + tvH4 + 8*aS); cx.stroke();
-        cx.beginPath(); cx.moveTo(midX - 10*aS, tvY + tvH4 + 8*aS); cx.lineTo(midX + 10*aS, tvY + tvH4 + 8*aS); cx.stroke();
-
-        /* Floor */
-        cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(W*0.10, gY4); cx.lineTo(W*0.90, gY4); cx.stroke();
-
-        /* Couch — proportional to 4 players */
-        var couchW = pH * 4.2, couchH = pH * 0.4;
-        var couchX = midX - couchW/2;
-        var seatY4 = gY4 - pH * 0.45;
-        cx.globalAlpha = 0.28; cx.lineWidth = 2;
-        /* Seat cushion */
-        cx.beginPath();
-        cx.moveTo(couchX, seatY4); cx.lineTo(couchX + couchW, seatY4);
-        cx.lineTo(couchX + couchW, seatY4 + 4); cx.lineTo(couchX, seatY4 + 4);
-        cx.closePath(); cx.stroke();
-        cx.globalAlpha = 0.03; cx.fill();
-        /* Armrests */
-        cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(couchX - 3, seatY4 - couchH); cx.lineTo(couchX - 3, seatY4 + 4); cx.stroke();
-        cx.beginPath(); cx.moveTo(couchX + couchW + 3, seatY4 - couchH); cx.lineTo(couchX + couchW + 3, seatY4 + 4); cx.stroke();
-        /* Back cushion */
-        cx.globalAlpha = 0.03;
-        cx.fillRect(couchX, seatY4 - couchH, couchW, couchH);
-        cx.restore();
-
-        /* 4 friends on the couch — seated with proper hip at seat level */
-        var spacing = couchW / 5;
-        var hipY4 = seatY4 - 2 * aS; /* hip right at seat cushion */
-
-        var s4P1 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player1, t), 11, 0.06);
-        drawStickman(cx, couchX + spacing, hipY4, pScale, s4P1, '#f0b000', 0.75, 11);
-
-        var s4P2 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player2, t), 12, 0.06);
-        drawStickman(cx, couchX + spacing*2, hipY4, pScale, s4P2, '#f0b000', 0.70, 12);
-
-        var s4P3 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player3, t), 13, 0.06);
-        drawStickman(cx, couchX + spacing*3, hipY4, pScale, s4P3, '#f0b000', 0.75, 13);
-
-        var s4P4 = addMicroNoise(animateKeyframes(SCENE_KF.s4_player4, t), 14, 0.06);
-        drawStickman(cx, couchX + spacing*4, hipY4, pScale, s4P4, '#f0b000', 0.73, 14);
+        drawImageCover(cx, sceneImages['fifa'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 5: Optra camino a la UCAB ───
-         Journey, music, freedom, the road */
+    { /* ─── Scene 5: Optra camino a la UCAB ─── */
       draw: function(cx, W, H, t) {
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-
-        /* Road */
-        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
-        cx.beginPath(); cx.moveTo(W*0.10, H*0.78); cx.lineTo(W*0.90, H*0.78); cx.stroke();
-        /* Road edge bottom */
-        cx.globalAlpha = 0.20; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(W*0.10, H*0.81); cx.lineTo(W*0.90, H*0.81); cx.stroke();
-        /* Road dashes — moving */
-        cx.globalAlpha = 0.35; cx.lineWidth = 2;
-        cx.setLineDash([W*0.03, W*0.03]);
-        var dashOffset = -(t * 25) % (W * 0.06);
-        cx.beginPath(); cx.moveTo(W*0.10 + dashOffset, H*0.75); cx.lineTo(W*0.90, H*0.75); cx.stroke();
-        cx.setLineDash([]);
-
-        /* Mountains in background — layered depth */
-        cx.globalAlpha = 0.15; cx.lineWidth = 2;
-        cx.beginPath();
-        cx.moveTo(W*0.0, H*0.50);
-        cx.lineTo(W*0.12, H*0.32); cx.lineTo(W*0.25, H*0.42);
-        cx.lineTo(W*0.38, H*0.28); cx.lineTo(W*0.50, H*0.38);
-        cx.lineTo(W*0.62, H*0.25); cx.lineTo(W*0.75, H*0.35);
-        cx.lineTo(W*0.88, H*0.30); cx.lineTo(W*1.0, H*0.45);
-        cx.stroke();
-        /* Mountain fill */
-        cx.globalAlpha = 0.04;
-        cx.lineTo(W*1.0, H*0.78); cx.lineTo(W*0.0, H*0.78); cx.closePath(); cx.fill();
-        /* Closer range */
-        cx.globalAlpha = 0.12; cx.lineWidth = 1.5;
-        cx.beginPath();
-        cx.moveTo(W*0.0, H*0.55);
-        cx.lineTo(W*0.18, H*0.40); cx.lineTo(W*0.32, H*0.48);
-        cx.lineTo(W*0.48, H*0.36); cx.lineTo(W*0.65, H*0.44);
-        cx.lineTo(W*0.80, H*0.38); cx.lineTo(W*1.0, H*0.50);
-        cx.stroke();
-
-        /* Car — Optra with road bounce */
-        var bounce = sn(40, 2.0, 1.2);
-        var carY = H*0.62 + bounce;
-
-        /* Car body fill */
-        cx.globalAlpha = 0.10;
-        cx.beginPath();
-        cx.moveTo(W*0.28, carY + H*0.08);
-        cx.lineTo(W*0.72, carY + H*0.08);
-        cx.quadraticCurveTo(W*0.74, carY + H*0.08, W*0.74, carY + H*0.06);
-        cx.lineTo(W*0.74, carY);
-        cx.quadraticCurveTo(W*0.74, carY - H*0.02, W*0.72, carY - H*0.02);
-        cx.lineTo(W*0.28, carY - H*0.02);
-        cx.quadraticCurveTo(W*0.26, carY - H*0.02, W*0.26, carY);
-        cx.lineTo(W*0.26, carY + H*0.06);
-        cx.quadraticCurveTo(W*0.26, carY + H*0.08, W*0.28, carY + H*0.08);
-        cx.fill();
-        /* Car body stroke */
-        cx.globalAlpha = 0.65; cx.lineWidth = 4;
-        cx.beginPath();
-        cx.moveTo(W*0.28, carY + H*0.08);
-        cx.lineTo(W*0.72, carY + H*0.08);
-        cx.quadraticCurveTo(W*0.74, carY + H*0.08, W*0.74, carY + H*0.06);
-        cx.lineTo(W*0.74, carY);
-        cx.quadraticCurveTo(W*0.74, carY - H*0.02, W*0.72, carY - H*0.02);
-        cx.lineTo(W*0.28, carY - H*0.02);
-        cx.quadraticCurveTo(W*0.26, carY - H*0.02, W*0.26, carY);
-        cx.lineTo(W*0.26, carY + H*0.06);
-        cx.quadraticCurveTo(W*0.26, carY + H*0.08, W*0.28, carY + H*0.08);
-        cx.stroke();
-
-        /* Windshield / cabin */
-        cx.globalAlpha = 0.55; cx.lineWidth = 3;
-        cx.beginPath();
-        cx.moveTo(W*0.36, carY - H*0.02);
-        cx.lineTo(W*0.40, carY - H*0.12);
-        cx.lineTo(W*0.62, carY - H*0.12);
-        cx.lineTo(W*0.66, carY - H*0.02);
-        cx.stroke();
-        /* Windshield fill (glass) */
-        cx.globalAlpha = 0.06;
-        cx.fill();
-        /* Window division */
-        cx.globalAlpha = 0.40; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(W*0.51, carY - H*0.12); cx.lineTo(W*0.51, carY - H*0.02); cx.stroke();
-
-        /* Wheels with rotation */
-        cx.globalAlpha = 0.65; cx.lineWidth = 3;
-        /* Wheel fill */
-        cx.globalAlpha = 0.15;
-        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 8, 0, Math.PI*2); cx.fill();
-        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 8, 0, Math.PI*2); cx.fill();
-        /* Wheel stroke */
-        cx.globalAlpha = 0.60;
-        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 8, 0, Math.PI*2); cx.stroke();
-        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 8, 0, Math.PI*2); cx.stroke();
-        /* Wheel spokes rotating */
-        cx.lineWidth = 1.5; cx.globalAlpha = 0.30;
-        var wheelAngle = t * 4;
-        for (var sp = 0; sp < 4; sp++) {
-          var wa = wheelAngle + sp * Math.PI/2;
-          cx.beginPath(); cx.moveTo(W*0.36, carY + H*0.10); cx.lineTo(W*0.36 + Math.cos(wa)*5.5, carY + H*0.10 + Math.sin(wa)*5.5); cx.stroke();
-          cx.beginPath(); cx.moveTo(W*0.64, carY + H*0.10); cx.lineTo(W*0.64 + Math.cos(wa)*5.5, carY + H*0.10 + Math.sin(wa)*5.5); cx.stroke();
-        }
-        /* Hubcap centers */
-        cx.globalAlpha = 0.40;
-        cx.beginPath(); cx.arc(W*0.36, carY + H*0.10, 2, 0, Math.PI*2); cx.fill();
-        cx.beginPath(); cx.arc(W*0.64, carY + H*0.10, 2, 0, Math.PI*2); cx.fill();
-
-        /* Headlights */
-        cx.globalAlpha = 0.30;
-        cx.beginPath(); cx.arc(W*0.74, carY + H*0.02, 3.5, 0, Math.PI*2); cx.fill();
-        cx.beginPath(); cx.arc(W*0.26, carY + H*0.02, 3.5, 0, Math.PI*2); cx.fill();
-        /* Headlight glow */
-        cx.globalAlpha = 0.08;
-        cx.beginPath(); cx.arc(W*0.74, carY + H*0.02, 8, 0, Math.PI*2); cx.fill();
-
-        /* Side mirrors */
-        cx.globalAlpha = 0.40; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(W*0.26, carY); cx.lineTo(W*0.23, carY - H*0.015); cx.lineTo(W*0.22, carY); cx.stroke();
-        cx.beginPath(); cx.moveTo(W*0.74, carY); cx.lineTo(W*0.77, carY - H*0.015); cx.lineTo(W*0.78, carY); cx.stroke();
-
-        /* Door handle */
-        cx.globalAlpha = 0.25; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(W*0.44, carY + H*0.02); cx.lineTo(W*0.48, carY + H*0.02); cx.stroke();
-
-        cx.restore();
-
-        /* Music notes floating — larger, livelier */
-        cx.save();
-        cx.font = 'bold ' + Math.round(30*(W/900)) + 'px serif'; cx.fillStyle = '#f0b000';
-        var notes = ['\u266A', '\u266B', '\u2669', '\u266A', '\u266B'];
-        for (var n = 0; n < notes.length; n++) {
-          var notePhase = t * 0.5 + n * 0.9;
-          var noteLife = (Math.sin(notePhase) + 1) / 2;
-          var nx = W*0.34 + n*W*0.07 + sn(n*10 + 60, 0.5, 7);
-          var ny = carY - H*0.16 - n*H*0.03 + sn(n*10 + 70, 0.4, 5) - noteLife * 12;
-          cx.save();
-          cx.translate(nx, ny);
-          cx.rotate(sn(n*10 + 90, 0.15, 2) * 0.25);
-          cx.globalAlpha = Math.max(0, 0.28 + sn(n*10 + 80, 0.4, 0.10)) * noteLife;
-          cx.fillText(notes[n], 0, 0);
-          cx.restore();
-        }
-        cx.restore();
-
-        /* Stickman passengers inside car — clear heads + upper bodies */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        /* Driver (Carlos) */
-        var headBob1 = sn(50, 0.8, 1);
-        var dHx = W*0.44, dHy = carY - H*0.09 + headBob1;
-        cx.globalAlpha = 0.45;
-        cx.beginPath(); cx.arc(dHx, dHy, 7, 0, Math.PI*2); cx.fill();
-        cx.globalAlpha = 0.60; cx.lineWidth = 2.5;
-        cx.beginPath(); cx.arc(dHx, dHy, 7, 0, Math.PI*2); cx.stroke();
-        /* Driver neck + shoulders */
-        cx.globalAlpha = 0.45; cx.lineWidth = 3;
-        cx.beginPath(); cx.moveTo(dHx, dHy + 7); cx.lineTo(dHx, dHy + 14); cx.stroke();
-        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
-        cx.beginPath(); cx.moveTo(dHx - 8, dHy + 16); cx.lineTo(dHx + 8, dHy + 16); cx.stroke();
-        /* Hands on wheel hint */
-        cx.globalAlpha = 0.30; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(dHx + 7, dHy + 16); cx.lineTo(dHx + 11, dHy + 24); cx.stroke();
-        cx.beginPath(); cx.moveTo(dHx - 7, dHy + 16); cx.lineTo(dHx - 4, dHy + 24); cx.stroke();
-        /* Passenger (Javier) */
-        var headBob2 = sn(51, 0.9, 1.2);
-        var pHx = W*0.57, pHy = carY - H*0.09 + headBob2;
-        cx.globalAlpha = 0.45;
-        cx.beginPath(); cx.arc(pHx, pHy, 7, 0, Math.PI*2); cx.fill();
-        cx.globalAlpha = 0.60; cx.lineWidth = 2.5;
-        cx.beginPath(); cx.arc(pHx, pHy, 7, 0, Math.PI*2); cx.stroke();
-        /* Passenger neck + shoulders */
-        cx.globalAlpha = 0.45; cx.lineWidth = 3;
-        cx.beginPath(); cx.moveTo(pHx, pHy + 7); cx.lineTo(pHx, pHy + 14); cx.stroke();
-        cx.globalAlpha = 0.35; cx.lineWidth = 2.5;
-        cx.beginPath(); cx.moveTo(pHx - 8, pHy + 16); cx.lineTo(pHx + 8, pHy + 16); cx.stroke();
-        /* Passenger arm resting */
-        cx.globalAlpha = 0.30; cx.lineWidth = 2;
-        cx.beginPath(); cx.moveTo(pHx + 7, pHy + 16); cx.lineTo(pHx + 13, pHy + 12); cx.stroke();
-        cx.restore();
-
+        drawImageCover(cx, sceneImages['optra'], W, H, 1);
       }
     },
 
-    { /* ─── Scene 6: Fortnite split screen ───
-         Modern connection, gaming together, focused intensity */
+    { /* ─── Scene 6: Fortnite ─── */
       draw: function(cx, W, H, t) {
-        var u = 63 * aS; /* stickman height unit */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-
-        /* Dividing line */
-        cx.globalAlpha = 0.30; cx.lineWidth = 1.5; cx.setLineDash([4, 4]);
-        cx.beginPath(); cx.moveTo(W*0.5, H*0.20); cx.lineTo(W*0.5, H*0.85); cx.stroke();
-        cx.setLineDash([]);
-
-        /* ─── Helper: draw one gaming setup ─── */
-        function drawSetup(centerX, gY6) {
-          var monW = u * 1.3, monH = u * 0.8;
-          var deskW = u * 2.0, deskY = gY6 - u * 0.8;
-          /* Desk */
-          cx.globalAlpha = 0.35; cx.lineWidth = 2;
-          cx.beginPath(); cx.moveTo(centerX - deskW/2, deskY); cx.lineTo(centerX + deskW/2, deskY); cx.stroke();
-          cx.lineWidth = 1.5;
-          cx.beginPath(); cx.moveTo(centerX - deskW/2 + 4, deskY); cx.lineTo(centerX - deskW/2 + 4, gY6); cx.stroke();
-          cx.beginPath(); cx.moveTo(centerX + deskW/2 - 4, deskY); cx.lineTo(centerX + deskW/2 - 4, gY6); cx.stroke();
-          /* Monitor */
-          cx.globalAlpha = 0.45; cx.lineWidth = 2.5;
-          cx.strokeRect(centerX - monW/2, deskY - monH - 8*aS, monW, monH);
-          cx.globalAlpha = 0.04;
-          cx.fillRect(centerX - monW/2, deskY - monH - 8*aS, monW, monH);
-          /* Monitor stand */
-          cx.globalAlpha = 0.35; cx.lineWidth = 1.5;
-          cx.beginPath(); cx.moveTo(centerX, deskY - 8*aS); cx.lineTo(centerX, deskY - 2); cx.stroke();
-          cx.beginPath(); cx.moveTo(centerX - 8*aS, deskY - 2); cx.lineTo(centerX + 8*aS, deskY - 2); cx.stroke();
-          /* Keyboard */
-          cx.globalAlpha = 0.22; cx.lineWidth = 1.5;
-          cx.strokeRect(centerX - 15*aS, deskY - 5*aS, 30*aS, 4*aS);
-          /* Mouse */
-          cx.globalAlpha = 0.22;
-          cx.beginPath(); cx.ellipse(centerX + 22*aS, deskY - 3*aS, 3*aS, 2*aS, 0, 0, Math.PI*2); cx.stroke();
-          /* Screen glow */
-          var sg = cx.createRadialGradient(centerX, deskY - monH/2 - 8*aS, 0, centerX, deskY - monH/2 - 8*aS, u*1.5);
-          sg.addColorStop(0, 'rgba(240,176,0,0.04)');
-          sg.addColorStop(1, 'rgba(0,0,0,0)');
-          cx.fillStyle = sg; cx.globalAlpha = 0.5;
-          cx.fillRect(centerX - u*2, deskY - monH - u, u*4, monH + u*2);
-          cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        }
-
-        var gY6 = H * 0.70;
-        drawSetup(W * 0.25, gY6);
-        drawSetup(W * 0.75, gY6);
-
-        /* Floor lines */
-        cx.globalAlpha = 0.20; cx.lineWidth = 1.5;
-        cx.beginPath(); cx.moveTo(W*0.05, gY6); cx.lineTo(W*0.45, gY6); cx.stroke();
-        cx.beginPath(); cx.moveTo(W*0.55, gY6); cx.lineTo(W*0.95, gY6); cx.stroke();
-        cx.restore();
-
-        /* Gaming chairs */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.fillStyle = '#f0b000';
-        cx.lineCap = 'round'; cx.lineJoin = 'round';
-        function drawChair(chairX, chairGY) {
-          var chairW = u * 0.9, seatH = u * 0.35;
-          var seatCY = chairGY - seatH;
-          /* Seat */
-          cx.globalAlpha = 0.20; cx.lineWidth = 2;
-          cx.beginPath(); cx.moveTo(chairX - chairW/2, seatCY); cx.lineTo(chairX + chairW/2, seatCY); cx.stroke();
-          /* Backrest */
-          cx.globalAlpha = 0.15; cx.lineWidth = 1.5;
-          cx.beginPath(); cx.moveTo(chairX - chairW/2 + 2, seatCY);
-          cx.lineTo(chairX - chairW/2 - 1, seatCY - u * 0.7); cx.stroke();
-          cx.beginPath(); cx.moveTo(chairX + chairW/2 - 2, seatCY);
-          cx.lineTo(chairX + chairW/2 + 1, seatCY - u * 0.7); cx.stroke();
-          /* Back fill */
-          cx.globalAlpha = 0.03;
-          cx.beginPath();
-          cx.moveTo(chairX - chairW/2 + 2, seatCY);
-          cx.lineTo(chairX - chairW/2 - 1, seatCY - u * 0.7);
-          cx.lineTo(chairX + chairW/2 + 1, seatCY - u * 0.7);
-          cx.lineTo(chairX + chairW/2 - 2, seatCY);
-          cx.closePath(); cx.fill();
-          /* Chair legs / base */
-          cx.globalAlpha = 0.18; cx.lineWidth = 1.5;
-          cx.beginPath(); cx.moveTo(chairX, seatCY); cx.lineTo(chairX, chairGY); cx.stroke();
-          cx.beginPath(); cx.moveTo(chairX - chairW*0.5, chairGY); cx.lineTo(chairX + chairW*0.5, chairGY); cx.stroke();
-          /* Wheels */
-          cx.globalAlpha = 0.15;
-          cx.beginPath(); cx.arc(chairX - chairW*0.45, chairGY + 2, 2, 0, Math.PI*2); cx.fill();
-          cx.beginPath(); cx.arc(chairX + chairW*0.45, chairGY + 2, 2, 0, Math.PI*2); cx.fill();
-          return seatCY;
-        }
-        var seatYC = drawChair(W * 0.25, gY6);
-        var seatYJ = drawChair(W * 0.75, gY6);
-        cx.restore();
-
-        /* Stickmen at desks — seated with hip at chair seat */
-        var hipY6C = seatYC - 2 * aS;
-        var hipY6J = seatYJ - 2 * aS;
-        var s6CarlosPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_carlos, t), 15, 0.08);
-        var cInfo = drawStickman(cx, W*0.25, hipY6C, 1.15, s6CarlosPose, '#f0b000', 0.75, 15);
-
-        var s6JavierPose = addMicroNoise(animateKeyframes(SCENE_KF.s6_javier, t), 16, 0.08);
-        var jInfo = drawStickman(cx, W*0.75, hipY6J, 1.15, s6JavierPose, '#f0b000', 0.75, 16);
-
-        /* Headsets */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.lineCap = 'round';
-        cx.globalAlpha = 0.40; cx.lineWidth = 2;
-        cx.beginPath(); cx.arc(cInfo.headX, cInfo.headY - 2, cInfo.headR + 2, Math.PI*1.2, Math.PI*1.8); cx.stroke();
-        cx.beginPath(); cx.arc(jInfo.headX, jInfo.headY - 2, jInfo.headR + 2, Math.PI*1.2, Math.PI*1.8); cx.stroke();
-        cx.restore();
-
-        /* Voice chat line */
-        cx.save(); cx.strokeStyle = '#f0b000'; cx.lineCap = 'round';
-        cx.globalAlpha = 0.08 + sn(50, 0.6, 0.03); cx.lineWidth = 1;
-        cx.setLineDash([3, 5]);
-        cx.beginPath();
-        cx.moveTo(cInfo.headX + cInfo.headR + 5, cInfo.headY);
-        cx.quadraticCurveTo(W*0.5, H*0.30, jInfo.headX - jInfo.headR - 5, jInfo.headY);
-        cx.stroke();
-        cx.setLineDash([]); cx.restore();
+        drawImageCover(cx, sceneImages['fornite'], W, H, 1);
       }
     }
   ];
@@ -7136,17 +6399,17 @@ if (kWrap) {
      TIMELINE
   ═══════════════════════════════════════ */
   var T = {
-    ACT1_START: 0, ACT1_WALK: 4, ACT1_GONE: 24, ACT1_HEAD: 28,
-    MEM1_IN: 45, MEM1_OUT: 55,
-    MEM2_IN: 58, MEM2_OUT: 68,
-    MEM3_IN: 72, MEM3_OUT: 82,
-    MEM4_IN: 85, MEM4_OUT: 93,
-    MEM5_IN: 95, MEM5_OUT: 103,
-    MEM6_IN: 105, MEM6_OUT: 112,
-    MEM7_IN: 114, MEM7_OUT: 120,
-    CODA_START: 122, CODA_CARLOS: 144,
-    CODA_TEXT1: 126, CODA_TEXT2: 135, CODA_TEXT3: 144,
-    END: 200
+    ACT1_START: 0, ACT1_WALK: 14, ACT1_GONE: 24,
+    MEM1_IN: 38, MEM1_OUT: 46,
+    MEM2_IN: 45, MEM2_OUT: 53,
+    MEM3_IN: 52, MEM3_OUT: 60,
+    MEM4_IN: 59, MEM4_OUT: 67,
+    MEM5_IN: 66, MEM5_OUT: 74,
+    MEM6_IN: 73, MEM6_OUT: 81,
+    MEM7_IN: 80, MEM7_OUT: 88,
+    CODA_START: 90, CODA_CARLOS: 130,
+    CODA_TEXT1: 93, CODA_TEXT2: 101, CODA_TEXT3: 109,
+    END: 116
   };
 
   var sceneTimings = [
@@ -7200,194 +6463,56 @@ if (kWrap) {
        Devastating emotional sequence
     ═══════════════════════════════════ */
     if (t >= T.ACT1_START && t < T.MEM1_IN) {
-      /* Background stars — the vastness of the world */
-      drawStars(ctx, W, H, 15, 0.03, 1000);
-      drawVignette(ctx, W, H, 0.3);
+      /* ─── Act 1: Image-based sequence ─── */
+      var img1 = sceneImages['act1_call'];
+      var img2 = sceneImages['act1_walk'];
+      var img3 = sceneImages['act1_alone'];
+      var img4 = sceneImages['act1_recuerdos'];
 
-      /* Ground — fades as Javier leaves, symbolizing loss of foundation */
-      var groundFade = 1.0;
-      if (t > T.ACT1_GONE) groundFade = Math.max(0, 1 - (t - T.ACT1_GONE) / 6);
-      var gYact = H*0.78;
-      drawGround(ctx, W*0.10, W*0.90, gYact, 0.06 * groundFade);
+      var XFADE = 2; /* crossfade duration in seconds */
+      var REC_START = 30; /* when recuerdos image appears */
 
-      var cX = W*0.45, cY = gYact - 29*aS;
-      var carlosPose;
-
-      /* ─── Phase 1: Standing together (0 to ACT1_WALK) ─── */
       if (t < T.ACT1_WALK) {
-        /* They stand close — alive, breathing, comfortable presence */
-        var phaseT = t / T.ACT1_WALK;
-        /* Carlos: weight shifts between feet, arms move with thought */
-        var cBreath1 = Math.sin(t * 1.1) * 0.8;
-        var cBreath2 = Math.sin(t * 0.7 + 1.2) * 0.5;
-        var cWeightShift = Math.sin(t * 0.4) * 1.5;
-        carlosPose = {
-          armL: -15 + cBreath1 + Math.sin(t * 0.3) * 2,
-          armR: 22 + cBreath2 + Math.sin(t * 0.5 + 0.8) * 3,
-          handL: 6 + Math.sin(t * 0.6) * 1.5,
-          handR: -7 + Math.sin(t * 0.4) * 1,
-          legL: -7 + cWeightShift * 0.3,
-          legR: 8 - cWeightShift * 0.3,
-          shinL: 3 + Math.abs(cWeightShift) * 0.2,
-          shinR: 3 + Math.abs(cWeightShift) * 0.2,
-          bodyLean: cWeightShift * 0.6 + cBreath1 * 0.3,
-          hipSway: cWeightShift * 0.8,
-          headTilt: 2 + Math.sin(t * 0.35 + 0.5) * 1.5,
-          shoulderTwist: Math.sin(t * 0.25) * 0.8
-        };
-        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
+        /* Phase 1: Together — show toma1 */
+        var fadeIn = Math.min(1, t / 1.5);
+        drawImageCover(ctx, img1, W, H, easeInOut(fadeIn));
 
-        /* Javier: mirrored weight shifts, slightly different rhythm */
-        var jBreath1 = Math.sin(t * 1.0 + 2.0) * 0.7;
-        var jBreath2 = Math.sin(t * 0.65 + 0.7) * 0.5;
-        var jWeightShift = Math.sin(t * 0.45 + 1.5) * 1.5;
-        var javierIdlePose = {
-          armL: -18 + jBreath1 + Math.sin(t * 0.35 + 1) * 2,
-          armR: 20 + jBreath2 + Math.sin(t * 0.55 + 2) * 2.5,
-          handL: 5 + Math.sin(t * 0.5 + 1) * 1,
-          handR: -6 + Math.sin(t * 0.45 + 1.5) * 1,
-          legL: -6 + jWeightShift * 0.3,
-          legR: 7 - jWeightShift * 0.3,
-          shinL: 3, shinR: 3,
-          bodyLean: jWeightShift * 0.5 + jBreath1 * 0.3,
-          hipSway: jWeightShift * 0.7,
-          headTilt: -2 + Math.sin(t * 0.3 + 1.8) * 1.5,
-          shoulderTwist: Math.sin(t * 0.28 + 1) * 0.7
-        };
-        drawStickman(ctx, W*0.55, cY, 1.0, javierIdlePose, '#dde8e2', 1, 51);
+      } else if (t < T.ACT1_WALK + XFADE) {
+        /* Phase 2: Crossfade toma1 → toma2 */
+        var p = easeInOut((t - T.ACT1_WALK) / XFADE);
+        drawImageCover(ctx, img1, W, H, 1 - p);
+        drawImageCover(ctx, img2, W, H, p);
 
-      /* ─── Phase 2: The moment of parting (ACT1_WALK to ACT1_WALK+3) ─── */
-      } else if (t < T.ACT1_WALK + 3) {
-        var partT = (t - T.ACT1_WALK) / 3;
-
-        /* Carlos — disbelief → reaches out → freezes */
-        var shockP = easeOutCubic(Math.min(1, partT * 2.5)); /* fast initial shock */
-        var reachP = easeOutCubic(clamp01((partT - 0.2) / 0.5)); /* arm extends with weight */
-        var frozenP = easeIn(clamp01((partT - 0.7) / 0.3)); /* body freezes at end */
-        var cBreath = Math.sin(t * 1.3) * 0.6 * (1 - frozenP);
-        var cWeight = Math.sin(t * 0.5) * 0.8 * (1 - frozenP);
-        carlosPose = {
-          armL: lerp(-15, -8, shockP) + cBreath,
-          armR: lerp(22, 48, reachP),
-          handL: lerp(6, 4, shockP),
-          handR: lerp(-7, -20, reachP),
-          legL: lerp(-7, -5, shockP) + cWeight * 0.2,
-          legR: lerp(8, 10, reachP),
-          shinL: 3, shinR: 3,
-          bodyLean: lerp(0, 5, reachP) * (1 - frozenP * 0.3) + cBreath * 0.2,
-          hipSway: cWeight * 0.5,
-          headTilt: lerp(2, 6, easeInOut(partT)) + Math.sin(t * 0.8) * 0.3 * (1 - frozenP),
-          shoulderTwist: lerp(0, 4, reachP)
-        };
-        /* Carlos takes a small step forward when reaching */
-        var carlosStep = lerp(0, W*0.02, reachP);
-        drawStickman(ctx, cX + carlosStep, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
-
-        /* Javier — hesitates, turns, takes first heavy steps */
-        var hesitateP = easeInOut(clamp01(partT * 3)); /* quick hesitation at start */
-        var turnP = easeInOutCubic(clamp01((partT - 0.15) / 0.85));
-        var jBreath = Math.sin(t * 1.1 + 2) * 0.5;
-        var javierTurnPose = {
-          armL: lerp(-18, -10, turnP) + jBreath * 0.4,
-          armR: lerp(20, 8, turnP) - jBreath * 0.3,
-          handL: lerp(5, 3, turnP),
-          handR: lerp(-6, -3, turnP),
-          legL: lerp(-6, -14, turnP),
-          legR: lerp(7, 16, turnP),
-          shinL: lerp(3, 4, turnP),
-          shinR: lerp(3, 6, turnP),
-          bodyLean: lerp(0, 5, turnP),
-          hipSway: lerp(0, -2, turnP),
-          headTilt: lerp(-2, -7, turnP) + Math.sin(t * 0.6 + 3) * (1 - turnP) * 2, /* looks back early */
-          shoulderTwist: lerp(0, -5, turnP)
-        };
-        var jStartX = lerp(W*0.55, W*0.60, easeInOutCubic(turnP));
-        drawStickman(ctx, jStartX, cY, 1.0, javierTurnPose, '#dde8e2', 1, 51);
-
-      /* ─── Phase 3: Javier walks away (ACT1_WALK+3 to ACT1_GONE) ─── */
       } else if (t < T.ACT1_GONE) {
-        var walkDuration = T.ACT1_GONE - T.ACT1_WALK - 3;
-        var walkT = (t - T.ACT1_WALK - 3) / walkDuration;
-        var walkElapsed = t - T.ACT1_WALK - 3;
+        /* Phase 3: Javier walking away — show toma2 */
+        drawImageCover(ctx, img2, W, H, 1);
 
-        /* Linear position — matches walk speed so no sliding */
-        var jX = W*0.60 + walkT * W*0.30;
-        var jAlpha = walkT < 0.7 ? 1.0 : Math.max(0, 1.0 - (walkT - 0.7) / 0.3);
+      } else if (t < T.ACT1_GONE + XFADE) {
+        /* Phase 4a: Crossfade toma2 → toma3 */
+        var p2 = easeInOut((t - T.ACT1_GONE) / XFADE);
+        drawImageCover(ctx, img2, W, H, 1 - p2);
+        drawImageCover(ctx, img3, W, H, p2);
 
-        /* Sadness ramps with distance — walk slows down as sadness grows */
-        var sadness = easeInOut(clamp01(walkT * 1.2));
-        /* Walk speed slows as sadness increases: 1.1 → 0.65 */
-        var walkSpeed = lerp(1.1, 0.65, sadness);
-        var sadWalkPose = keyframeWalkPose(walkElapsed, walkSpeed, sadness);
+      } else if (t < REC_START) {
+        /* Phase 4b: Carlos alone — hold toma3 */
+        drawImageCover(ctx, img3, W, H, 1);
+        drawVignette(ctx, W, H, 0.35);
 
-        drawStickman(ctx, jX, cY, 1.0, sadWalkPose, '#dde8e2', jAlpha, 51);
+      } else if (t < REC_START + XFADE) {
+        /* Phase 5a: Crossfade toma3 → recuerdos */
+        var p3 = easeInOut((t - REC_START) / XFADE);
+        drawImageCover(ctx, img3, W, H, 1 - p3);
+        drawImageCover(ctx, img4, W, H, p3);
 
-        /* Carlos — progressive emotional collapse with LIFE */
-        var dropP = easeOutCubic(clamp01(walkT * 2.0)); /* arm drops in first half */
-        var slumpP = easeInOutCubic(walkT);
-        var cAlive = (1 - slumpP * 0.8); /* life fades as he slumps */
-        var cBreath3 = Math.sin(t * 0.9) * 0.5 * cAlive;
-        var cWeight3 = Math.sin(t * 0.35) * 1.0 * cAlive;
-        /* Subtle sway — standing still but body is heavy */
-        var heavyShift = Math.sin(t * 0.2 + 0.5) * lerp(1, 2.5, slumpP);
-        carlosPose = {
-          armL: lerp(-8, -5, slumpP) + cBreath3 + heavyShift * 0.3,
-          armR: lerp(48, 6, dropP) + cBreath3 * 0.5,
-          handL: lerp(4, 3, slumpP),
-          handR: lerp(-20, -3, dropP),
-          legL: -5 + cWeight3 * 0.2,
-          legR: 10 - cWeight3 * 0.2,
-          shinL: 3, shinR: 3,
-          bodyLean: lerp(5, -4, slumpP) + heavyShift * 0.4,
-          hipSway: heavyShift * 0.6,
-          headTilt: lerp(6, 12, slumpP) + Math.sin(t * 0.15) * lerp(0.5, 1.5, slumpP),
-          shoulderTwist: lerp(4, 0, slumpP) + heavyShift * 0.2
-        };
-        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
-
-        /* ─── The Look Back ─── */
-        /* At 40% of walk, Javier pauses and looks back briefly */
-        if (walkT > 0.35 && walkT < 0.50) {
-          var lookBackP = (walkT - 0.35) / 0.15;
-          var lookIntensity = Math.sin(lookBackP * Math.PI); /* peaks at center */
-          ctx.save();
-          ctx.strokeStyle = '#f0b000';
-          ctx.globalAlpha = lookIntensity * 0.04;
-          ctx.lineWidth = 0.5;
-          ctx.setLineDash([2, 6]);
-          ctx.beginPath();
-          ctx.moveTo(jX, cY - 30);
-          ctx.lineTo(cX, cY - 30);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.restore();
-        }
-
-      /* ─── Phase 4: Carlos alone (ACT1_GONE to MEM1_IN) ─── */
       } else {
-        var aloneP = easeOut(Math.min(1, (t - T.ACT1_GONE) / 4));
-
-        /* Carlos alone — the emptiness */
-        carlosPose = {
-          armL: lerp(-8, -6, aloneP) + sn(70, 0.2, 0.5),
-          armR: lerp(10, 6, aloneP) + sn(71, 0.2, 0.5),
-          handL: 5, handR: -5,
-          legL: -6, legR: 7,
-          shinL: 3, shinR: 3,
-          bodyLean: lerp(-2, -5, aloneP),   /* sinking posture */
-          headTilt: lerp(8, 12, aloneP),     /* head drops more */
-          shoulderTwist: 0
-        };
-        drawStickman(ctx, cX, cY, 1.0, carlosPose, '#dde8e2', 1, 50);
-
-        /* The space feels vast — extra vignette */
-        drawVignette(ctx, W, H, 0.2 + aloneP * 0.3);
+        /* Phase 5b: Recuerdos — hold until memories begin */
+        drawImageCover(ctx, img4, W, H, 1);
       }
     }
 
     /* ═══════════════════════════════════
        ACT 2 & 3 — FLASHBACK MEMORIES
-       Each scene fades in/out with atmosphere
+       Direct crossfade between memories
     ═══════════════════════════════════ */
     sceneTimings.forEach(function(st) {
       if (t >= st.inTime && t < st.outTime) {
@@ -7412,90 +6537,72 @@ if (kWrap) {
       }
     });
 
-    /* Brief transition to coda — gentle fade to black after last memory */
-    if (t >= T.MEM7_OUT && t < T.CODA_START) {
-      drawVignette(ctx, W, H, 0.5);
-    }
+    /* Last memory crossfades directly into coda — no black gap */
 
     /* ═══════════════════════════════════
        ACT 5 — THE CODA
-       Carlos appears slowly, golden, vulnerable.
-       Embers drift upward. Text reveals with weight.
+       3 images: sin lagrimas → con lagrimas → charco + frase
     ═══════════════════════════════════ */
     if (t >= T.CODA_START) {
+      var codaImg1 = sceneImages['coda_sin'];
+      var codaImg2 = sceneImages['coda_con'];
+      var codaImg3 = sceneImages['coda_charco_persona'];
+      var CX = 3; /* crossfade duration */
 
-      /* ─── Carlos appears ─── */
-      if (t >= T.CODA_CARLOS) {
-        var codaP = easeOutCubic(Math.min(1, (t - T.CODA_CARLOS) / 4));
+      /* Phase timing within coda */
+      var c1End = T.CODA_START + 8;   /* sin lagrimas holds ~8s */
+      var c2End = c1End + 8;           /* con lagrimas holds ~8s */
+      /* charco arrives at c2End + CX = ~109s, text starts at 112s */
 
-        /* Gentle golden aura beneath/around him */
-        ctx.save();
-        var cAuraG = ctx.createRadialGradient(W*0.5, H*0.58, 0, W*0.5, H*0.58, W*0.22);
-        cAuraG.addColorStop(0, 'rgba(240,176,0,' + (0.06 * codaP) + ')');
-        cAuraG.addColorStop(0.5, 'rgba(240,176,0,' + (0.03 * codaP) + ')');
-        cAuraG.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = cAuraG;
-        ctx.fillRect(0, 0, W, H);
-        ctx.restore();
+      if (t < T.CODA_START + 2) {
+        /* Fade in from black */
+        var fi = easeInOut((t - T.CODA_START) / 2);
+        drawImageCover(ctx, codaImg1, W, H, fi);
 
-        /* Embers drift upward gently */
-        if (codaP > 0.5 && t > T.CODA_CARLOS + 3) {
-          if (Math.random() < 0.08) {
-            spawnEmbers(W, H, 1);
-          }
-        }
-        updateAndDrawEmbers(ctx, W, H);
+      } else if (t < c1End) {
+        /* Hold sin lagrimas */
+        drawImageCover(ctx, codaImg1, W, H, 1);
 
-        /* ─── Carlos: open, vulnerable, facing viewer ─── */
-        /* Arms slightly out — welcoming, open posture */
-        /* Subtle breathing, alive but still */
-        var codaBreath = sn(100, 0.5, 1.5);
-        var codaBreath2 = sn(101, 0.8, 0.5);
-        var openness = easeOut(Math.min(1, (t - T.CODA_CARLOS - 2) / 3));
+      } else if (t < c1End + CX) {
+        /* Crossfade sin → con lagrimas */
+        var p = easeInOut((t - c1End) / CX);
+        drawImageCover(ctx, codaImg1, W, H, 1 - p);
+        drawImageCover(ctx, codaImg2, W, H, p);
 
-        var codaPose = {
-          armL: lerp(-12, -30, openness) + codaBreath,
-          armR: lerp(12, 30, openness) - codaBreath,
-          handL: lerp(6, 15, openness) + codaBreath2,
-          handR: lerp(-6, -15, openness) - codaBreath2,
-          legL: -8 + sn(102, 0.1, 0.3),
-          legR: 8 + sn(103, 0.1, 0.3),
-          shinL: 3,
-          shinR: 3,
-          bodyLean: codaBreath * 0.3,
-          headTilt: sn(104, 0.15, 1),
-          shoulderTwist: sn(105, 0.1, 0.3)
-        };
+      } else if (t < c2End) {
+        /* Hold con lagrimas */
+        drawImageCover(ctx, codaImg2, W, H, 1);
 
-        var codaGY = H*0.72;
-        drawStickman(ctx, W*0.5, codaGY - 29*1.1*aS, 1.1, codaPose, '#f0b000', codaP, 100);
+      } else if (t < c2End + CX) {
+        /* Crossfade con lagrimas → charco */
+        var p2 = easeInOut((t - c2End) / CX);
+        drawImageCover(ctx, codaImg2, W, H, 1 - p2);
+        drawImageCover(ctx, codaImg3, W, H, p2);
 
-        /* Ground line — faint, golden */
-        if (codaP > 0.3) {
-          ctx.save();
-          ctx.strokeStyle = '#f0b000';
-          ctx.globalAlpha = (codaP - 0.3) * 0.06;
-          ctx.lineWidth = 0.8;
-          ctx.beginPath();
-          var gndY = codaGY;
-          ctx.moveTo(W*0.35, gndY);
-          ctx.lineTo(W*0.65, gndY);
-          ctx.stroke();
-          ctx.restore();
-        }
+      } else {
+        /* Hold charco + text */
+        drawImageCover(ctx, codaImg3, W, H, 1);
       }
 
-      /* ─── Text reveals — each appears with weight ─── */
+      /* ─── Text reveals — re-trigger animation on each phrase ─── */
       if (textEl) {
+        var newText = '';
         if (t >= T.CODA_TEXT3) {
-          textEl.innerHTML = 'Todo eso fuiste. Todo eso eres.<br>Y por eso estoy aqu\u00ed.';
-          textEl.classList.add('visible');
+          newText = 'Todo eso fuiste. Todo eso eres.<br>Y por eso estoy aqu\u00ed.';
         } else if (t >= T.CODA_TEXT2) {
-          textEl.textContent = 'Todo eso fuiste. Todo eso eres.';
-          textEl.classList.add('visible');
+          newText = 'Todo eso fuiste. Todo eso eres.';
         } else if (t >= T.CODA_TEXT1) {
-          textEl.textContent = 'Todo eso fuiste.';
-          textEl.classList.add('visible');
+          newText = 'Todo eso fuiste.';
+        }
+        var newClass = '';
+        if (t >= T.CODA_TEXT3) newClass = 'phrase3';
+        else if (t >= T.CODA_TEXT2) newClass = 'phrase2';
+        else if (t >= T.CODA_TEXT1) newClass = 'phrase1';
+        if (newClass && !textEl.classList.contains(newClass)) {
+          textEl.classList.remove('phrase1', 'phrase2', 'phrase3');
+          textEl.innerHTML = newText;
+          void textEl.offsetWidth;
+          textEl.classList.add(newClass);
         }
       }
     }
@@ -7530,13 +6637,8 @@ if (kWrap) {
 
     if (audio) {
       audio.currentTime = startTime || 0;
-      audio.volume = 0;
-      audio.play().then(function() {
-        var fi = setInterval(function() {
-          if (audio.volume < 0.95) { audio.volume = Math.min(1, audio.volume + 0.03); }
-          else { audio.volume = 1; clearInterval(fi); }
-        }, 80);
-      }).catch(function() {});
+      audio.volume = 1;
+      audio.play().catch(function() {});
     }
 
     prevTime = startTime || 0;
@@ -7551,21 +6653,21 @@ if (kWrap) {
     isPlaying = false;
     playBtn.style.display = '';
     if (stopBtn) stopBtn.style.display = 'none';
-    if (textEl) { textEl.classList.remove('visible'); textEl.textContent = ''; }
+    if (textEl) { textEl.classList.remove('phrase1', 'phrase2', 'phrase3'); textEl.textContent = ''; }
     sceneBtns.forEach(function(btn) { btn.classList.remove('active'); });
   }
 
   function updateActiveScene(t) {
     var sceneRanges = [
-      {start:0, end:45},
-      {start:45, end:55},
-      {start:58, end:68},
-      {start:72, end:82},
-      {start:85, end:93},
-      {start:95, end:103},
-      {start:105, end:112},
-      {start:114, end:120},
-      {start:122, end:200}
+      {start:0, end:38},
+      {start:38, end:46},
+      {start:45, end:53},
+      {start:52, end:60},
+      {start:59, end:67},
+      {start:66, end:74},
+      {start:73, end:81},
+      {start:80, end:88},
+      {start:90, end:170}
     ];
     sceneBtns.forEach(function(btn, i) {
       var r = sceneRanges[i];
@@ -7591,11 +6693,10 @@ if (kWrap) {
     btn.addEventListener('click', function() {
       var time = parseFloat(btn.getAttribute('data-time')) || 0;
       if (isPlaying) {
-        /* Jump to scene time while playing */
         if (audio) audio.currentTime = time;
         prevTime = time;
         sceneTimings.forEach(function(st) { st.done = false; });
-        if (textEl) { textEl.classList.remove('visible'); textEl.textContent = ''; }
+        if (textEl) { textEl.classList.remove('phrase1', 'phrase2', 'phrase3'); textEl.textContent = ''; }
       } else {
         startPlayback(time);
       }
@@ -7616,7 +6717,7 @@ if (kWrap) {
     ctx.restore();
     if (textEl) {
       textEl.innerHTML = 'Todo eso fuiste. Todo eso eres.<br>Y por eso estoy aqu\u00ed.';
-      textEl.classList.add('visible');
+      textEl.classList.add('phrase3');
     }
   }
 })();
