@@ -5419,26 +5419,29 @@ if (kWrap) {
   var sceneImages = {};
   function preloadImg(key, src) {
     var img = new Image();
+    img.onerror = function() {
+      setTimeout(function() { img.src = src; }, 2000);
+    };
     img.src = src;
     sceneImages[key] = img;
   }
   /* Act 1: Despedida */
-  preloadImg('act1_call', 'tomas/toma1.png');
-  preloadImg('act1_walk', 'tomas/toma2.png');
-  preloadImg('act1_alone', 'tomas/toma3.png');
-  preloadImg('act1_recuerdos', 'tomas/recuerdods.png');
+  preloadImg('act1_call', 'tomas/toma1.jpg');
+  preloadImg('act1_walk', 'tomas/toma2.jpg');
+  preloadImg('act1_alone', 'tomas/toma3.jpg');
+  preloadImg('act1_recuerdos', 'tomas/recuerdods.jpg');
   /* Memories */
-  preloadImg('futbol_ninos', 'tomas/futbotninos.png');
-  preloadImg('futbol_adultos', 'tomas/futboladultos.png');
-  preloadImg('ucab', 'tomas/ucab.png');
-  preloadImg('optra', 'tomas/optra.png');
-  preloadImg('teatro', 'tomas/teatro.png');
-  preloadImg('fifa', 'tomas/fifa.png');
-  preloadImg('fornite', 'tomas/fornite.png');
+  preloadImg('futbol_ninos', 'tomas/futbotninos.jpg');
+  preloadImg('futbol_adultos', 'tomas/futboladultos.jpg');
+  preloadImg('ucab', 'tomas/ucab.jpg');
+  preloadImg('optra', 'tomas/optra.jpg');
+  preloadImg('teatro', 'tomas/teatro.jpg');
+  preloadImg('fifa', 'tomas/fifa.jpg');
+  preloadImg('fornite', 'tomas/fornite.jpg');
   /* Coda / Final */
-  preloadImg('coda_sin', 'tomas/sinlagrimas.png');
-  preloadImg('coda_con', 'tomas/conlagrimas.png');
-  preloadImg('coda_charco_persona', 'tomas/llorandocharco.png');
+  preloadImg('coda_sin', 'tomas/sinlagrimas.jpg');
+  preloadImg('coda_con', 'tomas/conlagrimas.jpg');
+  preloadImg('coda_charco_persona', 'tomas/llorandocharco.jpg');
 
   /* Draw image covering canvas (object-fit: cover) */
   function drawImageCover(cx, img, W, H, alpha) {
