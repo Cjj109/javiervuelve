@@ -91,17 +91,6 @@
     img, svg, canvas { display: block; max-width: 100%; }
     button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
-    /* ─── La luz: capa fija que tiñe el papel del color de cada sección ─── */
-    .luz {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-color: #00e68c;
-      opacity: .11;
-      mix-blend-mode: multiply;
-      -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 42%, #000 0%, transparent 70%);
-      mask-image: radial-gradient(ellipse 75% 70% at 50% 42%, #000 0%, transparent 70%);
-      transition: background-color 1.6s ease;
-    }
-
     /* ════════════════════════════════════
        PIEZAS QUE SE REPITEN
     ════════════════════════════════════ */
@@ -1436,35 +1425,69 @@
       font-size: .62rem; font-weight: 700; letter-spacing: .16em;
       text-transform: uppercase; color: var(--tinta-suave);
     }
-    .adagio-scenes {
-      display: flex; flex-wrap: wrap; justify-content: center;
-      gap: .6rem;
-      max-width: 900px;
-      margin: 1.6rem auto 0;
-    }
-    .adagio-scene-btn {
-      background: var(--blanco);
+    /* La tira de escenas: una barra de progreso y las tomas como fotogramas */
+    .adagio-scenes { max-width: 900px; margin: 1.6rem auto 0; }
+    .adagio-track {
+      height: 8px; margin: 0 2px .8rem;
       border: 2px solid var(--tinta); border-radius: 999px;
+      background: var(--blanco); overflow: hidden;
+    }
+    .adagio-track i {
+      display: block; height: 100%; width: 100%;
+      background: var(--oro);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform .25s linear;
+    }
+    .adagio-strip {
+      display: flex; gap: .7rem;
+      overflow-x: auto; overscroll-behavior-x: contain;
+      scroll-snap-type: x proximity;
+      padding: 6px 6px 10px;
+      scrollbar-width: none;
+    }
+    .adagio-strip::-webkit-scrollbar { display: none; }
+    .adagio-scene-btn {
+      flex: none; width: 128px;
+      display: flex; flex-direction: column; align-items: stretch;
+      padding: 0; overflow: hidden;
+      background: var(--blanco);
+      border: 2px solid var(--tinta); border-radius: 12px;
       color: var(--tinta);
-      padding: .42rem .95rem;
       box-shadow: var(--pop-sm);
-      text-align: center; line-height: 1.3;
-      transition: transform .12s, box-shadow .12s, background .2s;
+      scroll-snap-align: center;
+      text-align: left;
+      transition: transform .15s, box-shadow .15s;
     }
-    .adagio-scene-btn:hover { background: var(--papel-2); }
+    .adagio-scene-btn:hover { transform: translate(-2px, -2px); box-shadow: var(--pop-md); }
     .adagio-scene-btn:active { transform: translate(2px, 2px); box-shadow: none; }
-    .adagio-scene-btn.active { background: var(--oro); box-shadow: var(--pop-md); }
+    .adagio-scene-btn img {
+      width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; display: block;
+      border-bottom: 2px solid var(--tinta);
+      filter: grayscale(1) contrast(1.05);
+      opacity: .85;
+    }
+    .adagio-scene-btn .scene-num {
+      position: absolute; top: 6px; left: 6px;
+      padding: .12rem .45rem;
+      background: var(--tinta); color: var(--papel);
+      border-radius: 999px;
+      font-family: var(--titulo); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+    }
+    .adagio-scene-btn { position: relative; }
     .adagio-scene-btn .scene-name {
-      display: block;
-      font-family: var(--titulo);
-      font-size: .78rem; letter-spacing: .1em; text-transform: uppercase;
+      display: block; padding: .45rem .55rem 0;
+      font-family: var(--titulo); font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; line-height: 1.1;
     }
-    .adagio-scene-btn .scene-desc {
-      display: block;
-      font-size: .62rem; font-weight: 600;
-      color: var(--tinta-suave);
-      margin-top: 1px;
+    .adagio-scene-btn .scene-time {
+      display: block; padding: .15rem .55rem .5rem;
+      font-size: .62rem; font-weight: 700; letter-spacing: .08em;
+      color: var(--tinta-suave); font-variant-numeric: tabular-nums;
     }
+    .adagio-scene-btn.active { background: var(--oro); box-shadow: var(--pop-md); }
+    .adagio-scene-btn.active img { filter: none; opacity: 1; }
+    .adagio-scene-btn.active .scene-num { background: var(--tinta); }
+    .adagio-scene-btn.active .scene-time { color: var(--tinta); }
+    .adagio-scene-btn.active .scene-name::after { content: ' ▶'; font-size: .6em; }
 
     /* ════════════════════════════════════
        CIERRE — KINTSUGI (banda de tinta)
@@ -1497,19 +1520,38 @@
       border-radius: 50%;
     }
     .kintsugi-svg {
-      width: clamp(170px, 35vw, 250px);
-      height: clamp(190px, 40vw, 280px);
+      width: clamp(220px, 34vw, 320px);
+      height: auto;
       overflow: visible;
+      position: relative; z-index: 1;
+    }
+    /* El enso: un gran círculo de oro detrás del jarrón, que se inclina con él */
+    .kintsugi-wrap::before {
+      content: ''; position: absolute; left: 50%; top: 50%; z-index: 0;
+      width: clamp(300px, 46vw, 440px); height: clamp(300px, 46vw, 440px);
+      translate: -50% -50%;
+      border-radius: 50%;
+      border: 2px solid rgba(242,183,5,.32);
+      background: radial-gradient(circle, rgba(242,183,5,.1) 0%, rgba(242,183,5,.04) 55%, transparent 70%);
+      pointer-events: none;
+    }
+    .kintsugi-wrap::after {
+      content: ''; position: absolute; left: 50%; top: 50%; z-index: 0;
+      width: clamp(330px, 50vw, 480px); height: clamp(330px, 50vw, 480px);
+      translate: -50% -50%;
+      border-radius: 50%;
+      border: 1px dashed rgba(242,183,5,.18);
+      pointer-events: none;
     }
     .k-crack {
       fill: none;
       stroke: url(#real-gold);
-      stroke-linecap: round;
+      stroke-linecap: round; stroke-linejoin: round;
       stroke-dasharray: 300;
       stroke-dashoffset: 300;
       transition: stroke-dashoffset 0s;
-      filter: drop-shadow(0 0 4px rgba(242,183,5,.6));
     }
+    #kintsugi .k-crack { filter: drop-shadow(0 0 3px rgba(242,183,5,.55)); }
     .kc-sw { stroke: url(#real-gold-sw); }
     .k-crack.draw { stroke-dashoffset: 0; }
     .k-vessel { fill: none; stroke: rgba(242,183,5,.4); stroke-width: 1; }
@@ -1530,13 +1572,7 @@
       0%, 100% { opacity: .72; }
       50%      { opacity: 1; }
     }
-    .k-aura { animation: kintsugi-aura-ring 6s ease-in-out infinite; transform-origin: center; }
-    @keyframes kintsugi-aura-ring {
-      0%, 100% { opacity: .4; transform: scale(1); }
-      50%      { opacity: .8; transform: scale(1.06); }
-    }
-    .kintsugi-svg > ellipse:first-of-type { animation: kintsugi-aura 5s ease-in-out infinite; }
-    @keyframes kintsugi-aura { 0%, 100% { opacity: .7; } 50% { opacity: 1; } }
+    .k-aura { opacity: .5; }
 
     .kintsugi-kanji {
       font-size: .75rem; font-weight: 600; letter-spacing: .4em;
@@ -1746,14 +1782,13 @@
       .adagio-section { padding: 3.2rem 1rem 2.4rem; }
       .adagio-stage { aspect-ratio: 4 / 3; border-radius: 12px; }
       .adagio-text { font-size: clamp(1rem, 4.2vw, 1.6rem); width: 90%; bottom: 10%; }
-      .adagio-scenes { gap: .45rem; }
-      .adagio-scene-btn { padding: .35rem .7rem; }
-      .adagio-scene-btn .scene-name { font-size: .7rem; }
-      .adagio-scene-btn .scene-desc { font-size: .56rem; }
+      .adagio-strip { padding: 4px 4px 8px; gap: .5rem; }
 
       .close-section { padding: 4.2rem 1.1rem 4rem; }
       .kintsugi-wrap { margin-bottom: 2.2rem; }
-      .kintsugi-svg { width: clamp(150px, 48vw, 250px); height: clamp(170px, 56vw, 280px); }
+      .kintsugi-svg { width: clamp(190px, 58vw, 260px); }
+      .kintsugi-wrap::before { width: clamp(250px, 76vw, 340px); height: clamp(250px, 76vw, 340px); }
+      .kintsugi-wrap::after  { width: clamp(280px, 84vw, 380px); height: clamp(280px, 84vw, 380px); }
       .kintsugi-title { font-size: clamp(2.6rem, 15vw, 5rem); }
       .kintsugi-def { margin-bottom: 1.8rem; }
       .kintsugi-rule { margin-bottom: 1.8rem; }
@@ -1968,34 +2003,24 @@
     .hero-title .name { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.35s backwards; }
 
     /* El resto, al llegar con el scroll: oculto hasta que se ve */
-    .anim [data-reveal]:not(.in) :is(.s-label, .s-title, .rule, .body-text, .year-block, .crew-person, .sw,
+    .anim [data-reveal]:not(.in) :is(.s-label, .s-title, .rule, .body-text, .years-track, .crew, .swatches,
       .office-inner, .room-brand, .room-frame, .room-hint, .tess-counter, .tess-intro, .tess-terminal,
-      .vinyl-player, .strange-btn, .adagio-stage, .adagio-play, .adagio-hint, .adagio-scene-btn,
+      .vinyl-player, .strange-btn, .adagio-stage, .adagio-play, .adagio-hint, .adagio-scenes,
       .kintsugi-wrap, .kintsugi-kanji, .kintsugi-title, .kintsugi-def, .kintsugi-rule, .kintsugi-quote, .close-from,
       .gm-orb-wrap, .gm-dialogue, .gm-attr, .gm-sub) { opacity: 0; }
-    .anim [data-reveal].in .s-label        { animation: slap .5s cubic-bezier(.2,.9,.3,1.2) backwards; }
-    .anim [data-reveal].in .s-title        { animation: rise .6s cubic-bezier(.2,.8,.2,1) .08s backwards; }
-    .anim [data-reveal].in .rule           { animation: stretch .5s cubic-bezier(.2,.8,.2,1) .25s backwards; }
+    .anim [data-reveal].in .s-label        { animation: slap .45s cubic-bezier(.2,.9,.3,1.2) backwards; }
+    .anim [data-reveal].in .s-title        { animation: rise .5s cubic-bezier(.2,.8,.2,1) .06s backwards; }
+    .anim [data-reveal].in .rule           { animation: stretch .45s cubic-bezier(.2,.8,.2,1) .2s backwards; }
     .anim [data-reveal].in :is(.body-text, .room-hint, .adagio-hint, .tess-intro, .gm-attr, .gm-sub, .kintsugi-kanji, .kintsugi-def, .kintsugi-quote)
                                            { animation: rise .6s ease .3s backwards; }
-    .anim [data-reveal].in :is(.year-block, .crew-person, .sw, .adagio-scene-btn)
-                                           { animation: slap .5s cubic-bezier(.2,.9,.3,1.2) calc(.25s + var(--i, 0) * 70ms) backwards; }
+    .anim [data-reveal].in :is(.years-track, .crew, .swatches, .adagio-scenes)
+                                           { animation: rise .55s cubic-bezier(.2,.8,.2,1) .22s backwards; }
     .anim [data-reveal].in :is(.office-inner, .room-frame, .tess-terminal, .adagio-stage, .kintsugi-wrap)
                                            { animation: rise .7s cubic-bezier(.2,.8,.2,1) .3s backwards; }
     .anim [data-reveal].in :is(.room-brand, .strange-btn, .adagio-play, .close-from, .tess-counter, .gm-orb-wrap)
                                            { animation: pop-in .55s cubic-bezier(.2,.9,.3,1.3) .3s backwards; }
     .anim [data-reveal].in :is(.vinyl-player, .gm-dialogue, .kintsugi-title, .kintsugi-rule)
                                            { animation: rise .7s ease .25s backwards; }
-    /* Los índices para el escalonado */
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(1) { --i: 0; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(2) { --i: 1; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(3) { --i: 2; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(4) { --i: 3; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(5) { --i: 4; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(6) { --i: 5; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(7) { --i: 6; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(8) { --i: 7; }
-    :is(.year-block, .crew-person, .sw, .adagio-scene-btn):nth-child(9) { --i: 8; }
     /* El rombo de cada separador gira al aparecer */
     .anim .divider:not(.in) .gem { transform: rotate(45deg) scale(0); }
     .anim .divider.in .gem { transition: transform .5s cubic-bezier(.2,.9,.3,1.4) .1s; transform: rotate(45deg) scale(1); }
@@ -2005,89 +2030,95 @@
     .anim .divider .dl:last-child { transform-origin: left; }
 
     /* ════════════════════════════════════
-       GATSBY v4 — cartel Art Déco, solo CSS
-       (todo lo que se mueve es transform u opacity)
+       GATSBY v6 — la bahía, mínima
+       (solo CSS: lo que se mueve es transform u opacity)
     ════════════════════════════════════ */
     .gatsby-moment {
-      --lx: 50%; --ly: 62%;
+      --lx: 70%; --ly: 66%;
+      --torre-h: 76px; --torre-w: 26px;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-      min-height: min(92vh, 880px);
+      min-height: min(94vh, 900px);
       padding: 5.5rem 1.5rem 3rem;
-      background-image: linear-gradient(#07120e, #0f2a22 62%, #05100c 100%);
+      background-image: linear-gradient(#06100c, #10251d 66%, #05100c 100%);
       border-top: var(--borde) solid var(--tinta);
       overflow: hidden;
     }
     .gatsby-moment::before, .gatsby-moment::after { content: none; }
-    .gm-sky, .gm-water, .gm-reflect, .gm-frame, .gm-light { position: absolute; pointer-events: none; }
-    /* El cielo: rayos y arcos de oro desde la luz, y unas estrellas. Estático. */
+    .gm-sky, .gm-water, .gm-faro, .gm-dock { position: absolute; pointer-events: none; }
     .gm-sky {
       left: 0; right: 0; top: 0; height: var(--ly); z-index: 0;
       background:
         radial-gradient(1.6px 1.6px at 8% 12%, #fff 50%, transparent 52%),
-        radial-gradient(1.3px 1.3px at 18% 30%, #fff 50%, transparent 52%),
-        radial-gradient(1.6px 1.6px at 28% 8%, #fff 50%, transparent 52%),
-        radial-gradient(1.2px 1.2px at 43% 24%, #fff 50%, transparent 52%),
-        radial-gradient(1.5px 1.5px at 58% 10%, #fff 50%, transparent 52%),
-        radial-gradient(1.2px 1.2px at 72% 28%, #fff 50%, transparent 52%),
-        radial-gradient(1.6px 1.6px at 84% 14%, #fff 50%, transparent 52%),
-        radial-gradient(1.3px 1.3px at 93% 36%, #fff 50%, transparent 52%),
-        radial-gradient(circle at var(--lx) 100%, transparent 159px, rgba(242,183,5,.28) 160px, transparent 162px),
-        radial-gradient(circle at var(--lx) 100%, transparent 359px, rgba(242,183,5,.22) 360px, transparent 362px),
-        radial-gradient(circle at var(--lx) 100%, transparent 639px, rgba(242,183,5,.16) 640px, transparent 642px),
-        repeating-conic-gradient(from 270deg at var(--lx) 100%, rgba(242,183,5,.4) 0 .45deg, transparent .45deg 15deg);
-      -webkit-mask-image: radial-gradient(ellipse 62% 120% at var(--lx) 100%, #000 10%, transparent 100%);
-      mask-image: radial-gradient(ellipse 62% 120% at var(--lx) 100%, #000 10%, transparent 100%);
+        radial-gradient(1.3px 1.3px at 22% 32%, #fff 50%, transparent 52%),
+        radial-gradient(1.6px 1.6px at 36% 9%, #fff 50%, transparent 52%),
+        radial-gradient(1.4px 1.4px at 58% 18%, #fff 50%, transparent 52%),
+        radial-gradient(1.2px 1.2px at 78% 30%, #fff 50%, transparent 52%),
+        radial-gradient(1.6px 1.6px at 90% 10%, #fff 50%, transparent 52%);
     }
     .gm-water {
       left: 0; right: 0; bottom: 0; height: calc(100% - var(--ly)); z-index: 0;
-      border-top: 1px solid rgba(62,229,155,.25);
+      border-top: 1px solid rgba(62,229,155,.22);
       background: linear-gradient(#0c2822, #04100c);
     }
-    /* El marco déco, doble */
-    .gm-frame {
-      inset: 16px; z-index: 1;
-      border: 2px solid rgba(242,183,5,.5);
-      outline: 1px solid rgba(242,183,5,.25); outline-offset: 6px;
+    /* El faro: torre a rayas, linterna verde con marco de oro y techo. Nada más. */
+    .gm-faro { left: var(--lx); top: var(--ly); width: 0; height: 0; z-index: 1; pointer-events: auto; cursor: pointer; }
+    .gm-faro > span { position: absolute; left: 0; translate: -50% 0; display: block; }
+    .gm-faro::after { content: ''; position: absolute; left: -40px; top: -130px; width: 80px; height: 140px; }
+    .gm-torre {
+      bottom: 0; width: var(--torre-w); height: var(--torre-h);
+      clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+      background: repeating-linear-gradient(180deg, var(--tinta) 0 14px, #e6ebe5 14px 24px);
     }
-    /* La luz: un punto con anillo de oro, su resplandor que respira y un halo que se expande */
-    .gm-light { left: var(--lx); top: var(--ly); width: 0; height: 0; z-index: 1; pointer-events: auto; cursor: pointer; }
-    .gm-light > span { position: absolute; left: 0; top: 0; border-radius: 50%; translate: -50% -50%; }
+    .gm-linterna {
+      bottom: var(--torre-h); width: 20px; height: 20px;
+      background: #3ee59b; border: 2px solid var(--tinta); border-radius: 4px;
+      box-shadow: 0 0 0 3px var(--oro), 0 0 14px #3ee59b, 0 0 40px rgba(62,229,155,.8);
+    }
+    .gm-techo {
+      bottom: calc(var(--torre-h) + 23px); width: 36px; height: 14px;
+      clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      background: var(--tinta);
+    }
+    /* El resplandor, que se enciende con cada destello */
     .gm-glow {
-      width: 360px; height: 360px;
-      background: radial-gradient(circle, rgba(62,229,155,.9) 0%, rgba(62,229,155,.3) 30%, rgba(62,229,155,0) 70%);
-      animation: gm-breathe 4s ease-in-out infinite alternate;
-      will-change: transform, opacity;
+      bottom: calc(var(--torre-h) + 10px);
+      width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(62,229,155,.55) 0%, rgba(62,229,155,.18) 30%, rgba(62,229,155,0) 68%);
+      translate: none; transform: translate(-50%, 50%);
+      animation: gm-glow-blink 5s ease-in-out infinite;
     }
-    .gm-halo {
-      width: 56px; height: 56px;
-      border: 1.5px solid #3ee59b;
-      animation: gm-halo 2.8s ease-out infinite;
-      will-change: transform, opacity;
+    .gm-destello {
+      bottom: calc(var(--torre-h) + 10px); translate: -50% 50%;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: radial-gradient(circle, #eafff4 0%, rgba(62,229,155,.9) 35%, rgba(62,229,155,0) 70%);
+      opacity: 0;
+      animation: gm-destello 5s ease-in-out infinite;
     }
-    .gm-core {
-      width: 18px; height: 18px;
-      background: #3ee59b;
-      border: 2px solid var(--tinta);
-      box-shadow: 0 0 0 4px var(--oro), 0 0 0 6px var(--tinta), 0 0 16px #3ee59b, 0 0 40px rgba(62,229,155,.9);
+    @keyframes gm-destello   { 0%, 58%, 100% { opacity: 0; } 64% { opacity: 1; } 74% { opacity: .1; } }
+    @keyframes gm-glow-blink { 0%, 56%, 100% { opacity: .5; transform: translate(-50%, 50%) scale(.9); } 64% { opacity: 1; transform: translate(-50%, 50%) scale(1.3); } 80% { opacity: .55; transform: translate(-50%, 50%) scale(.95); } }
+    .gatsby-moment.flare .gm-glow { animation: gm-flare 1.2s ease-out; }
+    .gatsby-moment.flare .gm-destello { animation: gm-flash 1.2s ease-out; }
+    @keyframes gm-flare { 0% { transform: translate(-50%, 50%) scale(1); opacity: .6; } 20% { transform: translate(-50%, 50%) scale(1.8); opacity: 1; } 100% { transform: translate(-50%, 50%) scale(1); opacity: .5; } }
+    @keyframes gm-flash { 0%, 100% { opacity: 0; } 15% { opacity: 1; } }
+    /* El muelle: un tablón liso en perspectiva, hacia el faro, con cuatro tablas */
+    .gm-dock {
+      --d0: 24%; --d1: 76%;
+      left: 0; right: 0; bottom: 0; z-index: 1;
+      height: calc((100% - var(--ly)) * .74);
+      clip-path: polygon(47% 0, 53% 0, var(--d1) 100%, var(--d0) 100%);
+      background: rgba(238,243,236,.3);
     }
-    .gm-light::after {
-      /* zona de toque generosa */
-      content: ''; position: absolute; left: -36px; top: -36px; width: 72px; height: 72px; border-radius: 50%;
+    .gm-dock i {
+      position: absolute; inset: 3px 0 0 0; display: block;
+      clip-path: polygon(calc(47% + 3px) 0, calc(53% - 3px) 0, calc(var(--d1) - 3px) 100%, calc(var(--d0) + 3px) 100%);
+      background:
+        linear-gradient(180deg,
+          transparent calc(28% - 1px), rgba(238,243,236,.14) calc(28% - 1px), rgba(238,243,236,.14) calc(28% + 1px), transparent calc(28% + 1px),
+          transparent calc(48% - 1px), rgba(238,243,236,.14) calc(48% - 1px), rgba(238,243,236,.14) calc(48% + 1px), transparent calc(48% + 1px),
+          transparent calc(70% - 1px), rgba(238,243,236,.14) calc(70% - 1px), rgba(238,243,236,.14) calc(70% + 1px), transparent calc(70% + 1px),
+          transparent calc(92% - 1px), rgba(238,243,236,.14) calc(92% - 1px), rgba(238,243,236,.14) calc(92% + 1px), transparent calc(92% + 1px)),
+        linear-gradient(180deg, #15241e, #2a3d35);
     }
-    /* El reflejo: un haz que se abre hacia abajo y tiembla */
-    .gm-reflect {
-      left: calc(var(--lx) - 40px); top: calc(var(--ly) + 12px); bottom: 0; width: 80px; z-index: 0;
-      background: linear-gradient(rgba(62,229,155,.75), rgba(62,229,155,.25) 45%, rgba(62,229,155,0));
-      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
-      animation: gm-reflect 3.2s ease-in-out infinite alternate;
-      will-change: transform, opacity;
-    }
-    @keyframes gm-breathe { from { transform: scale(.86); opacity: .8; } to { transform: scale(1.12); opacity: 1; } }
-    @keyframes gm-halo    { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(2.8); opacity: 0; } }
-    @keyframes gm-reflect { from { opacity: .55; transform: scaleX(.85); } to { opacity: 1; transform: scaleX(1.1); } }
-    .gatsby-moment.flare .gm-glow { animation: gm-flare 1.4s ease-out; }
-    .gatsby-moment.flare .gm-halo { animation: gm-halo .9s ease-out; }
-    @keyframes gm-flare { 0% { transform: scale(1); } 25% { transform: scale(2.1); opacity: 1; } 100% { transform: scale(1); } }
 
     /* El texto, encima de la escena */
     .gm-text { position: relative; z-index: 2; max-width: 860px; text-align: center; }
@@ -2141,20 +2172,20 @@
       max-width: 92%;
     }
     .gm-sub em { font-style: normal; color: var(--verde); }
-    /* Al llegar: el cielo se abre, la luz se enciende */
-    .anim #gatsby-section:not(.in) :is(.gm-sky, .gm-light, .gm-reflect) { opacity: 0; }
-    .anim #gatsby-section.in .gm-sky     { animation: gm-fan 1.4s cubic-bezier(.2,.8,.2,1) .4s backwards; transform-origin: var(--lx) 100%; }
-    .anim #gatsby-section.in .gm-light   { animation: gm-on 1.6s ease .6s backwards; }
-    .anim #gatsby-section.in .gm-reflect { animation: gm-on 1.6s ease .8s backwards, gm-reflect 3.2s ease-in-out 2.4s infinite alternate; }
-    .anim #gatsby-section.in .gm-sub     { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.3s backwards; }
-    @keyframes gm-on  { 0% { opacity: 0; } 40% { opacity: .35; } 55% { opacity: .1; } 100% { opacity: 1; } }
-    @keyframes gm-fan { 0% { opacity: 0; transform: scale(.3); } 100% { opacity: 1; transform: scale(1); } }
+    /* Al llegar: el muelle sube, el faro se enciende */
+    .anim #gatsby-section:not(.in) :is(.gm-faro, .gm-dock) { opacity: 0; }
+    .anim #gatsby-section.in .gm-dock { animation: rise .9s cubic-bezier(.2,.8,.2,1) .3s backwards; }
+    .anim #gatsby-section.in .gm-faro { animation: gm-on 1.4s ease .7s backwards; }
+    .anim #gatsby-section.in .gm-sub  { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.2s backwards; }
+    @keyframes gm-on { 0% { opacity: 0; } 40% { opacity: .35; } 55% { opacity: .1; } 100% { opacity: 1; } }
 
     @media (max-width: 640px) {
-      .gatsby-moment { min-height: min(90vh, 760px); padding: 4rem 1rem 2.4rem; }
-      .gm-frame { inset: 10px; outline-offset: 4px; }
-      .gm-sky { background-size: auto; }
-      .gm-glow { width: 260px; height: 260px; }
+      .gatsby-moment { --lx: 68%; --ly: 64%; --torre-h: 60px; --torre-w: 22px; min-height: min(92vh, 780px); padding: 4rem 1rem 2.4rem; }
+      .gm-linterna { width: 17px; height: 17px; }
+      .gm-techo { width: 30px; height: 12px; bottom: calc(var(--torre-h) + 20px); }
+      .gm-glow { width: 220px; height: 220px; bottom: calc(var(--torre-h) + 9px); }
+      .gm-destello { bottom: calc(var(--torre-h) + 9px); width: 32px; height: 32px; }
+      .gm-dock { --d0: 6%; --d1: 94%; }
       .gm-line-2 { font-size: clamp(2.6rem, 13vw, 3.6rem); }
       .gm-line-3 { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
       .gm-sub { font-size: .9rem; padding: .5rem .9rem; }
@@ -2331,7 +2362,6 @@
 </head>
 <body>
 <a href="#main" class="skip-link">Ir al contenido</a>
-<div class="luz" id="luz" aria-hidden="true"></div>
 
 <main id="main">
 <!-- ══════════════ HERO ══════════════ -->
@@ -2544,16 +2574,17 @@
 <!-- ══════════════ GATSBY ══════════════ -->
 <div class="gatsby-moment" id="gatsby-section">
 
-  <!-- La escena, solo CSS: cielo con rayos déco, agua, marco y la luz verde -->
+  <!-- La escena, mínima y solo CSS: cielo, agua, un faro que destella y el muelle -->
   <div class="gm-sky" aria-hidden="true"></div>
   <div class="gm-water" aria-hidden="true"></div>
-  <div class="gm-reflect" aria-hidden="true"></div>
-  <div class="gm-frame" aria-hidden="true"></div>
-  <div class="gm-light" id="gm-light" aria-hidden="true">
+  <div class="gm-faro" id="gm-light" aria-hidden="true">
     <span class="gm-glow"></span>
-    <span class="gm-halo"></span>
-    <span class="gm-core"></span>
+    <span class="gm-torre"></span>
+    <span class="gm-linterna"></span>
+    <span class="gm-techo"></span>
+    <span class="gm-destello"></span>
   </div>
+  <div class="gm-dock" aria-hidden="true"><i></i></div>
 
   <!-- El diálogo más icónico de Fitzgerald -->
   <div class="gm-text">
@@ -2789,42 +2820,18 @@
   <audio id="adagio-audio" src="adagio.mp3" preload="auto"></audio>
 
   <div class="adagio-scenes" id="adagio-scenes">
-    <button class="adagio-scene-btn" data-time="0">
-      <span class="scene-name">Intro</span>
-      <span class="scene-desc">La despedida</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="38">
-      <span class="scene-name">Escena 1</span>
-      <span class="scene-desc">Futbol de ninos</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="45">
-      <span class="scene-name">Escena 2</span>
-      <span class="scene-desc">Futbol de adultos</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="52">
-      <span class="scene-name">Escena 3</span>
-      <span class="scene-desc">Pasillo UCAB</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="59">
-      <span class="scene-name">Escena 4</span>
-      <span class="scene-desc">Teatro: Hercules</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="66">
-      <span class="scene-name">Escena 5</span>
-      <span class="scene-desc">FIFA en casa</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="73">
-      <span class="scene-name">Escena 6</span>
-      <span class="scene-desc">El Optra</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="80">
-      <span class="scene-name">Escena 7</span>
-      <span class="scene-desc">Fortnite</span>
-    </button>
-    <button class="adagio-scene-btn" data-time="90">
-      <span class="scene-name">Final</span>
-      <span class="scene-desc">Todo eso fuiste</span>
-    </button>
+    <div class="adagio-track" aria-hidden="true"><i id="adagio-progress"></i></div>
+    <div class="adagio-strip" id="adagio-strip">
+      <button class="adagio-scene-btn" data-time="0"><img src="tomas/mini/toma1.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">Intro</span><span class="scene-name">La despedida</span><span class="scene-time">0:00</span></button>
+      <button class="adagio-scene-btn" data-time="38"><img src="tomas/mini/futbotninos.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">01</span><span class="scene-name">Fútbol de niños</span><span class="scene-time">0:38</span></button>
+      <button class="adagio-scene-btn" data-time="45"><img src="tomas/mini/futboladultos.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">02</span><span class="scene-name">Fútbol de adultos</span><span class="scene-time">0:45</span></button>
+      <button class="adagio-scene-btn" data-time="52"><img src="tomas/mini/ucab.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">03</span><span class="scene-name">Pasillo UCAB</span><span class="scene-time">0:52</span></button>
+      <button class="adagio-scene-btn" data-time="59"><img src="tomas/mini/teatro.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">04</span><span class="scene-name">Teatro: Hércules</span><span class="scene-time">0:59</span></button>
+      <button class="adagio-scene-btn" data-time="66"><img src="tomas/mini/fifa.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">05</span><span class="scene-name">FIFA en casa</span><span class="scene-time">1:06</span></button>
+      <button class="adagio-scene-btn" data-time="73"><img src="tomas/mini/optra.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">06</span><span class="scene-name">El Optra</span><span class="scene-time">1:13</span></button>
+      <button class="adagio-scene-btn" data-time="80"><img src="tomas/mini/fornite.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">07</span><span class="scene-name">Fortnite</span><span class="scene-time">1:20</span></button>
+      <button class="adagio-scene-btn" data-time="90"><img src="tomas/mini/conlagrimas.jpg" width="320" height="200" alt="" loading="lazy" decoding="async"><span class="scene-num">Final</span><span class="scene-name">Todo eso fuiste</span><span class="scene-time">1:30</span></button>
+    </div>
   </div>
 </div>
 
@@ -2835,12 +2842,8 @@
 
   <!-- Jarrón Kintsugi con grietas doradas — SVG animado -->
   <div class="kintsugi-wrap">
-    <svg class="kintsugi-svg" viewBox="0 0 200 230" fill="none" aria-hidden="true">
+    <svg class="kintsugi-svg" viewBox="0 0 240 300" fill="none" aria-hidden="true">
       <defs>
-        <radialGradient id="kg-glow" cx="50%" cy="55%" r="50%">
-          <stop offset="0%"  stop-color="rgba(240,176,0,.08)"/>
-          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
-        </radialGradient>
         <linearGradient id="real-gold" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#bf953f" />
           <stop offset="25%" stop-color="#fcf6ba" />
@@ -2848,108 +2851,78 @@
           <stop offset="75%" stop-color="#fbf5b7" />
           <stop offset="100%" stop-color="#aa771c" />
         </linearGradient>
-        <radialGradient id="ceramic-fill" cx="50%" cy="45%" r="55%">
-          <stop offset="0%"  stop-color="rgba(22,18,14,0.85)"/>
-          <stop offset="60%" stop-color="rgba(14,11,8,0.90)"/>
-          <stop offset="100%" stop-color="rgba(8,6,4,0.95)"/>
+        <radialGradient id="k-glaze" cx="38%" cy="30%" r="80%">
+          <stop offset="0%"  stop-color="#1c3b31"/>
+          <stop offset="45%" stop-color="#0e241d"/>
+          <stop offset="100%" stop-color="#050e0b"/>
         </radialGradient>
-        <radialGradient id="ceramic-highlight" cx="45%" cy="25%" r="50%">
-          <stop offset="0%"  stop-color="rgba(240,176,0,0.04)"/>
-          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
+        <linearGradient id="k-lip" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0a1b15"/>
+          <stop offset="50%" stop-color="#1f403a"/>
+          <stop offset="100%" stop-color="#0a1b15"/>
+        </linearGradient>
+        <radialGradient id="k-shadow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(0,0,0,.55)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
         </radialGradient>
       </defs>
 
-      <!-- Glow sutil de fondo -->
-      <ellipse cx="100" cy="130" rx="70" ry="70" fill="url(#kg-glow)"/>
-      <!-- Aura exterior pulsante -->
-      <ellipse class="k-aura" cx="100" cy="130" rx="85" ry="85" fill="none" stroke="rgba(240,176,0,0.06)" stroke-width="0.5"/>
+      <!-- La sombra en el suelo -->
+      <ellipse cx="120" cy="284" rx="78" ry="11" fill="url(#k-shadow)"/>
 
-      <!-- ── VASIJA japonesa: cuello, hombros, cuerpo, base ── -->
-      <!-- Relleno cerámico — capa sólida detrás del contorno -->
-      <path class="k-ceramic" fill="url(#ceramic-fill)" stroke="none"
-        d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
-      <path class="k-ceramic" fill="url(#ceramic-highlight)" stroke="none"
-        d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
-      <path class="k-ceramic" fill="url(#ceramic-fill)" stroke="none"
-        d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38 Z"/>
-      <ellipse class="k-ceramic" cx="100" cy="202" rx="30" ry="8" fill="url(#ceramic-fill)" stroke="none"/>
-      <!-- Cuerpo principal — contorno -->
-      <path class="k-vessel" stroke-width="1.4"
-        d="
-          M 88,38
-          C 82,38  78,42  76,48
-          C 72,56  70,64  68,72
-          C 62,88  56,105 54,122
-          C 51,140 52,158 57,173
-          C 63,190 76,202 100,205
-          C 124,202 137,190 143,173
-          C 148,158 149,140 146,122
-          C 144,105 138,88 132,72
-          C 130,64 128,56 124,48
-          C 122,42 118,38 112,38
-          Z
-        "/>
-      <!-- Cuello (estrecho) — conecta la boca con los hombros -->
-      <path class="k-vessel" stroke-width="1.2"
-        d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38"/>
-      <!-- Boca — el borde superior, abierto y ovalado -->
-      <ellipse class="k-vessel" cx="100" cy="20" rx="20" ry="7" stroke-width="1.4"/>
-      <!-- Interior visible de la boca (más oscuro) -->
-      <ellipse cx="100" cy="20" rx="16" ry="4.5" fill="rgba(0,0,0,.25)" stroke="none"/>
-      <!-- Base del jarrón -->
-      <ellipse class="k-vessel" cx="100" cy="202" rx="30" ry="8" stroke-width="1.2"/>
+      <!-- ── EL JARRÓN (tsubo): labio, cuello, hombros anchos, cuerpo y pie ── -->
+      <path class="k-ceramic" fill="url(#k-glaze)"
+        d="M 92,46 C 90,62 70,74 50,94 C 28,118 26,162 36,202 C 46,242 70,268 120,272 C 170,268 194,242 204,202 C 214,162 212,118 190,94 C 170,74 150,62 148,46 Z"/>
+      <!-- El brillo del esmalte, arriba a la izquierda -->
+      <ellipse cx="80" cy="120" rx="26" ry="48" fill="rgba(238,243,236,.06)" transform="rotate(-18 80 120)"/>
+      <!-- El pie -->
+      <ellipse cx="120" cy="270" rx="40" ry="9" fill="#071511"/>
+      <ellipse cx="120" cy="268" rx="40" ry="9" fill="none" stroke="rgba(242,183,5,.35)" stroke-width="1.2"/>
+      <!-- El labio y la boca -->
+      <ellipse cx="120" cy="46" rx="30" ry="9" fill="url(#k-lip)"/>
+      <ellipse cx="120" cy="46" rx="30" ry="9" fill="none" stroke="rgba(242,183,5,.5)" stroke-width="1.4"/>
+      <ellipse cx="120" cy="47" rx="21" ry="5" fill="#030806"/>
+      <!-- El contorno, fino, de oro apagado -->
+      <path class="k-vessel" stroke="rgba(242,183,5,.4)" stroke-width="1.4"
+        d="M 92,46 C 90,62 70,74 50,94 C 28,118 26,162 36,202 C 46,242 70,268 120,272 C 170,268 194,242 204,202 C 214,162 212,118 190,94 C 170,74 150,62 148,46"/>
 
-      <!-- ── GRIETAS DE ORO (kintsugi) ── -->
-      <!-- Grieta principal: desde la boca por el cuello y el cuerpo -->
-      <path class="k-crack" id="kc1" stroke-width="1.7" stroke-opacity=".8"
-        d="M 100,22 C 97,35 104,48 99,62 C 94,78 105,92 100,110 C 95,128 103,148 100,170 C 98,185 100,198 100,205"/>
-      <!-- Ramal izquierdo — sale del centro del cuerpo -->
-      <path class="k-crack" id="kc2" stroke-width="1.1" stroke-opacity=".65"
-        d="M 99,92 C 88,96 74,93 62,100 C 57,105 55,118 56,130"/>
-      <!-- Ramal derecho — sale más abajo -->
-      <path class="k-crack" id="kc3" stroke-width="1.1" stroke-opacity=".65"
-        d="M 101,128 C 114,133 130,128 140,136 C 148,142 147,158 143,170"/>
-      <!-- Grieta del cuello -->
-      <path class="k-crack" id="kc4" stroke-width=".9" stroke-opacity=".5"
-        d="M 97,42 C 88,44 82,50 78,58"/>
-      <!-- Grieta del hombro derecho -->
-      <path class="k-crack" id="kc5" stroke-width=".85" stroke-opacity=".45"
-        d="M 103,58 C 114,60 122,66 128,74"/>
-      <!-- Ramal izquierdo del cuello -->
-      <path class="k-crack" id="kc6" stroke-width=".75" stroke-opacity=".4"
-        d="M 95,35 C 90,36 86,37 83,39"/>
-      <!-- Sub-ramal de kc2 — bifurcación descendente -->
-      <path class="k-crack" id="kc7" stroke-width=".8" stroke-opacity=".5"
-        d="M 74,93 C 68,102 64,112 66,124"/>
-      <!-- Sub-ramal de kc3 — bifurcación hacia el borde -->
-      <path class="k-crack" id="kc8" stroke-width=".75" stroke-opacity=".45"
-        d="M 130,128 C 136,120 142,114 146,118"/>
-      <!-- Grieta baja izquierda — hacia la base -->
-      <path class="k-crack" id="kc9" stroke-width="1.0" stroke-opacity=".6"
-        d="M 100,170 C 92,176 82,182 76,190 C 73,195 72,199 74,203"/>
-      <!-- Grieta baja derecha — simétrica irregular -->
-      <path class="k-crack" id="kc10" stroke-width=".9" stroke-opacity=".55"
-        d="M 100,148 C 110,155 120,162 126,172 C 130,180 128,192 126,200"/>
-      <!-- Micro-grieta del hombro izquierdo -->
-      <path class="k-crack" id="kc11" stroke-width=".6" stroke-opacity=".35"
-        d="M 78,58 C 74,62 70,68 68,75"/>
-      <!-- Micro-grieta superior derecha -->
-      <path class="k-crack" id="kc12" stroke-width=".55" stroke-opacity=".3"
-        d="M 128,74 C 134,80 138,88 136,96"/>
+      <!-- ── LAS GRIETAS DE ORO ── -->
+      <!-- La principal, de la boca al pie -->
+      <path class="k-crack" id="kc1" stroke-width="2.6" d="M 120,52 C 112,84 128,122 118,160 C 110,200 124,240 120,268"/>
+      <!-- Ramal izquierdo, hacia el hombro -->
+      <path class="k-crack" id="kc2" stroke-width="1.7" d="M 118,112 C 95,120 72,114 54,132 C 46,140 42,162 44,182"/>
+      <!-- Ramal derecho, hacia abajo -->
+      <path class="k-crack" id="kc3" stroke-width="1.7" d="M 119,172 C 145,178 172,170 186,186 C 196,198 194,222 186,240"/>
+      <!-- Cuello, a la izquierda -->
+      <path class="k-crack" id="kc4" stroke-width="1.2" d="M 116,72 C 100,76 88,86 80,100"/>
+      <!-- Hombro derecho -->
+      <path class="k-crack" id="kc5" stroke-width="1.2" d="M 124,90 C 142,94 160,102 172,116"/>
+      <!-- Del ramal izquierdo, bajando -->
+      <path class="k-crack" id="kc6" stroke-width="1" d="M 72,114 C 64,126 58,142 60,158"/>
+      <!-- Del ramal derecho, hacia el borde -->
+      <path class="k-crack" id="kc7" stroke-width="1" d="M 172,170 C 180,162 190,154 200,152"/>
+      <!-- Hacia el pie, izquierda -->
+      <path class="k-crack" id="kc8" stroke-width="1.4" d="M 120,232 C 106,240 92,248 86,260"/>
+      <!-- Hacia el pie, derecha -->
+      <path class="k-crack" id="kc9" stroke-width="1.2" d="M 119,202 C 134,210 150,216 160,230 C 166,238 164,252 160,262"/>
+      <!-- Una pequeña, en el hombro izquierdo -->
+      <path class="k-crack" id="kc10" stroke-width=".9" d="M 58,132 C 50,140 44,148 40,158"/>
+      <!-- Otra pequeña, arriba a la derecha -->
+      <path class="k-crack" id="kc11" stroke-width=".9" d="M 172,116 C 180,124 186,134 188,146"/>
 
-      <!-- ── NODOS DORADOS en las intersecciones ── -->
-      <circle class="k-gold-fill" id="kg1" cx="99"  cy="62"  r="3.2"/>
-      <circle class="k-gold-fill" id="kg2" cx="99"  cy="92"  r="3.8"/>
-      <circle class="k-gold-fill" id="kg3" cx="100" cy="128" r="3.2"/>
-      <circle class="k-gold-fill" id="kg4" cx="100" cy="168" r="2.8"/>
-      <circle class="k-gold-fill" id="kg5" cx="97"  cy="42"  r="2.2"/>
-      <circle class="k-gold-fill" id="kg6"  cx="83"  cy="39"  r="1.8"/>
-      <circle class="k-gold-fill" id="kg7"  cx="74"  cy="93"  r="2.5"/>
-      <circle class="k-gold-fill" id="kg8"  cx="130" cy="128" r="2.5"/>
-      <circle class="k-gold-fill" id="kg9"  cx="100" cy="148" r="2.8"/>
-      <circle class="k-gold-fill" id="kg10" cx="76"  cy="190" r="2.2"/>
-      <circle class="k-gold-fill" id="kg11" cx="126" cy="172" r="2.2"/>
-      <circle class="k-gold-fill" id="kg12" cx="78"  cy="58"  r="1.8"/>
+      <!-- ── LAS GOTAS DE LACA DE ORO en los cruces ── -->
+      <circle class="k-gold-fill" id="kg1"  cx="118" cy="112" r="3.8"/>
+      <circle class="k-gold-fill" id="kg2"  cx="119" cy="172" r="3.8"/>
+      <circle class="k-gold-fill" id="kg3"  cx="116" cy="72"  r="2.8"/>
+      <circle class="k-gold-fill" id="kg4"  cx="124" cy="90"  r="2.8"/>
+      <circle class="k-gold-fill" id="kg5"  cx="72"  cy="114" r="2.8"/>
+      <circle class="k-gold-fill" id="kg6"  cx="172" cy="170" r="2.8"/>
+      <circle class="k-gold-fill" id="kg7"  cx="120" cy="232" r="3.2"/>
+      <circle class="k-gold-fill" id="kg8"  cx="119" cy="202" r="2.8"/>
+      <circle class="k-gold-fill" id="kg9"  cx="54"  cy="132" r="2.4"/>
+      <circle class="k-gold-fill" id="kg10" cx="186" cy="186" r="2.6"/>
+      <circle class="k-gold-fill" id="kg11" cx="172" cy="116" r="2.4"/>
+      <circle class="k-gold-fill" id="kg12" cx="120" cy="52"  r="2.6"/>
     </svg>
   </div>
 
@@ -2979,28 +2952,6 @@
    LA LUZ AL FINAL DEL MUELLE
    Canvas fijo — eco verde en toda la página
 ═══════════════════════════════════════════ */
-/* La luz: una capa fija que se tiñe del color de la sección visible.
-   No se repinta por frame: solo cambia su color (con transición CSS) al cambiar de sección. */
-const luzEl = document.getElementById('luz');
-function setLuz(c) {
-  if (luzEl) luzEl.style.backgroundColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
-}
-
-/* ── Color dinámico tipo Clementine — cambia por sección ── */
-const SECTION_COLORS = {
-  hero:     [0, 230, 140],   /* verde esperanza — el inicio */
-  grupo:    [0, 210, 255],   /* cyan intenso — la frescura de la amistad */
-  swatches: [0, 230, 140],   /* verde — los recuerdos compartidos */
-  gatsby:   [0, 255, 120],   /* verde Gatsby — la luz del muelle */
-  office:   [255, 180, 0],   /* ámbar fuerte — humor, calidez */
-  letters:  [60, 100, 255],  /* azul profundo — melancolía, lo que no se dijo */
-  habbo:    [0, 240, 180],   /* turquesa vivo — nostalgia digital */
-  vinyl:    [255, 40, 100],   /* rosa intenso — pasión, la música */
-  strange:  [255, 100, 30],   /* naranja portal — Doctor Strange */
-  adagio:   [100, 50, 160],   /* púrpura profundo — el flashback, la memoria */
-  kintsugi: [255, 190, 0]    /* dorado brillante — reparación, cierre */
-};
-
 /* ─── Scroll reveal ─── */
 requestAnimationFrame(() =>
   requestAnimationFrame(() => document.body.classList.add('anim'))
@@ -3134,8 +3085,6 @@ lbClose.addEventListener('click', closeLb);
 lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
-/* La luz ambiental siempre está encendida */
-let luzOn = true;
 
 
 /* ─── Hero: "20 años de amistad" toca para ver la línea de tiempo ─── */
@@ -4885,59 +4834,6 @@ if (kWrap) {
   }
 })();
 
-/* ─── Eternal Sunshine: color shift por sección ─── */
-(function() {
-  const sectionMap = [
-    { sel: '.hero',             key: 'hero' },
-    { sel: '#grupo-section',    key: 'grupo' },
-    { sel: '#swatches-section', key: 'swatches' },
-    { sel: '#gatsby-section',   key: 'gatsby' },
-    { sel: '#office-section',   key: 'office' },
-    { sel: '#room-section',     key: 'habbo' },
-    { sel: '#letters-section',  key: 'letters' },
-    { sel: '#vinyl-section',    key: 'vinyl' },
-    { sel: '#strange-section',  key: 'strange' },
-    { sel: '#adagio-section',   key: 'adagio' },
-    { sel: '#kintsugi',         key: 'kintsugi' }
-  ];
-
-  const entries = sectionMap
-    .map(s => { const el = document.querySelector(s.sel); return el ? { el, key: s.key } : null; })
-    .filter(Boolean);
-
-  if (!entries.length) return;
-
-  /* Mantener qué secciones están visibles y su ratio */
-  const visibleMap = new Map();
-
-  function updateColor() {
-    /* Elegir la sección con mayor intersectionRatio */
-    let best = null, bestRatio = 0;
-    visibleMap.forEach((ratio, key) => {
-      if (ratio > bestRatio) { bestRatio = ratio; best = key; }
-    });
-    if (!best) return;
-    const c = SECTION_COLORS[best];
-    if (!c) return;
-    setLuz(c);
-  }
-
-  const obs = new IntersectionObserver((ents) => {
-    ents.forEach(e => {
-      const key = entries.find(s => s.el === e.target)?.key;
-      if (!key) return;
-      if (e.isIntersecting) {
-        visibleMap.set(key, e.intersectionRatio);
-      } else {
-        visibleMap.delete(key);
-      }
-    });
-    updateColor();
-  }, { threshold: [0, 0.15, 0.3, 0.5, 0.7] });
-
-  entries.forEach(s => obs.observe(s.el));
-})();
-
 /* ═══════════════════════════════════════════
    ADAGIO FOR STRINGS — STICKMAN FLASHBACK
    (Improved: fluid animation, emotional depth,
@@ -6221,6 +6117,8 @@ if (kWrap) {
     if (stopBtn) stopBtn.style.display = 'none';
     if (textEl) { textEl.classList.remove('phrase1', 'phrase2', 'phrase3'); textEl.textContent = ''; }
     sceneBtns.forEach(function(btn) { btn.classList.remove('active'); });
+    var prog = document.getElementById('adagio-progress');
+    if (prog) prog.style.transform = 'scaleX(0)';
   }
 
   function updateActiveScene(t) {
@@ -6238,11 +6136,23 @@ if (kWrap) {
     sceneBtns.forEach(function(btn, i) {
       var r = sceneRanges[i];
       if (r && t >= r.start && t < r.end) {
-        btn.classList.add('active');
+        if (!btn.classList.contains('active')) {
+          btn.classList.add('active');
+          /* La escena activa se centra en la tira (solo en horizontal) */
+          var strip = btn.parentElement;
+          if (strip && strip.scrollWidth > strip.clientWidth) {
+            strip.scrollTo({ left: btn.offsetLeft - strip.clientWidth / 2 + btn.offsetWidth / 2, behavior: 'smooth' });
+          }
+        }
       } else {
         btn.classList.remove('active');
       }
     });
+    var prog = document.getElementById('adagio-progress');
+    if (prog) {
+      var total = (audio && isFinite(audio.duration) && audio.duration > 0) ? audio.duration : 100;
+      prog.style.transform = 'scaleX(' + Math.max(0, Math.min(1, t / total)) + ')';
+    }
   }
 
   playBtn.addEventListener('click', function() {
