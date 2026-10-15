@@ -2005,103 +2005,113 @@
     .anim .divider .dl:last-child { transform-origin: left; }
 
     /* ════════════════════════════════════
-       GATSBY v2 — la bahía de noche
+       GATSBY v3 — cartel Art Déco
     ════════════════════════════════════ */
     .gatsby-moment {
-      display: flex; flex-direction: column; align-items: center; justify-content: space-between;
-      min-height: min(92vh, 860px);
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      min-height: min(92vh, 880px);
       padding: 5.5rem 1.5rem 3rem;
       background-image: none;
       border-top: var(--borde) solid var(--tinta);
+      overflow: hidden;
     }
-    .gatsby-moment::before { content: none; }
+    /* El marco déco, doble, dentro de la banda */
+    .gatsby-moment::before,
+    .gatsby-moment::after {
+      content: ''; position: absolute; z-index: 1; pointer-events: none;
+      width: auto; height: auto; transform: none; background: none;
+      border: 2px solid rgba(242,183,5,.5);
+    }
+    .gatsby-moment::before { inset: 16px; }
+    .gatsby-moment::after  { inset: 24px; border-width: 1px; border-color: rgba(242,183,5,.25); }
     .gm-scene {
       position: absolute; inset: 0; z-index: 0;
       width: 100%; height: 100%;
       pointer-events: none;
     }
-    .gm-horizon { stroke: rgba(62,229,155,.22); stroke-width: 1; }
+    .gm-rays line { stroke: url(#gm-rays); stroke-width: 1.5; }
+    .gm-rays { transform-origin: 600px 440px; animation: gm-rays 14s ease-in-out infinite alternate; }
+    @keyframes gm-rays { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
+    .gm-arcs path { fill: none; stroke: rgba(242,183,5,.28); stroke-width: 1.2; stroke-dasharray: 2 7; }
+    .gm-arcs path:nth-child(2n) { stroke-dasharray: none; stroke-opacity: .6; }
     .gm-stars circle { fill: #fff; animation: gm-twinkle 3.6s ease-in-out infinite; }
     .gm-stars circle:nth-child(3n)   { animation-delay: -1.2s; }
     .gm-stars circle:nth-child(3n+1) { animation-delay: -2.4s; }
     .gm-stars circle:nth-child(4n)   { animation-duration: 5.2s; }
-    @keyframes gm-twinkle { 0%, 100% { opacity: .25; } 50% { opacity: .95; } }
+    @keyframes gm-twinkle { 0%, 100% { opacity: .2; } 50% { opacity: .9; } }
+    .gm-pier line { stroke: rgba(242,183,5,.3); stroke-width: 1.5; }
+    .gm-pier line:nth-child(n+3) { stroke-width: 1; stroke-opacity: .55; }
 
     /* La luz: late, y su reflejo tiembla en el agua */
     .gm-light { pointer-events: auto; cursor: pointer; }
-    .gm-glow { transform-origin: 760px 368px; animation: gm-breathe 4s ease-in-out infinite alternate; }
-    .gm-halo { fill: none; stroke: #3ee59b; stroke-width: 1.5; opacity: .5; transform-origin: 760px 368px; animation: gm-halo 2.6s ease-out infinite; }
-    .gm-core { fill: #3ee59b; stroke: #0f1f19; stroke-width: 2; filter: drop-shadow(0 0 10px #3ee59b) drop-shadow(0 0 26px rgba(62,229,155,.8)); }
+    .gm-glow { transform-origin: 600px 440px; animation: gm-breathe 4s ease-in-out infinite alternate; }
+    .gm-halo { fill: none; stroke: #3ee59b; stroke-width: 1.5; opacity: .6; transform-origin: 600px 440px; animation: gm-halo 2.8s ease-out infinite; }
+    .gm-ring { fill: none; stroke: var(--oro); stroke-width: 2; }
+    .gm-core { fill: #3ee59b; stroke: #0f1f19; stroke-width: 2; filter: drop-shadow(0 0 10px #3ee59b) drop-shadow(0 0 30px rgba(62,229,155,.9)); }
     .gm-reflect { animation: gm-reflect 3.2s ease-in-out infinite alternate; }
-    .gm-ripples line { stroke: rgba(62,229,155,.45); stroke-width: 1.5; stroke-dasharray: 6 10; animation: gm-ripple 2.8s linear infinite; }
-    .gm-ripples line:nth-child(2) { animation-duration: 3.4s; stroke-dasharray: 8 14; }
-    .gm-ripples line:nth-child(3) { animation-duration: 4.1s; stroke-dasharray: 10 18; opacity: .7; }
-    .gm-ripples line:nth-child(4) { animation-duration: 5s;   stroke-dasharray: 12 22; opacity: .45; }
+    .gm-ripples line { stroke: rgba(62,229,155,.5); stroke-width: 1.5; stroke-dasharray: 6 10; animation: gm-ripple 2.8s linear infinite; }
+    .gm-ripples line:nth-child(2) { animation-duration: 3.6s; stroke-dasharray: 8 14; opacity: .7; }
+    .gm-ripples line:nth-child(3) { animation-duration: 4.6s; stroke-dasharray: 10 18; opacity: .45; }
     @keyframes gm-breathe { from { transform: scale(.88); opacity: .8; } to { transform: scale(1.12); opacity: 1; } }
-    @keyframes gm-halo    { 0% { transform: scale(.4); opacity: .8; } 100% { transform: scale(2.4); opacity: 0; } }
-    @keyframes gm-reflect { from { opacity: .55; transform: scaleX(.9); transform-origin: 760px 384px; } to { opacity: 1; transform: scaleX(1.08); transform-origin: 760px 384px; } }
+    @keyframes gm-halo    { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(2.6); opacity: 0; } }
+    @keyframes gm-reflect { from { opacity: .55; transform: scaleX(.85); transform-origin: 600px 454px; } to { opacity: 1; transform: scaleX(1.1); transform-origin: 600px 454px; } }
     @keyframes gm-ripple  { to { stroke-dashoffset: -32; } }
-    /* Al tocarla, la luz se enciende más fuerte un instante */
     .gatsby-moment.flare .gm-glow { animation: gm-flare 1.4s ease-out; }
-    .gatsby-moment.flare .gm-core { animation: gm-flare-core 1.4s ease-out; }
-    @keyframes gm-flare { 0% { transform: scale(1); } 25% { transform: scale(1.9); opacity: 1; } 100% { transform: scale(1); } }
-    @keyframes gm-flare-core { 0%, 100% { r: 7; } 25% { r: 13; } }
-
-    /* El muelle */
-    .gm-planks line { stroke: rgba(238,243,236,.14); stroke-width: 2; }
-    .gm-edge { stroke: rgba(238,243,236,.28); stroke-width: 2.5; }
-    .gm-posts rect { fill: #0a1512; stroke: rgba(238,243,236,.2); stroke-width: 1; }
-    .gm-figure circle { fill: #06100c; stroke: rgba(238,243,236,.35); stroke-width: 1; }
-    .gm-figure path { fill: none; stroke: #06100c; stroke-width: 3.2; }
-    .gm-figure { transform-origin: 700px 388px; animation: gm-reach 5s ease-in-out infinite alternate; }
-    @keyframes gm-reach { from { transform: rotate(-1deg); } to { transform: rotate(1.5deg); } }
+    .gatsby-moment.flare .gm-rays { animation: gm-rays-flare 1.4s ease-out; }
+    @keyframes gm-flare { 0% { transform: scale(1); } 25% { transform: scale(2); opacity: 1; } 100% { transform: scale(1); } }
+    @keyframes gm-rays-flare { 0% { opacity: 1; } 25% { opacity: 1.6; transform: scale(1.04); } 100% { opacity: 1; } }
 
     /* El texto, encima de la escena */
     .gm-text {
-      position: relative; z-index: 1;
-      max-width: 720px;
+      position: relative; z-index: 2;
+      max-width: 860px;
       text-align: center;
     }
-    .gatsby-moment .s-label { margin-bottom: 1.4rem; }
-    .gm-dialogue { margin-bottom: 1.4rem; }
+    .gatsby-moment .s-label { margin-bottom: 1.6rem; }
+    .gm-dialogue { margin-bottom: 1.6rem; }
     .gm-line-1 {
       font-family: var(--cita);
-      font-size: clamp(1.15rem, 2.8vw, 1.7rem);
+      font-size: clamp(1.15rem, 2.6vw, 1.6rem);
       font-style: italic; font-weight: 400;
-      color: rgba(238,243,236,.72); line-height: 1.45;
-      margin-bottom: .8rem;
+      color: rgba(238,243,236,.75); line-height: 1.4;
+      margin-bottom: .9rem;
     }
     .gm-line-2 {
-      font-family: var(--cita);
-      font-size: clamp(2rem, 6vw, 3.9rem);
-      font-style: italic; font-weight: 500;
-      color: var(--papel); line-height: 1.12;
-      text-shadow: 0 2px 30px rgba(0,0,0,.6);
-      text-wrap: balance;
+      font-family: var(--titulo);
+      font-size: clamp(2.9rem, 9.5vw, 6.4rem);
+      line-height: .95; letter-spacing: .01em;
+      text-transform: uppercase;
+      color: var(--papel);
+      text-shadow: .05em .05em 0 var(--tinta), .05em .05em 0 rgba(242,183,5,.0);
+      -webkit-text-stroke: 1px rgba(15,31,25,.6);
+      margin-bottom: .5rem;
     }
-    .gm-line-2 em {
-      font-style: italic; color: var(--verde-luz);
+    .gm-line-3 {
+      font-family: var(--cita);
+      font-size: clamp(2rem, 5.6vw, 3.6rem);
+      font-style: italic; font-weight: 500;
+      color: var(--verde-luz); line-height: 1.1;
       text-shadow: 0 0 18px rgba(62,229,155,.55), 0 0 60px rgba(62,229,155,.3);
     }
     .gm-attr {
       display: inline-block;
       padding: .35rem .9rem;
-      border: 2px solid rgba(238,243,236,.45); border-radius: 999px;
-      background: rgba(6,16,12,.5);
+      border: 2px solid rgba(242,183,5,.6); border-radius: 999px;
+      background: rgba(6,16,12,.6);
       font-size: .62rem; letter-spacing: .22em; font-weight: 600;
-      text-transform: uppercase; color: rgba(238,243,236,.85);
+      text-transform: uppercase; color: var(--oro);
       margin-bottom: 0;
     }
-    /* La frase final: un sticker de oro flotando sobre el agua */
+    /* La frase final: un sticker de oro al pie, sobre el reflejo */
     .gm-sub {
-      position: relative; z-index: 1;
-      margin-top: 3rem;
-      padding: .6rem 1.2rem;
+      position: relative; z-index: 2;
+      margin-top: auto;
+      padding: .65rem 1.3rem;
       background: var(--oro); color: var(--tinta);
       border: var(--borde) solid var(--tinta); border-radius: 10px;
       box-shadow: 6px 6px 0 rgba(62,229,155,.9);
       font-family: var(--titulo);
-      font-size: clamp(1rem, 2.6vw, 1.45rem);
+      font-size: clamp(1rem, 2.6vw, 1.5rem);
       letter-spacing: .06em; text-transform: uppercase;
       line-height: 1.15;
       transform: rotate(-1.5deg);
@@ -2109,17 +2119,23 @@
       max-width: 92%;
     }
     .gm-sub em { font-style: normal; color: var(--verde); }
-    /* La luz se enciende al llegar a la sección */
-    .anim #gatsby-section:not(.in) .gm-light { opacity: 0; }
-    .anim #gatsby-section.in .gm-light { animation: gm-on 1.8s ease .5s backwards; }
-    .anim #gatsby-section.in .gm-sub { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.2s backwards; }
-    @keyframes gm-on { 0% { opacity: 0; } 40% { opacity: .35; } 55% { opacity: .1; } 100% { opacity: 1; } }
+    /* Al llegar: los rayos se abren y la luz se enciende */
+    .anim #gatsby-section:not(.in) :is(.gm-light, .gm-rays, .gm-arcs) { opacity: 0; }
+    .anim #gatsby-section.in .gm-light { animation: gm-on 1.8s ease .4s backwards; }
+    .anim #gatsby-section.in .gm-rays  { animation: gm-fan 1.6s cubic-bezier(.2,.8,.2,1) .6s backwards, gm-rays 14s ease-in-out 2.2s infinite alternate; }
+    .anim #gatsby-section.in .gm-arcs  { animation: rise 1.2s ease 1s backwards; }
+    .anim #gatsby-section.in .gm-sub   { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.3s backwards; }
+    @keyframes gm-on  { 0% { opacity: 0; } 40% { opacity: .35; } 55% { opacity: .1; } 100% { opacity: 1; } }
+    @keyframes gm-fan { 0% { opacity: 0; transform: scale(.2) rotate(-6deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
 
     @media (max-width: 640px) {
-      .gatsby-moment { min-height: min(88vh, 720px); padding: 4rem 1rem 2.4rem; }
-      .gm-line-2 { font-size: clamp(2rem, 9.5vw, 2.8rem); }
-      .gm-sub { margin-top: 2rem; font-size: .9rem; padding: .5rem .9rem; }
-      .gm-planks line { stroke-width: 3; }
+      .gatsby-moment { min-height: min(90vh, 760px); padding: 4rem 1rem 2.4rem; }
+      .gatsby-moment::before { inset: 10px; }
+      .gatsby-moment::after  { inset: 16px; }
+      .gm-line-2 { font-size: clamp(2.6rem, 13vw, 3.6rem); }
+      .gm-line-3 { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
+      .gm-sub { font-size: .9rem; padding: .5rem .9rem; }
+      .gm-rays line { stroke-width: 2; }
     }
 
     /* ════════════════════════════════════
@@ -2506,37 +2522,36 @@
 <!-- ══════════════ GATSBY ══════════════ -->
 <div class="gatsby-moment" id="gatsby-section">
 
-  <!-- La escena: la bahía de noche, el muelle y la luz verde al otro lado -->
-  <svg class="gm-scene" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <!-- La escena: un cartel Art Déco; la luz verde y sus rayos de oro -->
+  <svg class="gm-scene" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="gm-sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#06100c"/>
-        <stop offset="1" stop-color="#0e2a22"/>
+        <stop offset="0" stop-color="#07120e"/>
+        <stop offset=".63" stop-color="#0f2a22"/>
+        <stop offset=".63" stop-color="#0b1f19"/>
+        <stop offset="1" stop-color="#05100c"/>
       </linearGradient>
-      <linearGradient id="gm-water" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#0c2822"/>
-        <stop offset="1" stop-color="#04100c"/>
-      </linearGradient>
+      <radialGradient id="gm-rays" gradientUnits="userSpaceOnUse" cx="600" cy="440" r="760">
+        <stop offset="0" stop-color="#f2b705" stop-opacity=".55"/>
+        <stop offset=".45" stop-color="#f2b705" stop-opacity=".18"/>
+        <stop offset="1" stop-color="#f2b705" stop-opacity="0"/>
+      </radialGradient>
       <radialGradient id="gm-glow" cx="50%" cy="50%" r="50%">
-        <stop offset="0" stop-color="#3ee59b" stop-opacity=".85"/>
-        <stop offset=".35" stop-color="#3ee59b" stop-opacity=".28"/>
+        <stop offset="0" stop-color="#3ee59b" stop-opacity=".9"/>
+        <stop offset=".3" stop-color="#3ee59b" stop-opacity=".3"/>
         <stop offset="1" stop-color="#3ee59b" stop-opacity="0"/>
       </radialGradient>
       <linearGradient id="gm-reflect" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#3ee59b" stop-opacity=".7"/>
-        <stop offset=".6" stop-color="#3ee59b" stop-opacity=".18"/>
+        <stop offset="0" stop-color="#3ee59b" stop-opacity=".75"/>
         <stop offset="1" stop-color="#3ee59b" stop-opacity="0"/>
-      </linearGradient>
-      <linearGradient id="gm-deck" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#1a2a24"/>
-        <stop offset="1" stop-color="#2a3d35"/>
       </linearGradient>
     </defs>
 
-    <!-- Cielo y agua -->
-    <rect x="0" y="0" width="1200" height="380" fill="url(#gm-sky)"/>
-    <rect x="0" y="380" width="1200" height="320" fill="url(#gm-water)"/>
-    <line class="gm-horizon" x1="0" y1="380" x2="1200" y2="380"/>
+    <rect x="0" y="0" width="1200" height="700" fill="url(#gm-sky)"/>
+
+    <!-- El abanico de rayos y los arcos, como en los carteles de los años 20 -->
+    <g class="gm-rays"><line x1="600" y1="440" x2="-400" y2="440"/><line x1="600" y1="440" x2="-395" y2="335"/><line x1="600" y1="440" x2="-378" y2="232"/><line x1="600" y1="440" x2="-351" y2="131"/><line x1="600" y1="440" x2="-314" y2="33"/><line x1="600" y1="440" x2="-266" y2="-60"/><line x1="600" y1="440" x2="-209" y2="-148"/><line x1="600" y1="440" x2="-143" y2="-229"/><line x1="600" y1="440" x2="-69" y2="-303"/><line x1="600" y1="440" x2="12" y2="-369"/><line x1="600" y1="440" x2="100" y2="-426"/><line x1="600" y1="440" x2="193" y2="-474"/><line x1="600" y1="440" x2="291" y2="-511"/><line x1="600" y1="440" x2="392" y2="-538"/><line x1="600" y1="440" x2="495" y2="-555"/><line x1="600" y1="440" x2="600" y2="-560"/><line x1="600" y1="440" x2="705" y2="-555"/><line x1="600" y1="440" x2="808" y2="-538"/><line x1="600" y1="440" x2="909" y2="-511"/><line x1="600" y1="440" x2="1007" y2="-474"/><line x1="600" y1="440" x2="1100" y2="-426"/><line x1="600" y1="440" x2="1188" y2="-369"/><line x1="600" y1="440" x2="1269" y2="-303"/><line x1="600" y1="440" x2="1343" y2="-229"/><line x1="600" y1="440" x2="1409" y2="-148"/><line x1="600" y1="440" x2="1466" y2="-60"/><line x1="600" y1="440" x2="1514" y2="33"/><line x1="600" y1="440" x2="1551" y2="131"/><line x1="600" y1="440" x2="1578" y2="232"/><line x1="600" y1="440" x2="1595" y2="335"/><line x1="600" y1="440" x2="1600" y2="440"/></g>
+    <g class="gm-arcs"><path d="M 510 440 A 90 90 0 0 1 690 440"/><path d="M 440 440 A 160 160 0 0 1 760 440"/><path d="M 350 440 A 250 250 0 0 1 850 440"/><path d="M 240 440 A 360 360 0 0 1 960 440"/><path d="M 110 440 A 490 490 0 0 1 1090 440"/><path d="M -40 440 A 640 640 0 0 1 1240 440"/></g>
 
     <!-- Estrellas -->
     <g class="gm-stars">
@@ -2544,47 +2559,30 @@
       <circle cx="420" cy="150" r="1"/><circle cx="520" cy="80" r="1.3"/><circle cx="640" cy="30" r="1"/>
       <circle cx="700" cy="140" r="1.5"/><circle cx="860" cy="60" r="1.1"/><circle cx="960" cy="130" r="1.4"/>
       <circle cx="1060" cy="50" r="1"/><circle cx="1140" cy="160" r="1.3"/><circle cx="150" cy="230" r="1"/>
-      <circle cx="560" cy="220" r="1.1"/><circle cx="1010" cy="250" r="1"/><circle cx="780" cy="210" r="1.2"/>
-      <circle cx="280" cy="300" r=".9"/><circle cx="900" cy="320" r=".9"/><circle cx="40" cy="330" r="1"/>
+      <circle cx="1010" cy="250" r="1"/><circle cx="40" cy="330" r="1"/><circle cx="1160" cy="320" r="1"/>
     </g>
 
-    <!-- La orilla de enfrente: East Egg, apenas una sombra -->
-    <path d="M 640 380 L 700 368 L 760 372 L 820 362 L 900 370 L 980 360 L 1060 372 L 1200 366 L 1200 380 Z" fill="#071712"/>
+    <!-- El muelle, reducido a dos líneas de fuga -->
+    <g class="gm-pier">
+      <line x1="120" y1="700" x2="586" y2="452"/>
+      <line x1="1080" y1="700" x2="614" y2="452"/>
+      <line x1="300" y1="604" x2="900" y2="604"/>
+      <line x1="430" y1="535" x2="770" y2="535"/>
+      <line x1="520" y1="487" x2="680" y2="487"/>
+    </g>
 
-    <!-- La luz verde y su reflejo en el agua -->
+    <!-- La luz verde y su reflejo -->
     <g class="gm-light" id="gm-light">
-      <circle class="gm-glow" cx="760" cy="368" r="150" fill="url(#gm-glow)"/>
-      <polygon class="gm-reflect" points="752,384 768,384 812,700 708,700" fill="url(#gm-reflect)"/>
+      <circle class="gm-glow" cx="600" cy="440" r="170" fill="url(#gm-glow)"/>
+      <polygon class="gm-reflect" points="590,454 610,454 634,700 566,700" fill="url(#gm-reflect)"/>
       <g class="gm-ripples">
-        <line x1="720" y1="420" x2="800" y2="420"/>
-        <line x1="708" y1="470" x2="812" y2="470"/>
-        <line x1="690" y1="540" x2="830" y2="540"/>
-        <line x1="672" y1="630" x2="848" y2="630"/>
+        <line x1="550" y1="490" x2="650" y2="490"/>
+        <line x1="520" y1="545" x2="680" y2="545"/>
+        <line x1="480" y1="615" x2="720" y2="615"/>
       </g>
-      <circle class="gm-halo" cx="760" cy="368" r="22"/>
-      <circle class="gm-core" cx="760" cy="368" r="7"/>
-    </g>
-
-    <!-- El muelle de West Egg, hacia la luz -->
-    <g class="gm-dock">
-      <polygon points="330,700 620,700 714,398 690,398" fill="url(#gm-deck)"/>
-      <g class="gm-planks">
-        <line x1="378" y1="660" x2="632" y2="660"/><line x1="449" y1="600" x2="651" y2="600"/>
-        <line x1="515" y1="545" x2="668" y2="545"/><line x1="574" y1="495" x2="684" y2="495"/>
-        <line x1="622" y1="455" x2="696" y2="455"/><line x1="658" y1="425" x2="706" y2="425"/>
-      </g>
-      <line class="gm-edge" x1="330" y1="700" x2="690" y2="398"/>
-      <line class="gm-edge" x1="620" y1="700" x2="714" y2="398"/>
-      <g class="gm-posts">
-        <rect x="353" y="612" width="12" height="64"/><rect x="621" y="612" width="12" height="64"/>
-        <rect x="445" y="562" width="8" height="38"/><rect x="647" y="562" width="8" height="38"/>
-        <rect x="543" y="497" width="5" height="22"/><rect x="674" y="497" width="5" height="22"/>
-      </g>
-      <!-- Alguien al final del muelle, estirando el brazo hacia la luz -->
-      <g class="gm-figure">
-        <circle cx="700" cy="350" r="6"/>
-        <path d="M 700 356 L 700 388 M 700 362 L 712 352 L 722 346 M 700 364 L 692 380 M 700 388 L 695 398 M 700 388 L 706 398" stroke-linecap="round" stroke-linejoin="round"/>
-      </g>
+      <circle class="gm-halo" cx="600" cy="440" r="26"/>
+      <circle class="gm-ring" cx="600" cy="440" r="16"/>
+      <circle class="gm-core" cx="600" cy="440" r="8"/>
     </g>
   </svg>
 
@@ -2592,8 +2590,9 @@
   <div class="gm-text">
     <span class="s-label s-c">El Gran Gatsby · 1925</span>
     <div class="gm-dialogue">
-      <p class="gm-line-1">"¿No se puede repetir el pasado?"</p>
-      <p class="gm-line-2">¿Cómo que no? <em>Claro que se puede.</em></p>
+      <p class="gm-line-1">«¿No se puede repetir el pasado?»</p>
+      <p class="gm-line-2">¿Cómo que no?</p>
+      <p class="gm-line-3">Claro que se puede.</p>
     </div>
     <p class="gm-attr">— F. Scott Fitzgerald</p>
   </div>
@@ -3185,11 +3184,7 @@ document.querySelectorAll('.moment, .letter').forEach(el => io.observe(el));
   };
   light.addEventListener('click', flare);
   light.addEventListener('touchstart', flare, { passive: true });
-  /* En el teléfono la escena enseña su parte central: el muelle y la luz */
-  const scene = section.querySelector('.gm-scene');
-  const fit = () => scene && scene.setAttribute('viewBox', window.innerWidth < 640 ? '350 0 600 700' : '0 0 1200 700');
-  fit();
-  window.addEventListener('resize', fit);
+
 })();
 
 /* ─── Tocadiscos: el botón hace lo mismo que el disco ─── */
