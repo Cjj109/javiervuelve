@@ -391,29 +391,24 @@
     .swatches {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      max-width: 700px;
+      gap: 22px;
+      max-width: 720px;
       margin-left: auto; margin-right: auto;
-      padding-right: 6px; padding-bottom: 6px;
+      padding: 8px 8px 8px 0;
     }
     .swatches.assembling { pointer-events: none; }
     .swatches.assembled { opacity: 0; pointer-events: none; transition: opacity .5s ease; }
-    .swatches-wrap.swatches-breaking .swatches { animation: sw-break-shake .5s ease-out; }
-    @keyframes sw-break-shake {
-      0%, 100% { transform: translateX(0); }
-      15% { transform: translateX(-3px); }
-      30% { transform: translateX(3px); }
-      45% { transform: translateX(-2px); }
-      60% { transform: translateX(2px); }
-      75% { transform: translateX(-1px); }
-    }
 
+    /* Cada pieza es un sticker: color propio, un poco torcido, con número y botón de giro */
     .sw {
-      height: 184px; cursor: pointer;
+      height: 200px; cursor: pointer;
       position: relative;
-      transition: transform .2s ease;
+      transition: translate .18s ease, rotate .25s ease;
     }
-    .sw:hover { transform: translate(-2px, -2px); }
+    .sw:nth-child(odd)  { rotate: -1.4deg; }
+    .sw:nth-child(even) { rotate: 1.2deg; }
+    .sw:hover { translate: -3px -3px; rotate: 0deg; }
+    .sw.flipped { rotate: 0deg; }
     .sw.sw-fly {
       position: fixed !important;
       z-index: 100;
@@ -422,99 +417,145 @@
       opacity: 0;
     }
     .sw-inner { width: 100%; height: 100%; position: relative; }
-
     .sw-front, .sw-back {
       position: absolute; inset: 0;
       border: var(--borde) solid var(--tinta);
-      border-radius: 14px;
-      transition: opacity .32s ease, transform .32s ease, box-shadow .2s ease;
+      border-radius: 16px;
+      transition: opacity .32s ease, transform .32s ease, box-shadow .18s ease;
     }
     .sw-front {
-      background: var(--blanco);
+      background: var(--blanco); color: var(--tinta);
       box-shadow: var(--pop);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: .6rem;
-      padding-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto 1fr auto;
+      align-items: end;
+      padding: .75rem .85rem .85rem;
       opacity: 1; transform: scale(1); z-index: 1;
       overflow: hidden;
     }
-    .sw:hover .sw-front { box-shadow: 8px 8px 0 var(--tinta); }
+    .sw:hover .sw-front { box-shadow: 9px 9px 0 var(--tinta); }
     .sw.flipped .sw-front { opacity: 0; transform: scale(.94); z-index: 0; }
     .sw.flipped .sw-back  { opacity: 1; transform: scale(1);   z-index: 1; }
-
-    /* La franja de color arriba de cada tarjeta */
-    .sw-front::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 14px;
-      border-bottom: var(--borde) solid var(--tinta);
+    .sw-idx {
+      grid-column: 1; grid-row: 1; justify-self: start; align-self: start;
+      padding: .15rem .55rem;
+      background: var(--tinta); color: var(--papel);
+      border-radius: 999px;
+      font-family: var(--titulo); font-size: .64rem; letter-spacing: .14em;
     }
     .sw-cat-name {
+      grid-column: 1 / -1; grid-row: 2; align-self: center;
       font-family: var(--titulo);
-      font-size: 1.15rem; letter-spacing: .04em; text-transform: uppercase;
-      text-align: center; line-height: 1.1;
-      padding: 0 .7rem;
-      color: var(--tinta);
+      font-size: clamp(1.35rem, 2.6vw, 1.8rem); letter-spacing: .02em; text-transform: uppercase;
+      line-height: .95; text-align: left;
+      padding: .3rem 0;
     }
     .sw-count {
+      grid-column: 1; grid-row: 3; justify-self: start;
       font-family: var(--texto);
-      font-size: .58rem; font-weight: 700; letter-spacing: .14em;
-      text-transform: uppercase;
-      padding: .2rem .6rem;
+      font-size: .6rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+      padding: .22rem .6rem;
       border: 2px solid var(--tinta); border-radius: 999px;
-      background: var(--papel);
-      color: var(--tinta);
+      background: rgba(251,252,250,.75); color: var(--tinta);
     }
+    .sw-flip {
+      grid-column: 2; grid-row: 3;
+      width: 28px; height: 28px;
+      display: grid; place-items: center;
+      border: 2px solid var(--tinta); border-radius: 50%;
+      background: var(--blanco); color: var(--tinta);
+      font-size: 1rem; line-height: 1;
+      transition: rotate .35s ease;
+    }
+    .sw:hover .sw-flip { rotate: 180deg; }
+    /* El color de cada una */
+    .sw:nth-child(1) .sw-front { background: var(--verde-claro); }
+    .sw:nth-child(2) .sw-front { background: var(--oro); }
+    .sw:nth-child(3) .sw-front { background-color: var(--blanco); background-image: repeating-linear-gradient(-45deg, rgba(15,31,25,.08) 0 6px, transparent 6px 15px); }
+    .sw:nth-child(4) .sw-front { background: var(--papel-2); }
+    .sw:nth-child(5) .sw-front { background: #ffd9b0; }
+    .sw:nth-child(6) .sw-front { background: var(--tinta); color: var(--papel); }
+    .sw:nth-child(6) .sw-idx   { background: var(--oro); color: var(--tinta); }
+    .sw:nth-child(6) .sw-count { background: var(--oro); border-color: var(--oro); color: var(--tinta); }
+    .sw:nth-child(6) .sw-flip  { background: var(--tinta); color: var(--papel); border-color: var(--papel); }
 
-    /* La cara de atrás: tinta con la lista */
+    /* El reverso: tinta, y cada cosa como una píldora con su check */
     .sw-back {
       background: var(--tinta); color: var(--papel);
       box-shadow: var(--pop-oro);
       opacity: 0; transform: scale(.94); z-index: 0;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 1rem .9rem; gap: .55rem;
+      justify-content: center;
+      padding: .9rem .9rem; gap: .5rem;
+      overflow: hidden;
     }
     .sw-back-title {
       font-family: var(--titulo);
-      font-size: .75rem; letter-spacing: .2em; text-transform: uppercase;
+      font-size: .74rem; letter-spacing: .18em; text-transform: uppercase;
       color: var(--oro);
     }
-    .sw-back-rule { width: 32px; height: 4px; flex-shrink: 0; background: var(--oro); }
+    .sw-back-rule { width: 30px; height: 3px; flex-shrink: 0; background: var(--oro); }
     .sw-items {
       list-style: none;
       display: flex; flex-direction: column;
-      align-items: center; gap: .3rem;
+      align-items: flex-start; gap: .32rem;
+      margin-top: .15rem;
     }
     .sw-items li {
       font-family: var(--texto);
-      font-size: .72rem; font-weight: 700;
+      font-size: .66rem; font-weight: 800;
       letter-spacing: .06em; text-transform: uppercase;
-      text-align: center; line-height: 1.25;
+      line-height: 1.2;
+      padding: .22rem .6rem .22rem .5rem;
+      background: var(--papel); color: var(--tinta);
+      border: 2px solid var(--tinta); border-radius: 999px;
     }
+    .sw-items li::before { content: '✓ '; color: var(--verde); }
+    .sw:nth-child(6) .sw-back { background: var(--oro); color: var(--tinta); box-shadow: var(--pop); }
+    .sw:nth-child(6) .sw-back-title { color: var(--tinta); }
+    .sw:nth-child(6) .sw-back-rule  { background: var(--tinta); }
 
-    .sw-gold  .sw-front::before { background: var(--oro); }
-    .sw-green .sw-front::before { background: var(--verde); }
-    .sw-dim   .sw-front::before {
-      background: repeating-linear-gradient(-45deg, var(--tinta) 0 4px, var(--papel) 4px 10px);
+    /* El contador de piezas: seis rombos que se van llenando de oro */
+    .sw-progress {
+      display: flex; align-items: center; justify-content: center; gap: .9rem;
+      margin-top: 1.5rem;
+      transition: opacity .4s ease;
     }
-    .sw-gold  .sw-back-title, .sw-gold  .sw-back-rule { color: var(--oro); background-color: var(--oro); }
-    .sw-green .sw-back-title { color: var(--verde-luz); }
-    .sw-green .sw-back-rule  { background: var(--verde-luz); }
-    .sw-dim   .sw-back-title { color: var(--papel); }
-    .sw-dim   .sw-back-rule  { background: var(--papel); }
-    .sw-back-title { background: none !important; }
+    .swatches-wrap.assembled .sw-progress { opacity: 0; pointer-events: none; }
+    .sw-gems { display: flex; gap: .55rem; }
+    .sw-gems i {
+      display: block; width: 13px; height: 13px;
+      border: 2.5px solid var(--tinta); background: var(--blanco);
+      rotate: 45deg;
+      transition: background .25s ease, scale .25s cubic-bezier(.2,.9,.3,1.4);
+    }
+    .sw-gems i.on { background: var(--oro); scale: 1.15; }
+    .sw-progress-text {
+      font-family: var(--titulo);
+      font-size: .78rem; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--tinta-suave);
+    }
 
     /* El jarrón que aparece al unir las seis */
     .swatches-vase {
       position: absolute; left: 50%; top: 50%;
       transform: translate(-50%, -50%) scale(.85);
       opacity: 0; pointer-events: none;
-      width: clamp(150px, 30vw, 210px);
+      width: clamp(180px, 32vw, 240px);
       transition: opacity .8s ease .4s, transform .8s cubic-bezier(.25,.46,.45,.94) .4s;
     }
     .swatches-wrap.assembled .swatches-vase { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    .swatches-vase .kintsugi-svg { width: 100%; height: auto; }
+    .swatches-vase .kintsugi-svg { width: 100%; height: auto; position: relative; z-index: 1; }
+    /* El enso detrás, también aquí */
+    .swatches-vase::before {
+      content: ''; position: absolute; left: 50%; top: 50%; z-index: 0;
+      width: 136%; height: 136%; translate: -50% -50%;
+      border-radius: 50%;
+      border: 2px solid rgba(242,183,5,.45);
+      background: radial-gradient(circle, rgba(242,183,5,.16) 0%, rgba(242,183,5,.05) 55%, transparent 70%);
+    }
+    .swatches-vase .k-vessel { stroke: rgba(15,31,25,.6); }
     .swatches-assembled-text {
       position: absolute; left: 0; right: 0; bottom: -2.5rem;
       text-align: center;
@@ -1721,12 +1762,15 @@
       .cp-name { font-size: .62rem; }
 
       .swatches-wrap { min-height: 380px; margin-top: 2.2rem; }
-      .swatches { grid-template-columns: 1fr 1fr; gap: 14px; }
-      .sw { height: 150px; }
-      .sw-cat-name { font-size: .95rem; padding: 0 .5rem; }
-      .sw-count { font-size: .52rem; }
-      .sw-back { padding: .8rem .7rem; gap: .4rem; }
-      .sw-items li { font-size: .62rem; }
+      .swatches { grid-template-columns: 1fr 1fr; gap: 14px; padding-right: 6px; }
+      .sw { height: 168px; }
+      .sw-cat-name { font-size: 1.15rem; }
+      .sw-count { font-size: .54rem; padding: .18rem .5rem; }
+      .sw-flip { width: 24px; height: 24px; font-size: .85rem; }
+      .sw-back { padding: .7rem .65rem; gap: .35rem; }
+      .sw-items li { font-size: .58rem; padding: .18rem .5rem .18rem .45rem; }
+      .sw-progress { gap: .7rem; margin-top: 1.2rem; }
+      .sw-progress-text { font-size: .7rem; }
 
       .divider { padding: 0 1rem; gap: .8rem; }
 
@@ -1816,7 +1860,7 @@
       .cp-ring { width: 54px; height: 54px; font-size: 1.2rem; }
       .gatsby-moment { padding: 3.5rem .9rem 4.5rem; }
       .swatches { gap: 10px; }
-      .sw { height: 140px; }
+      .sw { height: 156px; }
     }
 
     /* ════════════════════════════════════
@@ -2435,8 +2479,10 @@
     <div class="sw sw-green" role="button" tabindex="0" aria-label="Ver categoría Videojuegos" data-piece="1">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">01</span>
           <div class="sw-cat-name">Videojuegos</div>
-          <span class="sw-count">× 2 cosas</span>
+          <span class="sw-count">2 cosas</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Videojuegos</div>
@@ -2449,8 +2495,10 @@
     <div class="sw sw-gold" role="button" tabindex="0" aria-label="Ver categoría Deporte" data-piece="2">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">02</span>
           <div class="sw-cat-name">Deporte</div>
-          <span class="sw-count">× 3 cosas</span>
+          <span class="sw-count">3 cosas</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Deporte</div>
@@ -2463,8 +2511,10 @@
     <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Teatro" data-piece="3">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">03</span>
           <div class="sw-cat-name">Teatro</div>
-          <span class="sw-count">× 2 cosas</span>
+          <span class="sw-count">2 cosas</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Teatro</div>
@@ -2477,8 +2527,10 @@
     <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Educación" data-piece="4">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">04</span>
           <div class="sw-cat-name">Educación</div>
-          <span class="sw-count">× 3 cosas</span>
+          <span class="sw-count">3 cosas</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Educación</div>
@@ -2491,8 +2543,10 @@
     <div class="sw sw-dim" role="button" tabindex="0" aria-label="Ver categoría Humor" data-piece="5">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">05</span>
           <div class="sw-cat-name">Humor</div>
-          <span class="sw-count">× 3 cosas</span>
+          <span class="sw-count">3 cosas</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">Humor</div>
@@ -2505,8 +2559,10 @@
     <div class="sw sw-gold" role="button" tabindex="0" aria-label="Ver categoría 20 años" data-piece="6">
       <div class="sw-inner">
         <div class="sw-front">
+          <span class="sw-idx">06</span>
           <div class="sw-cat-name">20 años</div>
-          <span class="sw-count">× toda una vida</span>
+          <span class="sw-count">toda una vida</span>
+          <span class="sw-flip" aria-hidden="true">↻</span>
         </div>
         <div class="sw-back">
           <div class="sw-back-title">20 años</div>
@@ -2517,13 +2573,13 @@
     </div>
 
   </div>
+  <div class="sw-progress" id="sw-progress">
+    <span class="sw-gems" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    <span class="sw-progress-text" id="sw-progress-text">Toca las seis piezas</span>
+  </div>
   <div class="swatches-vase" id="swatches-vase" aria-hidden="true">
-    <svg class="kintsugi-svg swatches-vase-svg" viewBox="0 0 200 230" fill="none" aria-hidden="true">
+    <svg class="kintsugi-svg swatches-vase-svg" viewBox="0 0 240 300" fill="none" aria-hidden="true">
       <defs>
-        <radialGradient id="kg-glow-sw" cx="50%" cy="55%" r="50%">
-          <stop offset="0%" stop-color="rgba(240,176,0,.08)"/>
-          <stop offset="100%" stop-color="rgba(240,176,0,0)"/>
-        </radialGradient>
         <linearGradient id="real-gold-sw" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#bf953f" />
           <stop offset="25%" stop-color="#fcf6ba" />
@@ -2531,40 +2587,78 @@
           <stop offset="75%" stop-color="#fbf5b7" />
           <stop offset="100%" stop-color="#aa771c" />
         </linearGradient>
-        <radialGradient id="ceramic-fill-sw" cx="50%" cy="45%" r="55%">
-          <stop offset="0%"  stop-color="rgba(22,18,14,0.85)"/>
-          <stop offset="60%" stop-color="rgba(14,11,8,0.90)"/>
-          <stop offset="100%" stop-color="rgba(8,6,4,0.95)"/>
+        <radialGradient id="k-glaze-sw" cx="38%" cy="30%" r="80%">
+          <stop offset="0%"  stop-color="#1c3b31"/>
+          <stop offset="45%" stop-color="#0e241d"/>
+          <stop offset="100%" stop-color="#050e0b"/>
+        </radialGradient>
+        <linearGradient id="k-lip-sw" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0a1b15"/>
+          <stop offset="50%" stop-color="#1f403a"/>
+          <stop offset="100%" stop-color="#0a1b15"/>
+        </linearGradient>
+        <radialGradient id="k-shadow-sw" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(0,0,0,.55)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
         </radialGradient>
       </defs>
-      <ellipse cx="100" cy="130" rx="70" ry="70" fill="url(#kg-glow-sw)"/>
-      <!-- Relleno cerámico -->
-      <path class="k-ceramic" fill="url(#ceramic-fill-sw)" stroke="none" d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
-      <path class="k-ceramic" fill="url(#ceramic-fill-sw)" stroke="none" d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38 Z"/>
-      <ellipse class="k-ceramic" cx="100" cy="202" rx="30" ry="8" fill="url(#ceramic-fill-sw)" stroke="none"/>
-      <!-- Contornos -->
-      <path class="k-vessel" stroke="rgba(240,176,0,.22)" stroke-width="1.4" fill="none" d="M 88,38 C 82,38 78,42 76,48 C 72,56 70,64 68,72 C 62,88 56,105 54,122 C 51,140 52,158 57,173 C 63,190 76,202 100,205 C 124,202 137,190 143,173 C 148,158 149,140 146,122 C 144,105 138,88 132,72 C 130,64 128,56 124,48 C 122,42 118,38 112,38 Z"/>
-      <path class="k-vessel" stroke="rgba(240,176,0,.22)" stroke-width="1.2" fill="none" d="M 82,38 C 80,32 80,26 82,22 L 118,22 C 120,26 120,32 118,38"/>
-      <ellipse class="k-vessel" cx="100" cy="20" rx="20" ry="7" stroke-width="1.4" fill="none"/>
-      <ellipse cx="100" cy="20" rx="16" ry="4.5" fill="rgba(0,0,0,.25)" stroke="none"/>
-      <ellipse class="k-vessel" cx="100" cy="202" rx="30" ry="8" stroke-width="1.2" fill="none"/>
-      <!-- Grietas originales -->
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.7" stroke-opacity=".8" fill="none" stroke-dasharray="300" stroke-dashoffset="300" d="M 100,22 C 97,35 104,48 99,62 C 94,78 105,92 100,110 C 95,128 103,148 100,170 C 98,185 100,198 100,205"/>
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.1" stroke-opacity=".65" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 99,92 C 88,96 74,93 62,100 C 57,105 55,118 56,130"/>
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.1" stroke-opacity=".65" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 101,128 C 114,133 130,128 140,136 C 148,142 147,158 143,170"/>
-      <!-- Grietas adicionales -->
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width="1.0" stroke-opacity=".6" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 100,170 C 92,176 82,182 76,190 C 73,195 72,199 74,203"/>
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".9" stroke-opacity=".55" fill="none" stroke-dasharray="200" stroke-dashoffset="200" d="M 100,148 C 110,155 120,162 126,172 C 130,180 128,192 126,200"/>
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".8" stroke-opacity=".5" fill="none" stroke-dasharray="150" stroke-dashoffset="150" d="M 74,93 C 68,102 64,112 66,124"/>
-      <path class="k-crack kc-sw" stroke="var(--gold)" stroke-linecap="round" stroke-width=".9" stroke-opacity=".5" fill="none" stroke-dasharray="150" stroke-dashoffset="150" d="M 97,42 C 88,44 82,50 78,58"/>
-      <!-- Nodos dorados -->
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.2" cx="99" cy="62"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.8" cx="99" cy="92"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="3.2" cx="100" cy="128"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.8" cx="100" cy="168"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.5" cx="74" cy="93"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.2" cx="76" cy="190"/>
-      <circle class="k-gold-fill kg-sw" fill="var(--gold)" opacity="0" r="2.2" cx="126" cy="172"/>
+
+      <!-- La sombra en el suelo -->
+      <ellipse cx="120" cy="284" rx="78" ry="11" fill="url(#k-shadow-sw)"/>
+
+      <!-- ── EL JARRÓN (tsubo): labio, cuello, hombros anchos, cuerpo y pie ── -->
+      <path class="k-ceramic" fill="url(#k-glaze-sw)"
+        d="M 92,46 C 90,62 70,74 50,94 C 28,118 26,162 36,202 C 46,242 70,268 120,272 C 170,268 194,242 204,202 C 214,162 212,118 190,94 C 170,74 150,62 148,46 Z"/>
+      <!-- El brillo del esmalte, arriba a la izquierda -->
+      <ellipse cx="80" cy="120" rx="26" ry="48" fill="rgba(238,243,236,.06)" transform="rotate(-18 80 120)"/>
+      <!-- El pie -->
+      <ellipse cx="120" cy="270" rx="40" ry="9" fill="#071511"/>
+      <ellipse cx="120" cy="268" rx="40" ry="9" fill="none" stroke="rgba(242,183,5,.35)" stroke-width="1.2"/>
+      <!-- El labio y la boca -->
+      <ellipse cx="120" cy="46" rx="30" ry="9" fill="url(#k-lip-sw)"/>
+      <ellipse cx="120" cy="46" rx="30" ry="9" fill="none" stroke="rgba(242,183,5,.5)" stroke-width="1.4"/>
+      <ellipse cx="120" cy="47" rx="21" ry="5" fill="#030806"/>
+      <!-- El contorno, fino, de oro apagado -->
+      <path class="k-vessel" stroke="rgba(242,183,5,.4)" stroke-width="1.4"
+        d="M 92,46 C 90,62 70,74 50,94 C 28,118 26,162 36,202 C 46,242 70,268 120,272 C 170,268 194,242 204,202 C 214,162 212,118 190,94 C 170,74 150,62 148,46"/>
+
+      <!-- ── LAS GRIETAS DE ORO ── -->
+      <!-- La principal, de la boca al pie -->
+      <path class="k-crack kc-sw" stroke-width="2.6" d="M 120,52 C 112,84 128,122 118,160 C 110,200 124,240 120,268"/>
+      <!-- Ramal izquierdo, hacia el hombro -->
+      <path class="k-crack kc-sw" stroke-width="1.7" d="M 118,112 C 95,120 72,114 54,132 C 46,140 42,162 44,182"/>
+      <!-- Ramal derecho, hacia abajo -->
+      <path class="k-crack kc-sw" stroke-width="1.7" d="M 119,172 C 145,178 172,170 186,186 C 196,198 194,222 186,240"/>
+      <!-- Cuello, a la izquierda -->
+      <path class="k-crack kc-sw" stroke-width="1.2" d="M 116,72 C 100,76 88,86 80,100"/>
+      <!-- Hombro derecho -->
+      <path class="k-crack kc-sw" stroke-width="1.2" d="M 124,90 C 142,94 160,102 172,116"/>
+      <!-- Del ramal izquierdo, bajando -->
+      <path class="k-crack kc-sw" stroke-width="1" d="M 72,114 C 64,126 58,142 60,158"/>
+      <!-- Del ramal derecho, hacia el borde -->
+      <path class="k-crack kc-sw" stroke-width="1" d="M 172,170 C 180,162 190,154 200,152"/>
+      <!-- Hacia el pie, izquierda -->
+      <path class="k-crack kc-sw" stroke-width="1.4" d="M 120,232 C 106,240 92,248 86,260"/>
+      <!-- Hacia el pie, derecha -->
+      <path class="k-crack kc-sw" stroke-width="1.2" d="M 119,202 C 134,210 150,216 160,230 C 166,238 164,252 160,262"/>
+      <!-- Una pequeña, en el hombro izquierdo -->
+      <path class="k-crack kc-sw" stroke-width=".9" d="M 58,132 C 50,140 44,148 40,158"/>
+      <!-- Otra pequeña, arriba a la derecha -->
+      <path class="k-crack kc-sw" stroke-width=".9" d="M 172,116 C 180,124 186,134 188,146"/>
+
+      <!-- ── LAS GOTAS DE LACA DE ORO en los cruces ── -->
+      <circle class="k-gold-fill kg-sw"  cx="118" cy="112" r="3.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="119" cy="172" r="3.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="116" cy="72"  r="2.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="124" cy="90"  r="2.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="72"  cy="114" r="2.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="172" cy="170" r="2.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="120" cy="232" r="3.2"/>
+      <circle class="k-gold-fill kg-sw"  cx="119" cy="202" r="2.8"/>
+      <circle class="k-gold-fill kg-sw"  cx="54"  cy="132" r="2.4"/>
+      <circle class="k-gold-fill kg-sw" cx="186" cy="186" r="2.6"/>
+      <circle class="k-gold-fill kg-sw" cx="172" cy="116" r="2.4"/>
+      <circle class="k-gold-fill kg-sw" cx="120" cy="52"  r="2.6"/>
     </svg>
   </div>
   <p class="swatches-assembled-text" id="swatches-assembled-text">Así nos recomponemos.</p>
@@ -3166,12 +3260,18 @@ function checkAndAssembleKintsugi() {
   }, 1100);
 }
 
+function updateSwProgress(n) {
+  document.querySelectorAll('#sw-progress .sw-gems i').forEach((g, i) => g.classList.toggle('on', i < n));
+  const t = document.getElementById('sw-progress-text');
+  if (t) t.textContent = n >= TOTAL_PIECES ? 'Las seis. Mira.' : (n === 0 ? 'Toca las seis piezas' : n + ' de ' + TOTAL_PIECES + ' piezas');
+}
 document.querySelectorAll('.sw').forEach(sw => {
   const flip = () => {
     sw.classList.toggle('flipped');
     if (sw.classList.contains('flipped')) {
       const piece = sw.getAttribute('data-piece');
       if (piece) touchedPieces.add(piece);
+      updateSwProgress(touchedPieces.size);
       checkAndAssembleKintsugi();
     }
   };
