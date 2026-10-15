@@ -11,24 +11,32 @@ Este es un tributo web personal de Carlos y Anthonny para su amigo Javier, celeb
 - HTML5 semántico
 - CSS3 (grid, flexbox, transforms, animations, clip-path)
 - JavaScript vanilla (DOM manipulation, Canvas API, IntersectionObserver, Web Audio)
-- Fonts: Cinzel (títulos), Cormorant Garamond (subtítulos), Inter (body)
+- Fonts: Anton (títulos, mayúsculas), Inter (texto), Cormorant Garamond itálica (solo citas)
 
-### Paleta
+### Paleta (rediseño «cartel de papel», octubre 2026)
+Papel con cuadrícula de cuaderno, tinta verde-negra, oro como marcador y verde Gatsby como luz.
+Bordes de 3 px, sombras duras (`--pop`), stickers torcidos (`.s-label`, `.pildora`) y tarjetas blancas.
+Tres bandas de tinta (fondo oscuro): Gatsby, la transmisión (Tesseract) y el cierre Kintsugi.
 ```css
---dark:  #010608;
---card:  #050d0a;
---gold:  #f0b000;
---green: #00c87a;
---text:  #dde8e2;
---muted: rgba(195,215,205,0.80);
+--papel:  #eef3ec;   /* fondo */
+--blanco: #fbfcfa;   /* tarjetas */
+--tinta:  #0f1f19;   /* bordes, sombras, texto */
+--oro:    #f2b705;   /* el marcador — único acento cálido */
+--verde:  #0f8a5f;   /* la luz al final del muelle */
+--rojo:   #e23d3d;   /* solo REC y errores */
+--naranja:#ff7a1a;   /* el portal de Strange */
+--pop:    6px 6px 0 var(--tinta);
 ```
+Los nombres viejos (`--gold`, `--green`, `--text`, `--muted`, `--dark`, `--card`) siguen definidos
+como alias para el SVG del jarrón y el JS; no usarlos en CSS nuevo.
 
 ### Patrón de secciones
 Cada sección sigue este patrón HTML:
 ```html
 <div class="[nombre]-section" id="[nombre]-section">
-  <span class="s-label" style="text-align:center;display:block;">[Subtítulo pequeño]</span>
-  <h2 class="s-title" style="text-align:center;">[Título con <em>énfasis dorado</em>]</h2>
+  <span class="s-label s-c">[Subtítulo pequeño]</span>
+  <h2 class="s-title s-c">[Título con <em>énfasis con marcador</em>]</h2>
+  <div class="rule rule-c"></div>
   <!-- contenido -->
 </div>
 ```
