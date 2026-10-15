@@ -2029,11 +2029,10 @@
       width: 100%; height: 100%;
       pointer-events: none;
     }
-    .gm-rays line { stroke: url(#gm-rays); stroke-width: 1.5; }
+    .gm-rays line { stroke: url(#gm-rays); stroke-width: 1.2; }
     .gm-rays { transform-origin: 600px 440px; animation: gm-rays 14s ease-in-out infinite alternate; }
     @keyframes gm-rays { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
-    .gm-arcs path { fill: none; stroke: rgba(242,183,5,.28); stroke-width: 1.2; stroke-dasharray: 2 7; }
-    .gm-arcs path:nth-child(2n) { stroke-dasharray: none; stroke-opacity: .6; }
+    .gm-arcs path { fill: none; stroke: rgba(242,183,5,.22); stroke-width: 1; }
     .gm-stars circle { fill: #fff; animation: gm-twinkle 3.6s ease-in-out infinite; }
     .gm-stars circle:nth-child(3n)   { animation-delay: -1.2s; }
     .gm-stars circle:nth-child(3n+1) { animation-delay: -2.4s; }
@@ -2135,7 +2134,7 @@
       .gm-line-2 { font-size: clamp(2.6rem, 13vw, 3.6rem); }
       .gm-line-3 { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
       .gm-sub { font-size: .9rem; padding: .5rem .9rem; }
-      .gm-rays line { stroke-width: 2; }
+      .gm-rays line { stroke-width: 1.5; }
     }
 
     /* ════════════════════════════════════
@@ -2550,8 +2549,8 @@
     <rect x="0" y="0" width="1200" height="700" fill="url(#gm-sky)"/>
 
     <!-- El abanico de rayos y los arcos, como en los carteles de los años 20 -->
-    <g class="gm-rays"><line x1="600" y1="440" x2="-400" y2="440"/><line x1="600" y1="440" x2="-395" y2="335"/><line x1="600" y1="440" x2="-378" y2="232"/><line x1="600" y1="440" x2="-351" y2="131"/><line x1="600" y1="440" x2="-314" y2="33"/><line x1="600" y1="440" x2="-266" y2="-60"/><line x1="600" y1="440" x2="-209" y2="-148"/><line x1="600" y1="440" x2="-143" y2="-229"/><line x1="600" y1="440" x2="-69" y2="-303"/><line x1="600" y1="440" x2="12" y2="-369"/><line x1="600" y1="440" x2="100" y2="-426"/><line x1="600" y1="440" x2="193" y2="-474"/><line x1="600" y1="440" x2="291" y2="-511"/><line x1="600" y1="440" x2="392" y2="-538"/><line x1="600" y1="440" x2="495" y2="-555"/><line x1="600" y1="440" x2="600" y2="-560"/><line x1="600" y1="440" x2="705" y2="-555"/><line x1="600" y1="440" x2="808" y2="-538"/><line x1="600" y1="440" x2="909" y2="-511"/><line x1="600" y1="440" x2="1007" y2="-474"/><line x1="600" y1="440" x2="1100" y2="-426"/><line x1="600" y1="440" x2="1188" y2="-369"/><line x1="600" y1="440" x2="1269" y2="-303"/><line x1="600" y1="440" x2="1343" y2="-229"/><line x1="600" y1="440" x2="1409" y2="-148"/><line x1="600" y1="440" x2="1466" y2="-60"/><line x1="600" y1="440" x2="1514" y2="33"/><line x1="600" y1="440" x2="1551" y2="131"/><line x1="600" y1="440" x2="1578" y2="232"/><line x1="600" y1="440" x2="1595" y2="335"/><line x1="600" y1="440" x2="1600" y2="440"/></g>
-    <g class="gm-arcs"><path d="M 510 440 A 90 90 0 0 1 690 440"/><path d="M 440 440 A 160 160 0 0 1 760 440"/><path d="M 350 440 A 250 250 0 0 1 850 440"/><path d="M 240 440 A 360 360 0 0 1 960 440"/><path d="M 110 440 A 490 490 0 0 1 1090 440"/><path d="M -40 440 A 640 640 0 0 1 1240 440"/></g>
+    <g class="gm-rays"><line x1="600" y1="440" x2="-400" y2="440"/><line x1="600" y1="440" x2="-366" y2="181"/><line x1="600" y1="440" x2="-266" y2="-60"/><line x1="600" y1="440" x2="-107" y2="-267"/><line x1="600" y1="440" x2="100" y2="-426"/><line x1="600" y1="440" x2="341" y2="-526"/><line x1="600" y1="440" x2="600" y2="-560"/><line x1="600" y1="440" x2="859" y2="-526"/><line x1="600" y1="440" x2="1100" y2="-426"/><line x1="600" y1="440" x2="1307" y2="-267"/><line x1="600" y1="440" x2="1466" y2="-60"/><line x1="600" y1="440" x2="1566" y2="181"/><line x1="600" y1="440" x2="1600" y2="440"/></g>
+    <g class="gm-arcs"><path d="M 440 440 A 160 160 0 0 1 760 440"/><path d="M 240 440 A 360 360 0 0 1 960 440"/><path d="M -40 440 A 640 640 0 0 1 1240 440"/></g>
 
     <!-- Estrellas -->
     <g class="gm-stars">
@@ -2562,24 +2561,11 @@
       <circle cx="1010" cy="250" r="1"/><circle cx="40" cy="330" r="1"/><circle cx="1160" cy="320" r="1"/>
     </g>
 
-    <!-- El muelle, reducido a dos líneas de fuga -->
-    <g class="gm-pier">
-      <line x1="120" y1="700" x2="586" y2="452"/>
-      <line x1="1080" y1="700" x2="614" y2="452"/>
-      <line x1="300" y1="604" x2="900" y2="604"/>
-      <line x1="430" y1="535" x2="770" y2="535"/>
-      <line x1="520" y1="487" x2="680" y2="487"/>
-    </g>
 
     <!-- La luz verde y su reflejo -->
     <g class="gm-light" id="gm-light">
       <circle class="gm-glow" cx="600" cy="440" r="170" fill="url(#gm-glow)"/>
       <polygon class="gm-reflect" points="590,454 610,454 634,700 566,700" fill="url(#gm-reflect)"/>
-      <g class="gm-ripples">
-        <line x1="550" y1="490" x2="650" y2="490"/>
-        <line x1="520" y1="545" x2="680" y2="545"/>
-        <line x1="480" y1="615" x2="720" y2="615"/>
-      </g>
       <circle class="gm-halo" cx="600" cy="440" r="26"/>
       <circle class="gm-ring" cx="600" cy="440" r="16"/>
       <circle class="gm-core" cx="600" cy="440" r="8"/>
