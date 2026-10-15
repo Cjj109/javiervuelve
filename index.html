@@ -91,14 +91,15 @@
     img, svg, canvas { display: block; max-width: 100%; }
     button { font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 
-    /* ─── La luz: canvas fijo que tiñe el papel por sección ─── */
-    #cvs {
+    /* ─── La luz: capa fija que tiñe el papel del color de cada sección ─── */
+    .luz {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-color: #00e68c;
+      opacity: .11;
       mix-blend-mode: multiply;
-      opacity: .85;
-      will-change: transform;
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
+      -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 42%, #000 0%, transparent 70%);
+      mask-image: radial-gradient(ellipse 75% 70% at 50% 42%, #000 0%, transparent 70%);
+      transition: background-color 1.6s ease;
     }
 
     /* ════════════════════════════════════
@@ -1522,13 +1523,12 @@
     .kg-sw { fill: url(#real-gold-sw); }
     .k-gold-fill.show { opacity: .55; }
     .k-crack.shimmer {
-      filter: drop-shadow(0 0 4px rgba(242,183,5,.6)) drop-shadow(0 0 1px rgba(255,255,255,.3));
       animation: crack-shimmer 4s ease-in-out infinite;
       animation-delay: var(--shimmer-delay, 0s);
     }
     @keyframes crack-shimmer {
-      0%, 100% { filter: drop-shadow(0 0 4px rgba(242,183,5,.6)); }
-      50%      { filter: drop-shadow(0 0 8px rgba(242,183,5,.9)) drop-shadow(0 0 2px rgba(255,255,255,.4)); }
+      0%, 100% { opacity: .72; }
+      50%      { opacity: 1; }
     }
     .k-aura { animation: kintsugi-aura-ring 6s ease-in-out infinite; transform-origin: center; }
     @keyframes kintsugi-aura-ring {
@@ -2005,67 +2005,92 @@
     .anim .divider .dl:last-child { transform-origin: left; }
 
     /* ════════════════════════════════════
-       GATSBY v3 — cartel Art Déco
+       GATSBY v4 — cartel Art Déco, solo CSS
+       (todo lo que se mueve es transform u opacity)
     ════════════════════════════════════ */
     .gatsby-moment {
+      --lx: 50%; --ly: 62%;
       display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       min-height: min(92vh, 880px);
       padding: 5.5rem 1.5rem 3rem;
-      background-image: none;
+      background-image: linear-gradient(#07120e, #0f2a22 62%, #05100c 100%);
       border-top: var(--borde) solid var(--tinta);
       overflow: hidden;
     }
-    /* El marco déco, doble, dentro de la banda */
-    .gatsby-moment::before,
-    .gatsby-moment::after {
-      content: ''; position: absolute; z-index: 1; pointer-events: none;
-      width: auto; height: auto; transform: none; background: none;
+    .gatsby-moment::before, .gatsby-moment::after { content: none; }
+    .gm-sky, .gm-water, .gm-reflect, .gm-frame, .gm-light { position: absolute; pointer-events: none; }
+    /* El cielo: rayos y arcos de oro desde la luz, y unas estrellas. Estático. */
+    .gm-sky {
+      left: 0; right: 0; top: 0; height: var(--ly); z-index: 0;
+      background:
+        radial-gradient(1.6px 1.6px at 8% 12%, #fff 50%, transparent 52%),
+        radial-gradient(1.3px 1.3px at 18% 30%, #fff 50%, transparent 52%),
+        radial-gradient(1.6px 1.6px at 28% 8%, #fff 50%, transparent 52%),
+        radial-gradient(1.2px 1.2px at 43% 24%, #fff 50%, transparent 52%),
+        radial-gradient(1.5px 1.5px at 58% 10%, #fff 50%, transparent 52%),
+        radial-gradient(1.2px 1.2px at 72% 28%, #fff 50%, transparent 52%),
+        radial-gradient(1.6px 1.6px at 84% 14%, #fff 50%, transparent 52%),
+        radial-gradient(1.3px 1.3px at 93% 36%, #fff 50%, transparent 52%),
+        radial-gradient(circle at var(--lx) 100%, transparent 159px, rgba(242,183,5,.28) 160px, transparent 162px),
+        radial-gradient(circle at var(--lx) 100%, transparent 359px, rgba(242,183,5,.22) 360px, transparent 362px),
+        radial-gradient(circle at var(--lx) 100%, transparent 639px, rgba(242,183,5,.16) 640px, transparent 642px),
+        repeating-conic-gradient(from 270deg at var(--lx) 100%, rgba(242,183,5,.4) 0 .45deg, transparent .45deg 15deg);
+      -webkit-mask-image: radial-gradient(ellipse 62% 120% at var(--lx) 100%, #000 10%, transparent 100%);
+      mask-image: radial-gradient(ellipse 62% 120% at var(--lx) 100%, #000 10%, transparent 100%);
+    }
+    .gm-water {
+      left: 0; right: 0; bottom: 0; height: calc(100% - var(--ly)); z-index: 0;
+      border-top: 1px solid rgba(62,229,155,.25);
+      background: linear-gradient(#0c2822, #04100c);
+    }
+    /* El marco déco, doble */
+    .gm-frame {
+      inset: 16px; z-index: 1;
       border: 2px solid rgba(242,183,5,.5);
+      outline: 1px solid rgba(242,183,5,.25); outline-offset: 6px;
     }
-    .gatsby-moment::before { inset: 16px; }
-    .gatsby-moment::after  { inset: 24px; border-width: 1px; border-color: rgba(242,183,5,.25); }
-    .gm-scene {
-      position: absolute; inset: 0; z-index: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
+    /* La luz: un punto con anillo de oro, su resplandor que respira y un halo que se expande */
+    .gm-light { left: var(--lx); top: var(--ly); width: 0; height: 0; z-index: 1; pointer-events: auto; cursor: pointer; }
+    .gm-light > span { position: absolute; left: 0; top: 0; border-radius: 50%; translate: -50% -50%; }
+    .gm-glow {
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(62,229,155,.9) 0%, rgba(62,229,155,.3) 30%, rgba(62,229,155,0) 70%);
+      animation: gm-breathe 4s ease-in-out infinite alternate;
+      will-change: transform, opacity;
     }
-    .gm-rays line { stroke: url(#gm-rays); stroke-width: 1.2; }
-    .gm-rays { transform-origin: 600px 440px; animation: gm-rays 14s ease-in-out infinite alternate; }
-    @keyframes gm-rays { from { transform: rotate(-1.5deg); } to { transform: rotate(1.5deg); } }
-    .gm-arcs path { fill: none; stroke: rgba(242,183,5,.22); stroke-width: 1; }
-    .gm-stars circle { fill: #fff; animation: gm-twinkle 3.6s ease-in-out infinite; }
-    .gm-stars circle:nth-child(3n)   { animation-delay: -1.2s; }
-    .gm-stars circle:nth-child(3n+1) { animation-delay: -2.4s; }
-    .gm-stars circle:nth-child(4n)   { animation-duration: 5.2s; }
-    @keyframes gm-twinkle { 0%, 100% { opacity: .2; } 50% { opacity: .9; } }
-    .gm-pier line { stroke: rgba(242,183,5,.3); stroke-width: 1.5; }
-    .gm-pier line:nth-child(n+3) { stroke-width: 1; stroke-opacity: .55; }
-
-    /* La luz: late, y su reflejo tiembla en el agua */
-    .gm-light { pointer-events: auto; cursor: pointer; }
-    .gm-glow { transform-origin: 600px 440px; animation: gm-breathe 4s ease-in-out infinite alternate; }
-    .gm-halo { fill: none; stroke: #3ee59b; stroke-width: 1.5; opacity: .6; transform-origin: 600px 440px; animation: gm-halo 2.8s ease-out infinite; }
-    .gm-ring { fill: none; stroke: var(--oro); stroke-width: 2; }
-    .gm-core { fill: #3ee59b; stroke: #0f1f19; stroke-width: 2; filter: drop-shadow(0 0 10px #3ee59b) drop-shadow(0 0 30px rgba(62,229,155,.9)); }
-    .gm-reflect { animation: gm-reflect 3.2s ease-in-out infinite alternate; }
-    .gm-ripples line { stroke: rgba(62,229,155,.5); stroke-width: 1.5; stroke-dasharray: 6 10; animation: gm-ripple 2.8s linear infinite; }
-    .gm-ripples line:nth-child(2) { animation-duration: 3.6s; stroke-dasharray: 8 14; opacity: .7; }
-    .gm-ripples line:nth-child(3) { animation-duration: 4.6s; stroke-dasharray: 10 18; opacity: .45; }
-    @keyframes gm-breathe { from { transform: scale(.88); opacity: .8; } to { transform: scale(1.12); opacity: 1; } }
-    @keyframes gm-halo    { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(2.6); opacity: 0; } }
-    @keyframes gm-reflect { from { opacity: .55; transform: scaleX(.85); transform-origin: 600px 454px; } to { opacity: 1; transform: scaleX(1.1); transform-origin: 600px 454px; } }
-    @keyframes gm-ripple  { to { stroke-dashoffset: -32; } }
+    .gm-halo {
+      width: 56px; height: 56px;
+      border: 1.5px solid #3ee59b;
+      animation: gm-halo 2.8s ease-out infinite;
+      will-change: transform, opacity;
+    }
+    .gm-core {
+      width: 18px; height: 18px;
+      background: #3ee59b;
+      border: 2px solid var(--tinta);
+      box-shadow: 0 0 0 4px var(--oro), 0 0 0 6px var(--tinta), 0 0 16px #3ee59b, 0 0 40px rgba(62,229,155,.9);
+    }
+    .gm-light::after {
+      /* zona de toque generosa */
+      content: ''; position: absolute; left: -36px; top: -36px; width: 72px; height: 72px; border-radius: 50%;
+    }
+    /* El reflejo: un haz que se abre hacia abajo y tiembla */
+    .gm-reflect {
+      left: calc(var(--lx) - 40px); top: calc(var(--ly) + 12px); bottom: 0; width: 80px; z-index: 0;
+      background: linear-gradient(rgba(62,229,155,.75), rgba(62,229,155,.25) 45%, rgba(62,229,155,0));
+      clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%);
+      animation: gm-reflect 3.2s ease-in-out infinite alternate;
+      will-change: transform, opacity;
+    }
+    @keyframes gm-breathe { from { transform: scale(.86); opacity: .8; } to { transform: scale(1.12); opacity: 1; } }
+    @keyframes gm-halo    { 0% { transform: scale(.5); opacity: .8; } 100% { transform: scale(2.8); opacity: 0; } }
+    @keyframes gm-reflect { from { opacity: .55; transform: scaleX(.85); } to { opacity: 1; transform: scaleX(1.1); } }
     .gatsby-moment.flare .gm-glow { animation: gm-flare 1.4s ease-out; }
-    .gatsby-moment.flare .gm-rays { animation: gm-rays-flare 1.4s ease-out; }
-    @keyframes gm-flare { 0% { transform: scale(1); } 25% { transform: scale(2); opacity: 1; } 100% { transform: scale(1); } }
-    @keyframes gm-rays-flare { 0% { opacity: 1; } 25% { opacity: 1.6; transform: scale(1.04); } 100% { opacity: 1; } }
+    .gatsby-moment.flare .gm-halo { animation: gm-halo .9s ease-out; }
+    @keyframes gm-flare { 0% { transform: scale(1); } 25% { transform: scale(2.1); opacity: 1; } 100% { transform: scale(1); } }
 
     /* El texto, encima de la escena */
-    .gm-text {
-      position: relative; z-index: 2;
-      max-width: 860px;
-      text-align: center;
-    }
+    .gm-text { position: relative; z-index: 2; max-width: 860px; text-align: center; }
     .gatsby-moment .s-label { margin-bottom: 1.6rem; }
     .gm-dialogue { margin-bottom: 1.6rem; }
     .gm-line-1 {
@@ -2081,8 +2106,7 @@
       line-height: .95; letter-spacing: .01em;
       text-transform: uppercase;
       color: var(--papel);
-      text-shadow: .05em .05em 0 var(--tinta), .05em .05em 0 rgba(242,183,5,.0);
-      -webkit-text-stroke: 1px rgba(15,31,25,.6);
+      text-shadow: .05em .05em 0 var(--tinta);
       margin-bottom: .5rem;
     }
     .gm-line-3 {
@@ -2090,7 +2114,7 @@
       font-size: clamp(2rem, 5.6vw, 3.6rem);
       font-style: italic; font-weight: 500;
       color: var(--verde-luz); line-height: 1.1;
-      text-shadow: 0 0 18px rgba(62,229,155,.55), 0 0 60px rgba(62,229,155,.3);
+      text-shadow: 0 0 18px rgba(62,229,155,.55);
     }
     .gm-attr {
       display: inline-block;
@@ -2101,7 +2125,6 @@
       text-transform: uppercase; color: var(--oro);
       margin-bottom: 0;
     }
-    /* La frase final: un sticker de oro al pie, sobre el reflejo */
     .gm-sub {
       position: relative; z-index: 2;
       margin-top: auto;
@@ -2118,23 +2141,23 @@
       max-width: 92%;
     }
     .gm-sub em { font-style: normal; color: var(--verde); }
-    /* Al llegar: los rayos se abren y la luz se enciende */
-    .anim #gatsby-section:not(.in) :is(.gm-light, .gm-rays, .gm-arcs) { opacity: 0; }
-    .anim #gatsby-section.in .gm-light { animation: gm-on 1.8s ease .4s backwards; }
-    .anim #gatsby-section.in .gm-rays  { animation: gm-fan 1.6s cubic-bezier(.2,.8,.2,1) .6s backwards, gm-rays 14s ease-in-out 2.2s infinite alternate; }
-    .anim #gatsby-section.in .gm-arcs  { animation: rise 1.2s ease 1s backwards; }
-    .anim #gatsby-section.in .gm-sub   { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.3s backwards; }
+    /* Al llegar: el cielo se abre, la luz se enciende */
+    .anim #gatsby-section:not(.in) :is(.gm-sky, .gm-light, .gm-reflect) { opacity: 0; }
+    .anim #gatsby-section.in .gm-sky     { animation: gm-fan 1.4s cubic-bezier(.2,.8,.2,1) .4s backwards; transform-origin: var(--lx) 100%; }
+    .anim #gatsby-section.in .gm-light   { animation: gm-on 1.6s ease .6s backwards; }
+    .anim #gatsby-section.in .gm-reflect { animation: gm-on 1.6s ease .8s backwards, gm-reflect 3.2s ease-in-out 2.4s infinite alternate; }
+    .anim #gatsby-section.in .gm-sub     { animation: slap .55s cubic-bezier(.2,.9,.3,1.2) 1.3s backwards; }
     @keyframes gm-on  { 0% { opacity: 0; } 40% { opacity: .35; } 55% { opacity: .1; } 100% { opacity: 1; } }
-    @keyframes gm-fan { 0% { opacity: 0; transform: scale(.2) rotate(-6deg); } 100% { opacity: 1; transform: scale(1) rotate(0); } }
+    @keyframes gm-fan { 0% { opacity: 0; transform: scale(.3); } 100% { opacity: 1; transform: scale(1); } }
 
     @media (max-width: 640px) {
       .gatsby-moment { min-height: min(90vh, 760px); padding: 4rem 1rem 2.4rem; }
-      .gatsby-moment::before { inset: 10px; }
-      .gatsby-moment::after  { inset: 16px; }
+      .gm-frame { inset: 10px; outline-offset: 4px; }
+      .gm-sky { background-size: auto; }
+      .gm-glow { width: 260px; height: 260px; }
       .gm-line-2 { font-size: clamp(2.6rem, 13vw, 3.6rem); }
       .gm-line-3 { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
       .gm-sub { font-size: .9rem; padding: .5rem .9rem; }
-      .gm-rays line { stroke-width: 1.5; }
     }
 
     /* ════════════════════════════════════
@@ -2239,14 +2262,14 @@
     .vinyl-player:has(.spinning) .deck-play { background: var(--tinta); color: var(--papel); box-shadow: 4px 4px 0 var(--oro); }
     .vinyl-player:has(.spinning) .deck-play-ico { width: 12px; height: 12px; border: 0; background: var(--papel); border-radius: 2px; }
     .deck-eq { flex: 1; display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 26px; }
-    .deck-eq i { display: block; width: 5px; height: 4px; background: var(--tinta); border-radius: 2px 2px 0 0; transition: height .3s; }
+    .deck-eq i { display: block; width: 5px; height: 26px; background: var(--tinta); border-radius: 2px 2px 0 0; transform: scaleY(.15); transform-origin: bottom; transition: transform .3s; }
     .vinyl-player:has(.spinning) .deck-eq i { animation: deck-eq .7s ease-in-out infinite alternate; background: var(--verde); }
     .deck-eq i:nth-child(1) { animation-delay: -.1s; } .deck-eq i:nth-child(2) { animation-delay: -.5s; }
     .deck-eq i:nth-child(3) { animation-delay: -.3s; } .deck-eq i:nth-child(4) { animation-delay: -.65s; }
     .deck-eq i:nth-child(5) { animation-delay: 0s; }   .deck-eq i:nth-child(6) { animation-delay: -.45s; }
     .deck-eq i:nth-child(7) { animation-delay: -.2s; } .deck-eq i:nth-child(8) { animation-delay: -.6s; }
     .deck-eq i:nth-child(9) { animation-delay: -.35s; }
-    @keyframes deck-eq { from { height: 4px; } to { height: 26px; } }
+    @keyframes deck-eq { from { transform: scaleY(.15); } to { transform: scaleY(1); } }
     .deck-controls .vinyl-hint { flex: none; margin: 0; max-width: 150px; text-align: right; line-height: 1.4; }
 
     /* La letra: la hoja del disco */
@@ -2308,7 +2331,7 @@
 </head>
 <body>
 <a href="#main" class="skip-link">Ir al contenido</a>
-<canvas id="cvs"></canvas>
+<div class="luz" id="luz" aria-hidden="true"></div>
 
 <main id="main">
 <!-- ══════════════ HERO ══════════════ -->
@@ -2521,56 +2544,16 @@
 <!-- ══════════════ GATSBY ══════════════ -->
 <div class="gatsby-moment" id="gatsby-section">
 
-  <!-- La escena: un cartel Art Déco; la luz verde y sus rayos de oro -->
-  <svg class="gm-scene" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <defs>
-      <linearGradient id="gm-sky" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#07120e"/>
-        <stop offset=".63" stop-color="#0f2a22"/>
-        <stop offset=".63" stop-color="#0b1f19"/>
-        <stop offset="1" stop-color="#05100c"/>
-      </linearGradient>
-      <radialGradient id="gm-rays" gradientUnits="userSpaceOnUse" cx="600" cy="440" r="760">
-        <stop offset="0" stop-color="#f2b705" stop-opacity=".55"/>
-        <stop offset=".45" stop-color="#f2b705" stop-opacity=".18"/>
-        <stop offset="1" stop-color="#f2b705" stop-opacity="0"/>
-      </radialGradient>
-      <radialGradient id="gm-glow" cx="50%" cy="50%" r="50%">
-        <stop offset="0" stop-color="#3ee59b" stop-opacity=".9"/>
-        <stop offset=".3" stop-color="#3ee59b" stop-opacity=".3"/>
-        <stop offset="1" stop-color="#3ee59b" stop-opacity="0"/>
-      </radialGradient>
-      <linearGradient id="gm-reflect" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#3ee59b" stop-opacity=".75"/>
-        <stop offset="1" stop-color="#3ee59b" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-
-    <rect x="0" y="0" width="1200" height="700" fill="url(#gm-sky)"/>
-
-    <!-- El abanico de rayos y los arcos, como en los carteles de los años 20 -->
-    <g class="gm-rays"><line x1="600" y1="440" x2="-400" y2="440"/><line x1="600" y1="440" x2="-366" y2="181"/><line x1="600" y1="440" x2="-266" y2="-60"/><line x1="600" y1="440" x2="-107" y2="-267"/><line x1="600" y1="440" x2="100" y2="-426"/><line x1="600" y1="440" x2="341" y2="-526"/><line x1="600" y1="440" x2="600" y2="-560"/><line x1="600" y1="440" x2="859" y2="-526"/><line x1="600" y1="440" x2="1100" y2="-426"/><line x1="600" y1="440" x2="1307" y2="-267"/><line x1="600" y1="440" x2="1466" y2="-60"/><line x1="600" y1="440" x2="1566" y2="181"/><line x1="600" y1="440" x2="1600" y2="440"/></g>
-    <g class="gm-arcs"><path d="M 440 440 A 160 160 0 0 1 760 440"/><path d="M 240 440 A 360 360 0 0 1 960 440"/><path d="M -40 440 A 640 640 0 0 1 1240 440"/></g>
-
-    <!-- Estrellas -->
-    <g class="gm-stars">
-      <circle cx="90" cy="60" r="1.4"/><circle cx="210" cy="120" r="1"/><circle cx="330" cy="40" r="1.6"/>
-      <circle cx="420" cy="150" r="1"/><circle cx="520" cy="80" r="1.3"/><circle cx="640" cy="30" r="1"/>
-      <circle cx="700" cy="140" r="1.5"/><circle cx="860" cy="60" r="1.1"/><circle cx="960" cy="130" r="1.4"/>
-      <circle cx="1060" cy="50" r="1"/><circle cx="1140" cy="160" r="1.3"/><circle cx="150" cy="230" r="1"/>
-      <circle cx="1010" cy="250" r="1"/><circle cx="40" cy="330" r="1"/><circle cx="1160" cy="320" r="1"/>
-    </g>
-
-
-    <!-- La luz verde y su reflejo -->
-    <g class="gm-light" id="gm-light">
-      <circle class="gm-glow" cx="600" cy="440" r="170" fill="url(#gm-glow)"/>
-      <polygon class="gm-reflect" points="590,454 610,454 634,700 566,700" fill="url(#gm-reflect)"/>
-      <circle class="gm-halo" cx="600" cy="440" r="26"/>
-      <circle class="gm-ring" cx="600" cy="440" r="16"/>
-      <circle class="gm-core" cx="600" cy="440" r="8"/>
-    </g>
-  </svg>
+  <!-- La escena, solo CSS: cielo con rayos déco, agua, marco y la luz verde -->
+  <div class="gm-sky" aria-hidden="true"></div>
+  <div class="gm-water" aria-hidden="true"></div>
+  <div class="gm-reflect" aria-hidden="true"></div>
+  <div class="gm-frame" aria-hidden="true"></div>
+  <div class="gm-light" id="gm-light" aria-hidden="true">
+    <span class="gm-glow"></span>
+    <span class="gm-halo"></span>
+    <span class="gm-core"></span>
+  </div>
 
   <!-- El diálogo más icónico de Fitzgerald -->
   <div class="gm-text">
@@ -2996,23 +2979,14 @@
    LA LUZ AL FINAL DEL MUELLE
    Canvas fijo — eco verde en toda la página
 ═══════════════════════════════════════════ */
-const cvs = document.getElementById('cvs');
-const ctx = cvs.getContext('2d');
-let W, H;
-
-function resize() {
-  W = cvs.width  = window.innerWidth;
-  H = cvs.height = window.innerHeight;
+/* La luz: una capa fija que se tiñe del color de la sección visible.
+   No se repinta por frame: solo cambia su color (con transición CSS) al cambiar de sección. */
+const luzEl = document.getElementById('luz');
+function setLuz(c) {
+  if (luzEl) luzEl.style.backgroundColor = 'rgb(' + c[0] + ',' + c[1] + ',' + c[2] + ')';
 }
-resize();
-window.addEventListener('resize', resize);
-
-let phase = 0, lastTs = 0, intensity = 1;
-// luzOn se define abajo, pero el canvas necesita acceso
-function getLuzOn() { return true; }
 
 /* ── Color dinámico tipo Clementine — cambia por sección ── */
-/* Colores RGB base por sección (tono emocional de cada etapa) */
 const SECTION_COLORS = {
   hero:     [0, 230, 140],   /* verde esperanza — el inicio */
   grupo:    [0, 210, 255],   /* cyan intenso — la frescura de la amistad */
@@ -3026,99 +3000,6 @@ const SECTION_COLORS = {
   adagio:   [100, 50, 160],   /* púrpura profundo — el flashback, la memoria */
   kintsugi: [255, 190, 0]    /* dorado brillante — reparación, cierre */
 };
-let lightR = 0, lightG = 200, lightB = 122; /* actual (interpolado) */
-let targetR = 0, targetG = 200, targetB = 122; /* destino */
-
-function drawLight(ts) {
-  requestAnimationFrame(drawLight);
-  // dt basado en tiempo real; cap de 100ms para evitar salto tras volver de otra pestaña
-  const dt = Math.min(ts - lastTs, 100);
-  if (dt < 33) return; // ~30fps
-  lastTs = ts;
-
-  // Fundido al apagar/encender
-  const target = getLuzOn() ? 1 : 0;
-  intensity += (target - intensity) * 0.06;
-
-  // Phase proporcional al tiempo real — sin saltos aunque el dispositivo pierda frames
-  phase += 0.007 * (dt / 50);
-  const breath = 0.5 + 0.5 * Math.sin(phase); // respiración suave única
-
-  /* Interpolar color hacia el target — transición suave */
-  lightR += (targetR - lightR) * 0.045;
-  lightG += (targetG - lightG) * 0.045;
-  lightB += (targetB - lightB) * 0.045;
-  /* Sync CSS --green with interpolated canvas color */
-  const cR = Math.round(lightR), cG = Math.round(lightG), cB = Math.round(lightB);
-  document.documentElement.style.setProperty('--green',
-    '#' + [cR, cG, cB].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, '0')).join(''));
-  const c90 = [Math.round(cR*.9), Math.round(cG*.88), Math.round(cB*.9)];
-  const c80 = [Math.round(cR*.8), Math.round(cG*.78), Math.round(cB*.8)];
-  const c65 = [Math.round(cR*.65), Math.round(cG*.65), Math.round(cB*.65)];
-  const c85 = [Math.round(cR*.85), Math.round(cG*.84), Math.round(cB*.85)];
-  const c76 = [Math.round(cR*.76), Math.round(cG*.76), Math.round(cB*.76)];
-  const c66 = [Math.round(cR*.66), Math.round(cG*.66), Math.round(cB*.66)];
-  const c55 = [Math.round(cR*.55), Math.round(cG*.55), Math.round(cB*.55)];
-  const c73 = [Math.round(cR*.73), Math.round(cG*.73), Math.round(cB*.73)];
-  const c60 = [Math.round(cR*.6), Math.round(cG*.6), Math.round(cB*.6)];
-  const c48 = [Math.round(cR*.48), Math.round(cG*.48), Math.round(cB*.48)];
-
-  ctx.clearRect(0, 0, W, H);
-  if (intensity < 0.01) return; // totalmente apagado
-
-  const i  = intensity;
-  const bp = breath * i;
-
-  /* ══════════════════════════════════════════════════════
-     LUZ AMBIENTAL DIFUSA
-     Sin punto de origen fijo — la luz es el ambiente.
-     Tres capas: core (centro), drift (arriba), echo (abajo).
-     El color de cada sección se siente en toda la pantalla.
-  ══════════════════════════════════════════════════════ */
-
-  /* ── CAPA 1: CORE GLOW — baño central de color ── */
-  const coreX = W * 0.50;
-  const coreY = H * 0.45;
-  const coreR = Math.max(W, H) * 0.85;
-
-  const gCore = ctx.createRadialGradient(coreX, coreY, 0, coreX, coreY, coreR);
-  gCore.addColorStop(0,    `rgba(${cR},${cG},${cB}, ${(0.09 + bp * 0.025) * i})`);
-  gCore.addColorStop(0.20, `rgba(${c90[0]},${c90[1]},${c90[2]}, ${(0.06 + bp * 0.012) * i})`);
-  gCore.addColorStop(0.45, `rgba(${c80[0]},${c80[1]},${c80[2]}, ${(0.03 + bp * 0.006) * i})`);
-  gCore.addColorStop(0.72, `rgba(${c65[0]},${c65[1]},${c65[2]}, ${0.012 * i})`);
-  gCore.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gCore;
-  ctx.fillRect(0, 0, W, H);
-
-  /* ── CAPA 2: TOP DRIFT — asimetría superior ── */
-  const driftX = W * 0.40;
-  const driftY = H * 0.15;
-  const driftR = Math.max(W, H) * 0.9;
-  const driftBreath = 0.5 + 0.5 * Math.sin(phase * 0.8 + 1.4);
-
-  const gDrift = ctx.createRadialGradient(driftX, driftY, 0, driftX, driftY, driftR);
-  gDrift.addColorStop(0,    `rgba(${c85[0]},${c85[1]},${c85[2]}, ${(0.045 + driftBreath * 0.010) * i})`);
-  gDrift.addColorStop(0.30, `rgba(${c76[0]},${c76[1]},${c76[2]}, ${(0.022 + driftBreath * 0.005) * i})`);
-  gDrift.addColorStop(0.60, `rgba(${c66[0]},${c66[1]},${c66[2]}, ${0.008 * i})`);
-  gDrift.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gDrift;
-  ctx.fillRect(0, 0, W, H);
-
-  /* ── CAPA 3: BOTTOM ECHO — profundidad, reflejo ── */
-  const echoX = W * 0.55;
-  const echoY = H * 0.95;
-  const echoR = W * 1.0;
-  const echoBreath = 0.5 + 0.5 * Math.sin(phase * 0.6 + 2.1);
-
-  const gEcho = ctx.createRadialGradient(echoX, echoY, 0, echoX, echoY, echoR);
-  gEcho.addColorStop(0,    `rgba(${c73[0]},${c73[1]},${c73[2]}, ${(0.025 + echoBreath * 0.008) * i})`);
-  gEcho.addColorStop(0.35, `rgba(${c60[0]},${c60[1]},${c60[2]}, ${0.012 * i})`);
-  gEcho.addColorStop(0.70, `rgba(${c48[0]},${c48[1]},${c48[2]}, ${0.004 * i})`);
-  gEcho.addColorStop(1,    'rgba(0,0,0,0)');
-  ctx.fillStyle = gEcho;
-  ctx.fillRect(0, 0, W, H);
-}
-requestAnimationFrame(drawLight);
 
 /* ─── Scroll reveal ─── */
 requestAnimationFrame(() =>
@@ -3418,7 +3299,11 @@ if (jesusPerson) {
   const offCanvas = document.createElement('canvas');
   const offCtx = offCanvas.getContext('2d');
   const screenCtx = canvas.getContext('2d');
-  const ctx = offCtx;
+  let ctx = offCtx;
+  /* El fondo (paredes y suelo) se dibuja una vez por tamaño y se copia cada frame */
+  const bgCanvas = document.createElement('canvas');
+  const bgCtx = bgCanvas.getContext('2d');
+  let bgDirty = true, vignette = null;
   const wrap = canvas.parentElement;
   const section = document.getElementById('room-section');
   const chatForm = document.getElementById('room-chat');
@@ -3455,6 +3340,9 @@ if (jesusPerson) {
     canvas.width = cW * dpr; canvas.height = cH * dpr;
     offCanvas.width = cW * dpr; offCanvas.height = cH * dpr;
     offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bgCanvas.width = cW * dpr; bgCanvas.height = cH * dpr;
+    bgCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    bgDirty = true;
     const pad = 12;
     const availW = cW - pad * 2;
     const availH = cH - pad * 2;
@@ -4208,33 +4096,40 @@ if (jesusPerson) {
   }
 
   /* ══════════════ RENDER ══════════════ */
+  function buildBg() {
+    ctx = bgCtx;
+    ctx.clearRect(0, 0, cW, cH);
+    ctx.fillStyle = '#101c1e';
+    ctx.fillRect(0, 0, cW, cH);
+    drawWalls();
+    for (let r = 0; r < ROWS; r++)
+      for (let c = 0; c < COLS; c++) drawTile(c, r, false);
+    ctx = offCtx;
+    vignette = ctx.createRadialGradient(cW / 2, cH * 0.55, Math.min(cW, cH) * 0.35, cW / 2, cH * 0.55, Math.max(cW, cH) * 0.75);
+    vignette.addColorStop(0, 'rgba(0,0,0,0)');
+    vignette.addColorStop(1, 'rgba(0,0,0,.42)');
+    bgDirty = false;
+  }
+
   function render(ts) {
     animId = requestAnimationFrame(render);
     const dt = Math.min(ts - lastT, 100);
-    if (dt < 16) return;
+    if (dt < 30) return; /* ~33 fps: de sobra para la sala, y la mitad de trabajo */
     lastT = ts;
     sceneT += dt;
-    ctx.clearRect(0, 0, cW, cH);
-    /* Fondo: la tinta de la página */
-    ctx.fillStyle = '#101c1e';
-    ctx.fillRect(0, 0, cW, cH);
-
-    drawWalls();
+    if (bgDirty) buildBg();
+    ctx.drawImage(bgCanvas, 0, 0, cW, cH);
+    if (hoverCol >= 0) drawTile(hoverCol, hoverRow, true);
     drawWallDecor();
 
-    /* Orden de pintor */
+    /* Orden de pintor (el suelo ya está debajo) */
     const entities = [];
-    for (let r = 0; r < ROWS; r++)
-      for (let c = 0; c < COLS; c++) {
-        entities.push({ depth: r + c, type: 'tile', c, r, hl: c === hoverCol && r === hoverRow });
-      }
     furniture.forEach(f => entities.push({ depth: f.row + f.col + 0.1, type: 'furn', f }));
     characters.forEach((ch, i) => { updateChar(ch, dt); entities.push({ depth: charDepth(ch), type: 'char', ch, i }); });
     entities.sort((a, b) => a.depth - b.depth);
 
     entities.forEach(e => {
-      if (e.type === 'tile') drawTile(e.c, e.r, e.hl);
-      else if (e.type === 'furn') drawFurn(e.f);
+      if (e.type === 'furn') drawFurn(e.f);
       else if (e.type === 'char') drawChar(e.ch, dt, e.i);
     });
 
@@ -4245,10 +4140,7 @@ if (jesusPerson) {
     bubbles.forEach(drawBubble);
 
     /* Viñeta: la sala se oscurece hacia los bordes */
-    const vg = ctx.createRadialGradient(cW / 2, cH * 0.55, Math.min(cW, cH) * 0.35, cW / 2, cH * 0.55, Math.max(cW, cH) * 0.75);
-    vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,.42)');
-    ctx.fillStyle = vg;
+    ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, cW, cH);
 
     screenCtx.clearRect(0, 0, canvas.width, canvas.height);
@@ -5027,9 +4919,7 @@ if (kWrap) {
     if (!best) return;
     const c = SECTION_COLORS[best];
     if (!c) return;
-    targetR = c[0]; targetG = c[1]; targetB = c[2];
-
-    /* --green se actualiza en drawLight() para interpolar suavemente */
+    setLuz(c);
   }
 
   const obs = new IntersectionObserver((ents) => {
